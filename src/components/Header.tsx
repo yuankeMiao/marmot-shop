@@ -28,7 +28,7 @@ function Header() {
         <ul className="hidden md:flex gap-8 ">
           <li>Women</li>
           <li>Men</li>
-          <li>Kids</li>
+          <li>Electronics</li>
           <li>Jewlery</li>
         </ul>
       </nav>
