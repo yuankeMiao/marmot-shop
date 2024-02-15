@@ -4,3 +4,5 @@ export const CATEGORIES = [
   "men's clothing",
   "women's clothing",
 ];
+
+export const API_URL = "https://fakestoreapi.com/products";
