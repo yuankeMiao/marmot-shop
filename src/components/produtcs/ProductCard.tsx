@@ -6,7 +6,7 @@ import ShopAndFav from "../buttons/ShopAndFav";
 function ProductCard({ productItem }: { productItem: ProductType }) {
   return (
     <div
-      className="min-w-40 bg-white text-sky-950 px-4 py-8 rounded-xl shadow-md flex flex-col"
+      className="bg-white text-sky-950 px-4 py-8 rounded-xl shadow-md flex flex-col min-w-64"
     >
       <Link to={`/product/${productItem.id}`}>
         <img

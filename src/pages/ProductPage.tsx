@@ -1,3 +1,4 @@
+import { useState } from "react";
 import { useParams } from "react-router-dom";
 import { Breadcrumb, Rating, Button } from "flowbite-react";
 
@@ -7,15 +8,37 @@ import ShopAndFav from "../components/buttons/ShopAndFav";
 
 function ProductPage() {
   const productId = Number(useParams().productId);
-
   const { data, error, isLoading } = useGetProductByIdQuery(productId); //Yay!!!!
-
-  console.log(data);
-
   const product: ProductType = data;
 
+  const [amount, setAmount] = useState(1);
+
+  const handleIncrement = () => {
+    setAmount(prev => prev + 1);
+  };
+
+  const handledecrement = () => {
+    if (amount > 1) {
+      setAmount(prev => prev - 1);
+    }
+  };
+
+  // i did not set the input type = "number" because I dont want the default browser layout for number input
+  // so here I use customized validation for the input to make sure it is number and greater than 0, less than 100
+  const handleInputAmount = (e: React.ChangeEvent<HTMLInputElement>) => {
+    if (!Number(e.target.value)){
+      setAmount(1);
+    } else if (Number(e.target.value) < 1) {
+      setAmount(1);
+    } else if (Number(e.target.value) > 99) {
+      setAmount(99);
+    } else {
+      setAmount(Number(e.target.value));
+    }
+  };
+
   return (
-    <div className="py-4 mx-auto md:max-w-2xl lg:max-w-5xl xl:max-w-7xl">
+    <div className="py-4 mx-auto md:max-w-2xl lg:max-w-screen-lg xl:max-w-screen-xl 2xl:max-w-screen-2xl">
       {isLoading && <p>Loading...</p>}
       {product && (
         <div className="*:m-4">
@@ -57,12 +80,14 @@ function ProductPage() {
               </div>
 
               <Button.Group>
-                <Button color="gray">+</Button>
+                <Button color="gray" onClick={handledecrement} disabled={amount === 1}>-</Button>
                 <input
                   type="text"
                   className="w-16 bg-gray-50 border border-gray-300 text-gray-900 text-md text-center"
+                  value={amount}
+                  onChange={handleInputAmount}
                 />
-                <Button color="gray">-</Button>
+                <Button color="gray" onClick={handleIncrement}>+</Button>
               </Button.Group>
               <ShopAndFav />
             </div>

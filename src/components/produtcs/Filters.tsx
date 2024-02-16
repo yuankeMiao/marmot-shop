@@ -2,7 +2,7 @@ import { CATEGORIES } from "../../statics/constants";
 
 function Filters() {
   return (
-    <aside className="absolute w-full top-8 left-0 rounded-lg group bg-gray-100 dark:text-gray-100 dark:bg-cyan-900 ">
+    <div className="lg:absolute w-full mt-8 top-0 left-0 rounded-lg group bg-gray-100 dark:text-gray-100 dark:bg-cyan-900 ">
       <div className="h-full px-6 py-4 overflow-y-auto ">
         <ul className="*:py-4">
           <li className="border-b">
@@ -19,25 +19,21 @@ function Filters() {
             </ul>
           </li>
           <li>
-            <span className="font-bold">By Price</span>
+            <span className="font-bold">Order By Price</span>
             <ul className="py-2 *:group/item *:px-2 *:flex *:gap-2">
               <li>
-                <input type="checkbox" id="0-25" />
-                <label htmlFor="0-25">0 - 25 € </label>
+                <input type="checkbox" id="low-high" />
+                <label htmlFor="low-high">From low to high</label>
               </li>
               <li>
-                <input type="checkbox" id="26-50" />
-                <label htmlFor="26-50">26 - 50 € </label>
-              </li>
-              <li>
-                <input type="checkbox" id="51-" />
-                <label htmlFor="51-">More than 50 € </label>
+                <input type="checkbox" id="high-low" />
+                <label htmlFor="high-low">From high to low </label>
               </li>
             </ul>
           </li>
         </ul>
       </div>
-    </aside>
+    </div>
   );
 }
 
