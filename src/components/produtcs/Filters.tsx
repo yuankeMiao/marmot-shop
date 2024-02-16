@@ -2,7 +2,7 @@ import { CATEGORIES } from "../../statics/constants";
 
 function Filters() {
   return (
-    <aside className="absolute w-full top-8 left-0 text-gray-100 bg-cyan-900 rounded-lg group">
+    <aside className="absolute w-full top-8 left-0 rounded-lg group bg-gray-100 dark:text-gray-100 dark:bg-cyan-900 ">
       <div className="h-full px-6 py-4 overflow-y-auto ">
         <ul className="*:py-4">
           <li className="border-b">
