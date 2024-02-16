@@ -1,3 +1,5 @@
+import { CATEGORIES } from "./constants";
+
 export interface ProductType {
     id: number;
     title: string;
@@ -17,3 +19,11 @@ export type ProductsState = {
     loading: boolean;
     error?: string;
 };
+
+
+export type CategoriesType = typeof CATEGORIES[number];
+
+export interface FilterType {
+    categories: CategoriesType[];
+    sortByPrice: "asc" | "desc" | "";
+  }

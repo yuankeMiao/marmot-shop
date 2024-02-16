@@ -1,12 +1,16 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import { Breadcrumb, Rating, Button } from "flowbite-react";
 
 import { useGetProductByIdQuery } from "../redux/slices/productQuery";
-import { ProductType } from "../types/productTypes";
+import { ProductType } from "../misc/productTypes";
 import ShopAndFav from "../components/buttons/ShopAndFav";
 
 function ProductPage() {
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, []);
+
   const productId = Number(useParams().productId);
   const { data, error, isLoading } = useGetProductByIdQuery(productId); //Yay!!!!
   const product: ProductType = data;

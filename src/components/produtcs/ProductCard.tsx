@@ -1,5 +1,5 @@
 
-import { ProductType } from "../../types/productTypes";
+import { ProductType } from "../../misc/productTypes";
 import { Link } from "react-router-dom";
 import ShopAndFav from "../buttons/ShopAndFav";
 
