@@ -11,8 +11,12 @@ import Badge from "./buttons/Bagde";
 import Search from "./Search";
 
 import avartaHolder from "../statics/marmot-1.png";
+import { useAppSelector } from "../appHooks/reduxHooks";
 
 function Header() {
+
+  const cartAmount = useAppSelector((state) => state.cart.total);
+
   return (
     <header className="w-full h-20 bg-primary flex justify-between items-center px-4 md:px-12">
       <div className="flex items-center gap-2">
@@ -40,7 +44,7 @@ function Header() {
           <Badge amount={15}>
             <FontAwesomeIcon icon={faHeart} className="w-5 h-5" />
           </Badge>
-          <Badge amount={6}>
+          <Badge amount={cartAmount}>
             <FontAwesomeIcon icon={faCartShopping} className="w-5 h-5" />
           </Badge>
         </div>

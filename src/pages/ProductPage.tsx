@@ -4,7 +4,7 @@ import { Breadcrumb, Rating, Button } from "flowbite-react";
 
 import { useGetProductByIdQuery } from "../redux/slices/productQuery";
 import { ProductType } from "../misc/productTypes";
-import ShopAndFav from "../components/buttons/ShopAndFav";
+import ShopAndFav from "../components/produtcs/ShopAndFav";
 
 function ProductPage() {
   useEffect(() => {
@@ -93,7 +93,7 @@ function ProductPage() {
                 />
                 <Button color="gray" onClick={handleIncrement}>+</Button>
               </Button.Group>
-              <ShopAndFav />
+              <ShopAndFav newItem={{...product,quantity:0}} quantity={amount} />
             </div>
           </div>
 

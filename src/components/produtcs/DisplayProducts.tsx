@@ -1,4 +1,3 @@
-// import { useEffect } from "react";
 
 // import { useAppDispatch, useAppSelector } from "../../appHooks/reduxHooks";
 // import { fetchAllProducts } from "../../redux/slices/productsSlice";
@@ -13,7 +12,7 @@ function DisplayProducts({ filter }: { filter: FilterType }) {
   //   dispatch(fetchAllProducts());
   // }, [dispatch]);
 
-  // const data = useAppSelector((state) => state.products.products);
+  // const {products: data, loading: isLoading} = useAppSelector((state) => state.products);
   const [productList, setProductList] = useState<ProductType[]>([]);
 
   const { data, error, isLoading } = useGetAllProductsQuery();
