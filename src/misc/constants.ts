@@ -1,8 +1,24 @@
 export const CATEGORIES = [
-  "electronics",
-  "jewelery",
-  "men's clothing",
-  "women's clothing",
-];
+  "smartphones",
+  "laptops",
+  "fragrances",
+  "skincare",
+  "groceries",
+  "home-decoration",
+  "furniture",
+  "tops",
+  "womens-dresses",
+  "womens-shoes",
+  "mens-shirts",
+  "mens-shoes",
+  "mens-watches",
+  "womens-watches",
+  "womens-bags",
+  "womens-jewellery",
+  "sunglasses",
+  "automotive",
+  "motorcycle",
+  "lighting"
+]
 
-export const API_URL = "https://fakestoreapi.com/products";
+export const PRODUCTS_URL = "https://dummyjson.com/products";

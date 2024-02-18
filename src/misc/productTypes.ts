@@ -1,16 +1,51 @@
 import { CATEGORIES } from "./constants";
 
+// {
+//   "products": [
+//     {
+//       "id": 1,
+//       "title": "iPhone 9",
+//       "description": "An apple mobile which is nothing like apple",
+//       "price": 549,
+//       "discountPercentage": 12.96,
+//       "rating": 4.69,
+//       "stock": 94,
+//       "brand": "Apple",
+//       "category": "smartphones",
+//       "thumbnail": "...",
+//       "images": ["...", "...", "..."]
+//     },
+//     {...},
+//     {...},
+//     {...}
+//     // 30 items
+//   ],
+
+//   "total": 100,
+//   "skip": 0,
+//   "limit": 30
+// }
+    
+
 export interface ProductType {
   id: number;
   title: string;
-  price: number;
   description: string;
+  price: number;
+  discountPercentage: number;
+  rating: number;
+  stock: number;
+  brand: string;
   category: string;
-  image: string;
-  rating: {
-    rate: number;
-    count: number;
-  };
+  thumbnail: string;
+  images: string[];
+}
+
+export interface ProductQueryType {
+  products: ProductType[];
+  total: number;
+  skip: number;
+  limit: number;
 }
 
 export interface ProductsState {
@@ -37,10 +72,7 @@ export interface CartState {
 }
 
 
-
-export type CategoriesType = (typeof CATEGORIES)[number];
-
 export interface FilterType {
-  categories: CategoriesType[];
+  category: (typeof CATEGORIES)[number];
   sortByPrice: "asc" | "desc" | "";
 }

@@ -1,7 +1,9 @@
-
 // import { useAppDispatch, useAppSelector } from "../../appHooks/reduxHooks";
 // import { fetchAllProducts } from "../../redux/slices/productsSlice";
-import { useGetAllProductsQuery } from "../../redux/slices/productQuery";
+import {
+  useGetAllProductsQuery,
+  useGetProductsByCategoryQuery,
+} from "../../redux/slices/productQuery";
 import ProductCard from "./ProductCard";
 import { FilterType, ProductType } from "../../misc/productTypes";
 import { useEffect, useState } from "react";
@@ -16,27 +18,29 @@ function DisplayProducts({ filter }: { filter: FilterType }) {
   const [productList, setProductList] = useState<ProductType[]>([]);
 
   const { data, error, isLoading } = useGetAllProductsQuery();
+  const {
+    data: productsByCategory,
+    error: errorByCategory,
+    isLoading: isLoadingByCategory,
+  } = useGetProductsByCategoryQuery(filter.category);
 
   useEffect(() => {
-    if (data) {
-      let filteredProducts = [...data]; //because data is immutable
-
-      if (filter.categories.length > 0) {
-        filteredProducts = filteredProducts.filter((product) =>
-          filter.categories.includes(product.category)
-        );
-      }
-
-      if(filter.sortByPrice === "asc") {
-        filteredProducts = filteredProducts.sort((a, b) => a.price - b.price);
-      } else if(filter.sortByPrice === "desc") {
-        filteredProducts = filteredProducts.sort((a, b) => b.price - a.price);
-      }
-
-      setProductList(filteredProducts);
+    if (filter.category === "") {
+      setProductList(data || []);
+    } else {
+      setProductList(productsByCategory || []);
     }
-  }
-  , [data, filter.categories, filter.sortByPrice]);
+  }, [filter.category, data, productsByCategory]);
+
+  useEffect(() => {
+    if (productList) {
+      if (filter.sortByPrice === "asc") {
+        setProductList([...productList].sort((a, b) => a.price - b.price));
+      } else if (filter.sortByPrice === "desc") {
+        setProductList([...productList].sort((a, b) => b.price - a.price));
+      }
+    }
+  }, [filter.sortByPrice, productList]);
 
   // console.log(productList)
   return (

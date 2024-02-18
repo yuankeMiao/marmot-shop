@@ -12,12 +12,12 @@ function ProductCard({ productItem }: { productItem: ProductType }) {
     >
       <Link to={`/product/${productItem.id}`}>
         <img
-          src={productItem.image}
+          src={productItem.thumbnail}
           alt={productItem.title}
-          className="w-full aspect-square object-contain"
+          className="w-full aspect-square object-cover"
         />
       </Link>
-      <span className="mt-4 h-20">{productItem.title}</span>
+      <span className="mt-4 h-12 font-bold">{productItem.title}</span>
       <span className="text-lg font-bold py-4">{productItem.price} €</span>
       <ShopAndFav newItem={{...productItem, quantity:0}} quantity={1} />
     </div>

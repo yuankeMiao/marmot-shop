@@ -1,16 +1,20 @@
 // actually, it is working great!!
 
 import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
-import type { ProductType } from "../../misc/productTypes";
+import type { ProductQueryType, ProductType } from "../../misc/productTypes";
+import { PRODUCTS_URL } from "../../misc/constants";
 
 const productQueries = createApi({
     reducerPath: "productApi",
-    baseQuery: fetchBaseQuery({ baseUrl: "https://fakestoreapi.com/products" }),
+    baseQuery: fetchBaseQuery({ baseUrl: PRODUCTS_URL }),
     tagTypes: ["Product"],
     endpoints: (builder) => ({
         getAllProducts: builder.query<ProductType[], void>({
             query: () => "",
             providesTags: ["Product"],
+            transformResponse: (response: ProductQueryType) => {
+                return response.products;
+            }
         }),
 
         // example here https://redux.js.org/tutorials/essentials/part-8-rtk-query-advanced
@@ -18,9 +22,13 @@ const productQueries = createApi({
             query: (id: number) => `${id}`,
             providesTags: (result, error, arg) => [{ type: "Product", id:arg }],
         }),
+
         getProductsByCategory: builder.query<ProductType[], string>({
             query: (category) => `category/${category}`,
             providesTags: ["Product"],
+            transformResponse: (response: ProductQueryType) => {
+                return response.products;
+            }
         }),
     }),
 })

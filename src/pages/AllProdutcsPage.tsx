@@ -11,7 +11,7 @@ function AllProdutcsPage() {
 
   // I set categories as a list then I can select multiple categories
   const [filter, setFilter] = useState<FilterType>({
-    categories: [],
+    category: "",
     sortByPrice: "",
   });
 
@@ -22,7 +22,7 @@ function AllProdutcsPage() {
   return (
     <div className="flex flex-col lg:flex-row">
       <div className="relative min-w-56 ">
-        <Filters setFilter={setFilter} />
+        <Filters filter={filter} setFilter={setFilter} />
       </div>
       <main className="py-8 lg:px-8">
         <Breadcrumb aria-label="breadcrumb">
