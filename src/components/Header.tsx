@@ -29,11 +29,11 @@ function Header() {
       </div>
 
       <nav className="justify-self-start">
-        <ul className="hidden md:flex gap-8 ">
-          <li>Women</li>
-          <li>Men</li>
-          <li>Electronics</li>
-          <li>Jewlery</li>
+        <ul className="hidden md:flex gap-8 hover:*:underline">
+          <li><Link to="/">Home</Link></li>
+          <li><Link to="/all-products">All Products</Link></li>
+          <li>About Us</li>
+          <li>Customer Support</li>
         </ul>
       </nav>
 
