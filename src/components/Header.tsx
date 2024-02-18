@@ -15,7 +15,7 @@ import { useAppSelector } from "../appHooks/reduxHooks";
 
 function Header() {
 
-  const cartAmount = useAppSelector((state) => state.cart.total);
+  const cartAmount = useAppSelector((state) => state.cart.totalQuantity);
 
   return (
     <header className="w-full h-20 bg-primary flex justify-between items-center px-4 md:px-12">
@@ -45,7 +45,9 @@ function Header() {
             <FontAwesomeIcon icon={faHeart} className="w-5 h-5" />
           </Badge>
           <Badge amount={cartAmount}>
+            <Link to="/cart">
             <FontAwesomeIcon icon={faCartShopping} className="w-5 h-5" />
+            </Link>
           </Badge>
         </div>
         <div className="hidden font-bold text-sm">

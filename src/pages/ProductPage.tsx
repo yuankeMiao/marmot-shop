@@ -5,6 +5,7 @@ import { Breadcrumb, Rating, Button } from "flowbite-react";
 import { useGetProductByIdQuery } from "../redux/slices/productQuery";
 import { ProductType } from "../misc/productTypes";
 import ShopAndFav from "../components/produtcs/ShopAndFav";
+import AmountControl from "../components/produtcs/AmountControl";
 
 function ProductPage() {
   useEffect(() => {
@@ -16,30 +17,6 @@ function ProductPage() {
   const product: ProductType = data;
 
   const [amount, setAmount] = useState(1);
-
-  const handleIncrement = () => {
-    setAmount((prev) => prev + 1);
-  };
-
-  const handledecrement = () => {
-    if (amount > 1) {
-      setAmount((prev) => prev - 1);
-    }
-  };
-
-  // i did not set the input type = "number" because I dont want the default browser layout for number input
-  // so here I use customized validation for the input to make sure it is number and greater than 0, less than 100
-  const handleInputAmount = (e: React.ChangeEvent<HTMLInputElement>) => {
-    if (!Number(e.target.value)) {
-      setAmount(1);
-    } else if (Number(e.target.value) < 1) {
-      setAmount(1);
-    } else if (Number(e.target.value) > 99) {
-      setAmount(99);
-    } else {
-      setAmount(Number(e.target.value));
-    }
-  };
 
   return (
     <div className="py-4 mx-auto md:max-w-2xl lg:max-w-screen-lg xl:max-w-screen-xl 2xl:max-w-screen-2xl">
@@ -75,40 +52,14 @@ function ProductPage() {
               </Rating>
               <h2 className="text-2xl font-semibold h-28">{product.title}</h2>
               <div>
-                <p className={`text-3xl font-bold ${product.discountPercentage> 0 ? `line-through` :``}`}>{product.price} €</p>
-                <p className="text-3xl text-red-700 font-bold">
-                  Discount:{" "}
-                  {Math.round(
-                    (product.price * (100 - product.discountPercentage)) / 100
-                  )}{" "}
-                  €
-                </p>
+                <p className="text-3xl font-bold">{product.price} €</p>
 
                 <p className="my-2 text-green-600 font-medium">Avaliable Now</p>
               </div>
 
-              <Button.Group>
-                <Button
-                  color="gray"
-                  onClick={handledecrement}
-                  disabled={amount === 1}
-                >
-                  -
-                </Button>
-                <input
-                  type="text"
-                  className="w-16 bg-gray-50 border border-gray-300 text-gray-900 text-md text-center"
-                  value={amount}
-                  onChange={handleInputAmount}
-                />
-                <Button color="gray" onClick={handleIncrement}>
-                  +
-                </Button>
-              </Button.Group>
-              <ShopAndFav
-                newItem={{ ...product, quantity: 0 }}
-                quantity={amount}
-              />
+              <AmountControl amount={amount} setAmount={setAmount} />
+
+              <ShopAndFav newItem={product} quantity={amount} />
             </div>
           </div>
 

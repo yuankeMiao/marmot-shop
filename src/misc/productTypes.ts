@@ -54,19 +54,37 @@ export interface ProductsState {
   error?: string;
 };
 
-export interface CartItemType extends ProductType {
+/*
+    {
+      "id": 59,
+      "title": "Spring and summershoes",
+      "price": 20,
+      "quantity": 3,
+      "total": 60,
+      "discountPercentage": 8.71,
+      "discountedPrice": 55,
+      "thumbnail": "https://cdn.dummyjson.com/product-images/59/thumbnail.jpg"
+    },
+*/
+
+export interface CartItemType {
+  id: number;
+  title: string;
+  price: number;
   quantity: number;
+  total: number;
+  discountPercentage: number;
+  discountedPrice: number;
+  thumbnail: string;
 }
-
-export type AddToCartType = {
-  newItem: CartItemType,
-  quantity: number
-}
-
 
 export interface CartState {
   products: CartItemType[];
   total: number;
+  discountedTotal: number;
+  userId: number;
+  totalProducts: number;
+  totalQuantity: number;
   loading: boolean;
   error?: string;
 }

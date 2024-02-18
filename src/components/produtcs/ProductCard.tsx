@@ -19,7 +19,7 @@ function ProductCard({ productItem }: { productItem: ProductType }) {
       </Link>
       <span className="mt-4 h-12 font-bold">{productItem.title}</span>
       <span className="text-lg font-bold py-4">{productItem.price} €</span>
-      <ShopAndFav newItem={{...productItem, quantity:0}} quantity={1} />
+      <ShopAndFav newItem={productItem} quantity={1} />
     </div>
   );
 }
