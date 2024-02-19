@@ -3,26 +3,24 @@
 import {
   useGetAllProductsQuery,
   useGetProductsByCategoryQuery,
+  useGetSortedProductsQuery
 } from "../../redux/slices/productQuery";
 import ProductCard from "./ProductCard";
 import { FilterType, ProductType } from "../../misc/productTypes";
 import { useEffect, useState } from "react";
 
 function DisplayProducts({ filter }: { filter: FilterType }) {
-  // const dispatch = useAppDispatch();
-  // useEffect(() => {
-  //   dispatch(fetchAllProducts());
-  // }, [dispatch]);
 
-  // const {products: data, loading: isLoading} = useAppSelector((state) => state.products);
   const [productList, setProductList] = useState<ProductType[]>([]);
 
-  const { data, error, isLoading } = useGetAllProductsQuery(50);
+  // const { data, error, isLoading } = useGetAllProductsQuery(12);
+  const { data, error, isLoading } = useGetSortedProductsQuery({limit: 12, sort: filter.sortByPrice});
+
   const {
     data: productsByCategory,
     error: errorByCategory,
     isLoading: isLoadingByCategory,
-  } = useGetProductsByCategoryQuery(filter.category);
+  } = useGetProductsByCategoryQuery({category: filter.category, sort: filter.sortByPrice});
 
   useEffect(() => {
     if (filter.category === "") {
@@ -31,16 +29,6 @@ function DisplayProducts({ filter }: { filter: FilterType }) {
       setProductList(productsByCategory || []);
     }
   }, [filter.category, data, productsByCategory]);
-
-  useEffect(() => {
-    if (productList) {
-      if (filter.sortByPrice === "asc") {
-        setProductList([...productList].sort((a, b) => a.price - b.price));
-      } else if (filter.sortByPrice === "desc") {
-        setProductList([...productList].sort((a, b) => b.price - a.price));
-      }
-    }
-  }, [filter.sortByPrice, productList]);
 
   // console.log(productList)
   return (

@@ -7,7 +7,7 @@ function Layout() {
   return (
     <>
       <Header />
-      <div className="min-h-screen xl:px-12 dark:bg-sky-950 dark:text-white">
+      <div className="min-h-screen mt-20 xl:px-12 dark:bg-sky-950 dark:text-white">
         <Outlet />
       </div>
       <Footer />
