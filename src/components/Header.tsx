@@ -18,18 +18,18 @@ function Header() {
   const cartAmount = useAppSelector((state) => state.cart.totalQuantity);
 
   return (
-    <header className="w-full h-20 bg-primary flex justify-between items-center px-4 md:px-12">
+    <header className="fixed z-20 top-0 start-0 w-full h-20 bg-primary flex justify-between items-center px-4 lg:px-12">
       <div className="flex items-center gap-2">
         <Link to="/">
           <span className="text-3xl font-bold">LOGO</span>
         </Link>
         <button>
-          <FontAwesomeIcon icon={faBars} className="block md:hidden w-6 h-6" />
+          <FontAwesomeIcon icon={faBars} className="block lg:hidden w-6 h-6" />
         </button>
       </div>
 
       <nav className="justify-self-start">
-        <ul className="hidden md:flex gap-8 hover:*:underline">
+        <ul className="hidden lg:flex gap-8 hover:*:underline">
           <li><Link to="/">Home</Link></li>
           <li><Link to="/all-products">All Products</Link></li>
           <li>About Us</li>

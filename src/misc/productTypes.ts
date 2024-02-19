@@ -51,7 +51,7 @@ export interface ProductQueryType {
 export interface ProductsState {
   products: ProductType[];
   loading: boolean;
-  error?: string;
+  error: string | null;
 };
 
 /*

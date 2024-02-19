@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
-import { Breadcrumb, Rating, Button } from "flowbite-react";
+import { Breadcrumb, Rating, Carousel } from "flowbite-react";
 
 import { useGetProductByIdQuery } from "../redux/slices/productQuery";
 import { ProductType } from "../misc/productTypes";
@@ -35,12 +35,18 @@ function ProductPage() {
           </Breadcrumb>
 
           <div className="flex flex-col md:grid grid-cols-3 gap-8">
-            <div className="col-span-2 max-h-96 bg-white p-8 flex justify-center rounded-xl shadow-md">
-              <img
-                src={product.images[0]}
-                alt={product.title}
-                className="w-full md:h-full aspect-square object-contain"
-              />
+
+            <div className="col-span-2 h-[28rem] bg-gray-200 flex justify-center rounded-xl shadow-md">
+              <Carousel pauseOnHover>
+                {product.images.map((image, index) => (
+                  <img
+                    key={index}
+                    src={image}
+                    alt={product.title}
+                    className="w-full h-full object-contain"
+                  />
+                ))}
+              </Carousel>
             </div>
 
             <div className="*:mb-4">

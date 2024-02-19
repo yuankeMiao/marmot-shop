@@ -9,8 +9,8 @@ const productQueries = createApi({
     baseQuery: fetchBaseQuery({ baseUrl: PRODUCTS_URL }),
     tagTypes: ["Product"],
     endpoints: (builder) => ({
-        getAllProducts: builder.query<ProductType[], void>({
-            query: () => "",
+        getAllProducts: builder.query({
+            query: (limit: number) => `?limit=${limit}`,
             providesTags: ["Product"],
             transformResponse: (response: ProductQueryType) => {
                 return response.products;
@@ -30,8 +30,15 @@ const productQueries = createApi({
                 return response.products;
             }
         }),
+        getProductsBySearch: builder.query<ProductType[], string>({
+            query: (search) => `search?q=${search}`,
+            providesTags: ["Product"],
+            transformResponse: (response: ProductQueryType) => {
+                return response.products;
+            }
+        }),
     }),
 })
 
-export const { useGetAllProductsQuery, useGetProductByIdQuery, useGetProductsByCategoryQuery } = productQueries;
+export const { useGetAllProductsQuery, useGetProductByIdQuery, useGetProductsByCategoryQuery, useGetProductsBySearchQuery } = productQueries;
 export default productQueries;

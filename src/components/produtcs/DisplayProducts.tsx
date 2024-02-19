@@ -17,7 +17,7 @@ function DisplayProducts({ filter }: { filter: FilterType }) {
   // const {products: data, loading: isLoading} = useAppSelector((state) => state.products);
   const [productList, setProductList] = useState<ProductType[]>([]);
 
-  const { data, error, isLoading } = useGetAllProductsQuery();
+  const { data, error, isLoading } = useGetAllProductsQuery(50);
   const {
     data: productsByCategory,
     error: errorByCategory,
