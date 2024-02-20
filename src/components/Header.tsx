@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 import { Link } from "react-router-dom";
 import { Modal } from "flowbite-react";
@@ -17,20 +17,16 @@ import avartaHolder from "../statics/marmot-1.png";
 import { useAppSelector } from "../appHooks/reduxHooks";
 
 import Login from "./user/Login";
-import { useGetCurerntUserQuery } from "../redux/slices/apiQuery";
+import { useGetCurrentUserQuery } from "../redux/slices/apiQuery";
 
-function Header() {
-  const { data: currentUser, error, isLoading } = useGetCurerntUserQuery();
+ function Header() {
+
+  const token = localStorage.getItem('token');
+  const { data: currentUser, error, isLoading } = useGetCurrentUserQuery(token);
   // console.log(currentUser);
-
-  // const auth = useAppSelector((state) => state.auth);
-  // console.log(auth);
 
   const [openModal, setOpenModal] = useState(false);
   const cartAmount = useAppSelector((state) => state.cart.totalQuantity);
-
-  // const state = useSelector(state => state);
-  // console.log(state);
 
   return (
     <header className="fixed z-20 top-0 start-0 w-full h-20 bg-primary flex justify-between items-center px-4 lg:px-12">
@@ -71,9 +67,7 @@ function Header() {
         </div>
 
         {currentUser ? (
-          <div
-            className="flex gap-2 items-center"
-          >
+          <div className="flex gap-2 items-center">
             <img
               className="w-8 h-8 rounded-full ring-2 bg-teal-500 ring-white"
               src={currentUser?.image || avartaHolder}

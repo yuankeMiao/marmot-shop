@@ -3,11 +3,12 @@
 import { useForm, Controller, SubmitHandler } from "react-hook-form";
 import { FloatingLabel } from "flowbite-react";
 
-import { LoginType, UserType } from "../../misc/userTypes";
+import { LoginType } from "../../misc/userTypes";
 
 import { useLoginMutation } from "../../redux/slices/apiQuery";
 import { useAppDispatch } from "../../appHooks/reduxHooks";
-import { setCurrentUser } from "../../redux/slices/authSlice";
+import { useEffect } from "react";
+
 
 function Login({
   setOpenModal,
@@ -25,19 +26,16 @@ function Login({
     },
   });
 
-  const [loginTrigger, { error, isLoading, isSuccess }] =
-    useLoginMutation();
   const dispatch = useAppDispatch();
+  const [loginTrigger, { data: loginReturnData, error: loginError, isLoading:loginLoading, isSuccess: loginSuccess }] =
+    useLoginMutation();
 
+    // when submit is clicked, trigger the login mutation
   const onSubmit: SubmitHandler<LoginType> = async (data) => {
     // console.log(data);
-    try {
-      const userData = await loginTrigger(data).unwrap() as UserType
-      dispatch(setCurrentUser(userData))
-      setOpenModal(false);
-    } catch (error) {
-      console.log(error);
-    }
+    const result = await loginTrigger(data).unwrap();
+    window.localStorage.setItem("token", result?.token);
+    setOpenModal(false);
   };
 
   return (

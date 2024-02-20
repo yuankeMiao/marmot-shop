@@ -9,15 +9,19 @@ import { LoginType, UserType } from "../../misc/userTypes";
 
 const apiQueries = createApi({
   reducerPath: "api",
-  baseQuery: fetchBaseQuery({ baseUrl: DUMMYJSON_URL,
-  prepareHeaders:(headers, {getState}) => {
-    const state= getState() as AppState;
-    const token = state.auth.token
-    if (token) {
-			headers.set('authorization', `Bearer ${token}`);
-		}
-    return headers;
-  }
+  baseQuery: fetchBaseQuery({
+    baseUrl: DUMMYJSON_URL,
+    // prepareHeaders: (headers, { getState }) => {
+    //   console.log('prepareHeaders is called');
+    //   // const state = getState() as AppState;
+    //   // const token = state.auth.accessToken;
+    //   const token = window.localStorage.getItem("token");
+    //   console.log('token', token);
+    //   if (token) {
+    //     headers.set("authorization", `Bearer ${token}`);
+    //   }
+    //   return headers;
+    // },
   }),
   tagTypes: ["Product", "User"],
   endpoints: (builder) => ({
@@ -82,16 +86,24 @@ const apiQueries = createApi({
 
     login: builder.mutation({
       query: (loginData: LoginType) => ({
-        url:'/auth/login',
-        method:'POST',
-        body:{...loginData}
-      })
+        url: "/auth/login",
+        method: "POST",
+        body: { ...loginData },
+      }),
+      invalidatesTags: ["User"],
     }),
 
-    getCurerntUser: builder.query<UserType, void>({
-      query:() => 'auth/me'
-    })
-
+    getCurrentUser: builder.query({
+      query: (token) => {
+          return {
+            url: "/auth/me",
+            headers: {
+              authorization: `Bearer ${token}`,
+            },
+          };
+      },
+      providesTags: ["User"],
+    }),
   }),
 });
 
@@ -102,7 +114,7 @@ export const {
   useGetProductsBySearchQuery,
   useGetSortedProductsQuery,
   useLoginMutation,
-  useGetCurerntUserQuery
+  useGetCurrentUserQuery,
 } = apiQueries;
 
 export default apiQueries;
