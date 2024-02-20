@@ -2,7 +2,7 @@ import { Link } from "react-router-dom";
 
 import { HERO_IMAGE } from "../misc/constants";
 import useFetchRandomQuote from "../appHooks/useFetchRandomQuote";
-import { useGetAllProductsQuery } from "../redux/slices/productQuery";
+import { useGetAllProductsQuery } from "../redux/slices/apiQuery";
 import ProductCard from "../components/produtcs/ProductCard";
 
 function HomePage() {
@@ -14,7 +14,7 @@ function HomePage() {
 
   const { data, error, isLoading } = useGetAllProductsQuery(10);
 
-  console.log(data);
+  // console.log(data);
 
   return (
     <div className="*:mb-12 last:mb-40">

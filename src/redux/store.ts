@@ -1,15 +1,18 @@
 import { configureStore } from "@reduxjs/toolkit";
-import cartReducer from "./slices/cartSlice";
 
-import productQueries from "./slices/productQuery";
+
+import cartReducer from "./slices/cartSlice";
+import apiQueries from "./slices/apiQuery";
+import authReducer from "./slices/authSlice";
 
 const store = configureStore({
   reducer: {
     cart: cartReducer,
-    [productQueries.reducerPath]: productQueries.reducer,
+    auth: authReducer,
+    [apiQueries.reducerPath]: apiQueries.reducer,
   },
   middleware: (getDefaultMiddleware) =>
-    getDefaultMiddleware().concat(productQueries.middleware)
+    getDefaultMiddleware().concat(apiQueries.middleware)
 });
 
 export type AppStore = typeof store;

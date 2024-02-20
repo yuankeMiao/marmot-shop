@@ -4,7 +4,7 @@ import {
   useGetAllProductsQuery,
   useGetProductsByCategoryQuery,
   useGetSortedProductsQuery
-} from "../../redux/slices/productQuery";
+} from "../../redux/slices/apiQuery";
 import ProductCard from "./ProductCard";
 import { FilterType, ProductType } from "../../misc/productTypes";
 import { useEffect, useState } from "react";

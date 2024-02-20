@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import { Breadcrumb, Rating, Carousel } from "flowbite-react";
 
-import { useGetProductByIdQuery } from "../redux/slices/productQuery";
+import { useGetProductByIdQuery } from "../redux/slices/apiQuery";
 import { ProductType } from "../misc/productTypes";
 import ShopAndFav from "../components/produtcs/ShopAndFav";
 import AmountControl from "../components/produtcs/AmountControl";

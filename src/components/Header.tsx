@@ -1,3 +1,8 @@
+import { useState } from "react";
+
+import { Link } from "react-router-dom";
+import { Modal } from "flowbite-react";
+
 import {
   faCartShopping,
   faHeart,
@@ -5,17 +10,27 @@ import {
 } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 
-import { Link } from "react-router-dom";
-
 import Badge from "./buttons/Bagde";
 import Search from "./Search";
 
 import avartaHolder from "../statics/marmot-1.png";
 import { useAppSelector } from "../appHooks/reduxHooks";
 
-function Header() {
+import Login from "./user/Login";
+import { useGetCurerntUserQuery } from "../redux/slices/apiQuery";
 
+function Header() {
+  const { data: currentUser, error, isLoading } = useGetCurerntUserQuery();
+  // console.log(currentUser);
+
+  // const auth = useAppSelector((state) => state.auth);
+  // console.log(auth);
+
+  const [openModal, setOpenModal] = useState(false);
   const cartAmount = useAppSelector((state) => state.cart.totalQuantity);
+
+  // const state = useSelector(state => state);
+  // console.log(state);
 
   return (
     <header className="fixed z-20 top-0 start-0 w-full h-20 bg-primary flex justify-between items-center px-4 lg:px-12">
@@ -30,8 +45,12 @@ function Header() {
 
       <nav className="justify-self-start">
         <ul className="hidden lg:flex gap-8 hover:*:underline">
-          <li><Link to="/">Home</Link></li>
-          <li><Link to="/all-products">All Products</Link></li>
+          <li>
+            <Link to="/">Home</Link>
+          </li>
+          <li>
+            <Link to="/all-products">All Products</Link>
+          </li>
           <li>About Us</li>
           <li>Customer Support</li>
         </ul>
@@ -46,19 +65,46 @@ function Header() {
           </Badge>
           <Badge amount={cartAmount}>
             <Link to="/cart">
-            <FontAwesomeIcon icon={faCartShopping} className="w-5 h-5" />
+              <FontAwesomeIcon icon={faCartShopping} className="w-5 h-5" />
             </Link>
           </Badge>
         </div>
-        <div className="hidden font-bold text-sm">
-          <button className="border-r px-2">Login</button>
-          <button className="px-2">Register</button>
-        </div>
-        <div className="flex gap-2 items-center">
-          <img className="w-8 h-8 rounded-full ring-2 bg-teal-500 ring-white" src={avartaHolder} alt="" />
-          <span className="hidden md:inline">Marmote</span>
-        </div>
+
+        {currentUser ? (
+          <div
+            className="flex gap-2 items-center"
+          >
+            <img
+              className="w-8 h-8 rounded-full ring-2 bg-teal-500 ring-white"
+              src={currentUser?.image || avartaHolder}
+              alt=""
+            />
+            <span className="hidden md:inline">{currentUser.username}</span>
+          </div>
+        ) : (
+          <div className="font-bold text-sm">
+            <button
+              className="border-r px-2"
+              onClick={() => setOpenModal(true)}
+            >
+              Login
+            </button>
+            <button className="px-2">Register</button>
+          </div>
+        )}
       </div>
+
+      <Modal
+        show={openModal}
+        onClose={() => setOpenModal(false)}
+        size="md"
+        popup
+      >
+        <Modal.Header />
+        <Modal.Body>
+          <Login setOpenModal={setOpenModal} />
+        </Modal.Body>
+      </Modal>
     </header>
   );
 }

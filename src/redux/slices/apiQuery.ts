@@ -1,16 +1,28 @@
 // actually, it is working great!!
+// for the auth part, I learned from this video: https://www.youtube.com/watch?v=-JJFQ9bkUbo
 
 import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
 import type { ProductQueryType, ProductType } from "../../misc/productTypes";
-import { PRODUCTS_URL } from "../../misc/constants";
+import { DUMMYJSON_URL } from "../../misc/constants";
+import { AppState } from "../store";
+import { LoginType, UserType } from "../../misc/userTypes";
 
-const productQueries = createApi({
-  reducerPath: "productApi",
-  baseQuery: fetchBaseQuery({ baseUrl: PRODUCTS_URL }),
-  tagTypes: ["Product"],
+const apiQueries = createApi({
+  reducerPath: "api",
+  baseQuery: fetchBaseQuery({ baseUrl: DUMMYJSON_URL,
+  prepareHeaders:(headers, {getState}) => {
+    const state= getState() as AppState;
+    const token = state.auth.token
+    if (token) {
+			headers.set('authorization', `Bearer ${token}`);
+		}
+    return headers;
+  }
+  }),
+  tagTypes: ["Product", "User"],
   endpoints: (builder) => ({
     getAllProducts: builder.query({
-      query: (limit: number) => `?limit=${limit}`,
+      query: (limit: number) => `products/?limit=${limit}`,
       providesTags: ["Product"],
       transformResponse: (response: ProductQueryType) => {
         return response.products;
@@ -26,7 +38,7 @@ const productQueries = createApi({
     */
     getSortedProducts: builder.query({
       query: ({ limit, sort }: { limit: number; sort: string }) =>
-        `?limit=${limit}`,
+        `products/?limit=${limit}`,
       providesTags: ["Product"],
       transformResponse: (response: ProductQueryType, meta, arg) => {
         if (arg.sort === "asc") {
@@ -40,15 +52,16 @@ const productQueries = createApi({
     }),
 
     getProductById: builder.query({
-      query: (id: number) => `${id}`,
+      query: (id: number) => `products/${id}`,
       providesTags: (result, error, arg) => [{ type: "Product", id: arg }],
     }),
 
     // the same with the sorting here
     getProductsByCategory: builder.query({
-      query: ({category, sort}: {category: string, sort: string}) => `category/${category}`,
+      query: ({ category, sort }: { category: string; sort: string }) =>
+        `products/category/${category}`,
       providesTags: ["Product"],
-      transformResponse: (response: ProductQueryType,meta, arg) => {
+      transformResponse: (response: ProductQueryType, meta, arg) => {
         if (arg.sort === "asc") {
           return response.products.sort((a, b) => a.price - b.price);
         } else if (arg.sort === "desc") {
@@ -60,12 +73,25 @@ const productQueries = createApi({
     }),
 
     getProductsBySearch: builder.query<ProductType[], string>({
-      query: (search) => `search?q=${search}`,
+      query: (search) => `products/search?q=${search}`,
       providesTags: ["Product"],
       transformResponse: (response: ProductQueryType) => {
         return response.products;
       },
     }),
+
+    login: builder.mutation({
+      query: (loginData: LoginType) => ({
+        url:'/auth/login',
+        method:'POST',
+        body:{...loginData}
+      })
+    }),
+
+    getCurerntUser: builder.query<UserType, void>({
+      query:() => 'auth/me'
+    })
+
   }),
 });
 
@@ -75,5 +101,8 @@ export const {
   useGetProductsByCategoryQuery,
   useGetProductsBySearchQuery,
   useGetSortedProductsQuery,
-} = productQueries;
-export default productQueries;
+  useLoginMutation,
+  useGetCurerntUserQuery
+} = apiQueries;
+
+export default apiQueries;
