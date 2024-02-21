@@ -1,20 +1,17 @@
-
-
 import { useForm, Controller, SubmitHandler } from "react-hook-form";
 import { FloatingLabel } from "flowbite-react";
 
 import { LoginType } from "../../misc/userTypes";
 
 import { useLoginMutation } from "../../redux/slices/apiQuery";
-import { useAppDispatch } from "../../appHooks/reduxHooks";
-import { useEffect } from "react";
-
 
 function Login({
   setOpenModal,
 }: {
   setOpenModal: React.Dispatch<React.SetStateAction<boolean>>;
 }) {
+
+  
   const {
     control,
     handleSubmit,
@@ -26,11 +23,18 @@ function Login({
     },
   });
 
-  const dispatch = useAppDispatch();
-  const [loginTrigger, { data: loginReturnData, error: loginError, isLoading:loginLoading, isSuccess: loginSuccess }] =
-    useLoginMutation();
+  // i will handle the login status later, maybe using toast
+  const [
+    loginTrigger,
+    {
+      data: loginReturnData,
+      error: loginError,
+      isLoading: loginLoading,
+      isSuccess: loginSuccess,
+    },
+  ] = useLoginMutation();
 
-    // when submit is clicked, trigger the login mutation
+  // when submit is clicked, trigger the login mutation
   const onSubmit: SubmitHandler<LoginType> = async (data) => {
     // console.log(data);
     const result = await loginTrigger(data).unwrap();

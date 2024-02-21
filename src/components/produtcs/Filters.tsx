@@ -20,7 +20,7 @@ function Filters({filter, setFilter} : {filter:FilterType ,setFilter: React.Disp
 
 
   return (
-    <div className="lg:absolute w-full mt-8 top-0 left-0 rounded-lg group bg-gray-100 dark:text-gray-100 dark:bg-cyan-900 ">
+    <div className="sidebar">
       <div className="h-full px-4 py-4 overflow-y-auto ">
         <ul className="*:py-4">
           <li className="border-b-2">

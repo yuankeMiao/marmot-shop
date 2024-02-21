@@ -94,7 +94,7 @@ const apiQueries = createApi({
     }),
 
     getCurrentUser: builder.query({
-      query: (token) => {
+      query: (token: string | null) => {
           return {
             url: "/auth/me",
             headers: {
@@ -103,7 +103,20 @@ const apiQueries = createApi({
           };
       },
       providesTags: ["User"],
+      transformResponse: (response: any): UserType => {
+        return {
+          id: response.id,
+          username: response.username,
+          email: response.email,
+          firstName: response.firstName,
+          lastName: response.lastName,
+          image: response.image,
+          address: response.address,
+        };
+        }
     }),
+
+
   }),
 });
 

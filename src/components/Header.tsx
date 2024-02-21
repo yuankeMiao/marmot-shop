@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 
 import { Link } from "react-router-dom";
-import { Modal } from "flowbite-react";
+import { Modal, Dropdown } from "flowbite-react";
 
 import {
   faCartShopping,
@@ -13,7 +13,6 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import Badge from "./buttons/Bagde";
 import Search from "./Search";
 
-import avartaHolder from "../statics/marmot-1.png";
 import { useAppSelector } from "../appHooks/reduxHooks";
 
 import Login from "./user/Login";
@@ -27,6 +26,11 @@ import { useGetCurrentUserQuery } from "../redux/slices/apiQuery";
 
   const [openModal, setOpenModal] = useState(false);
   const cartAmount = useAppSelector((state) => state.cart.totalQuantity);
+
+  const handleLogout = () => {
+    localStorage.removeItem('token');
+    window.location.reload();
+  };
 
   return (
     <header className="fixed z-20 top-0 start-0 w-full h-20 bg-primary flex justify-between items-center px-4 lg:px-12">
@@ -70,10 +74,13 @@ import { useGetCurrentUserQuery } from "../redux/slices/apiQuery";
           <div className="flex gap-2 items-center">
             <img
               className="w-8 h-8 rounded-full ring-2 bg-teal-500 ring-white"
-              src={currentUser?.image || avartaHolder}
-              alt=""
+              src={currentUser.image}
+              alt={currentUser.username}
             />
-            <span className="hidden md:inline">{currentUser.username}</span>
+            <Dropdown label={currentUser.username} dismissOnClick={false} inline>
+              <Dropdown.Item as={Link} to="/profile">Profile</Dropdown.Item>
+              <Dropdown.Item onClick={handleLogout}>Logout</Dropdown.Item>
+            </Dropdown>
           </div>
         ) : (
           <div className="font-bold text-sm">
