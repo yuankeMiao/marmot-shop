@@ -1,58 +1,137 @@
-// import { ProductType, ProductQueryType, ProductsState } from "../../misc/productTypes";
-// import productQueries, {useGetAllProductsQuery} from "../../redux/slices/productQuery";
+import { ProductType } from "../../misc/productTypes";
+import apiQueries from "../../redux/slices/apiQuery";
+import { createStore } from "../../redux/store";
+import { productServer } from "../shared/productServer";
 
-// const initialState: ProductsState = {
-//     products: [],
-//     loading: false,
-//     error: null
-// };
+let store = createStore();
 
-// describe("Product RTK Query",() => {
-//     let mockProducts: ProductQueryType = {
-//         "products": [
-//           {
-//             "id": 1,
-//             "title": "iPhone 9",
-//             "description": "An apple mobile which is nothing like apple",
-//             "price": 549,
-//             "discountPercentage": 12.96,
-//             "rating": 4.69,
-//             "stock": 94,
-//             "brand": "Apple",
-//             "category": "smartphones",
-//             "thumbnail": "...",
-//             "images": ["...", "...", "..."]
-//           },
-//           {
-//             "id": 2,
-//             "title": "iPhone X",
-//             "description": "SIM-Free, Model A19211 6.5-inch Super Retina HD display with OLED technology A12 Bionic chip with ...",
-//             "price": 899,
-//             "discountPercentage": 17.94,
-//             "rating": 4.44,
-//             "stock": 34,
-//             "brand": "Apple",
-//             "category": "smartphones",
-//             "thumbnail": "https://cdn.dummyjson.com/product-images/2/thumbnail.jpg",
-//             "images": [
-//             "https://cdn.dummyjson.com/product-images/2/1.jpg",
-//             "https://cdn.dummyjson.com/product-images/2/2.jpg",
-//             "https://cdn.dummyjson.com/product-images/2/3.jpg",
-//             "https://cdn.dummyjson.com/product-images/2/thumbnail.jpg"
-//             ]
-//             }
-//         ],
-      
-//         "total": 100,
-//         "skip": 0,
-//         "limit": 30
-//       }
+beforeAll(() => {
+  productServer.listen();
+});
 
-//       // test 1: fullfilled
-//       test("should return all products", () => {
-//         const {data} = useGetAllProductsQuery();
-//         expect(data).toEqual(mockProducts.products);
-//         });
-// })
+afterAll(() => {
+  productServer.close();
+});
 
-export {}
+describe("productQuery", () => {
+  // test 1 : getAllProducts
+  test("getAllProducts", async () => {
+    await store.dispatch(apiQueries.endpoints.getAllProducts.initiate(2));
+
+    // console.log(store.getState().api.queries["getAllProducts(2)"]);
+    const data = store.getState().api.queries["getAllProducts(2)"]
+      ?.data as ProductType[];
+
+    expect(data).toHaveLength(2);
+  });
+
+  // test 2: getProdctsByCategory and sorted
+
+  test("getProductsByCategory-skincare-asc", async () => {
+    await store.dispatch(
+      apiQueries.endpoints.getProductsByCategory.initiate({
+        category: "skincare",
+        sort: "asc",
+      })
+    );
+
+    // console.log(store.getState().api.queries['getProductsByCategory({"category":"skincare","sort":"asc"})']?.data);
+    const data = store.getState().api.queries[
+      'getProductsByCategory({"category":"skincare","sort":"asc"})'
+    ]?.data as ProductType[];
+    // console.log(data);
+
+    expect(data).toHaveLength(1);
+  });
+
+//test 3: getProductsByCategory-smartphones-desc
+  test("getProductsByCategory-smartphones-desc", async () => {
+    await store.dispatch(
+      apiQueries.endpoints.getProductsByCategory.initiate({
+        category: "smartphones",
+        sort: "desc",
+      })
+    );
+
+    const data = store.getState().api.queries[
+      'getProductsByCategory({"category":"smartphones","sort":"desc"})'
+    ]?.data as ProductType[];
+    // console.log(data);
+
+    expect(data).toHaveLength(3);
+    expect(data[0].price).toBeGreaterThanOrEqual(data[1].price);
+  });
+
+  // test 4: getSortedProducts-asc
+  test("getSortedProducts-asc", async () => {
+    await store.dispatch(
+      apiQueries.endpoints.getSortedProducts.initiate({ limit: 5, sort: "asc" })
+    );
+
+    const data = store.getState().api.queries[
+      'getSortedProducts({"limit":5,"sort":"asc"})'
+    ]?.data as ProductType[];
+    // console.log(data);
+
+    expect(data).toHaveLength(5);
+    expect(data[0].price).toBeLessThanOrEqual(data[1].price);
+  });
+
+  // test 5: getSortedProducts-desc
+    test("getProductById", async () => {
+        await store.dispatch(apiQueries.endpoints.getProductById.initiate(1));
+    
+        const data = store.getState().api.queries["getProductById(1)"]
+        ?.data as ProductType;
+    
+        expect(data.price).toBe(549);
+    });
+
+
+    // test 6: getProductsBySearch
+    test("getProductsBySearch", async () => {
+        await store.dispatch(apiQueries.endpoints.getProductsBySearch.initiate("phone"));
+    
+        const data = store.getState().api.queries['getProductsBySearch("phone")']
+        ?.data as ProductType[];
+
+        // console.log(store.getState().api.queries);
+    
+        expect(data).toHaveLength(2);
+    });
+
+    // test 7: createNewProduct
+
+    test("createNewProduct", async () => {
+        const newProduct: Omit<ProductType, 'id'> = {
+            title: "New Product",
+            description: "New Product Description",
+            price: 100,
+            discountPercentage: 10,
+            rating: 4,
+            stock: 100,
+            brand: "New Brand",
+            category: "smartphones",
+            thumbnail: "https://cdn.dummyjson.com/product-images/26/thumbnail.jpg",
+            images: [
+                "https://cdn.dummyjson.com/product-images/26/1.jpg",
+                "https://cdn.dummyjson.com/product-images/26/2.jpg",
+                "https://cdn.dummyjson.com/product-images/26/3.jpg",
+                "https://cdn.dummyjson.com/product-images/26/4.jpg",
+                "https://cdn.dummyjson.com/product-images/26/5.jpg",
+                "https://cdn.dummyjson.com/product-images/26/thumbnail.jpg",
+            ],
+        };
+    
+        let retrunedData = await store.dispatch(apiQueries.endpoints.createNewProduct.initiate(newProduct)).then((data) => {
+            if ('data' in data) {
+                return data.data as ProductType;
+            } else {
+                return null;
+            }
+        });
+    
+        expect(retrunedData?.title).toBe("New Product");
+    });
+
+});

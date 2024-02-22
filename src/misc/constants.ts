@@ -19,7 +19,7 @@ export const CATEGORIES = [
   "automotive",
   "motorcycle",
   "lighting"
-]
+] as const
 
 export const DUMMYJSON_URL = "https://dummyjson.com";
 

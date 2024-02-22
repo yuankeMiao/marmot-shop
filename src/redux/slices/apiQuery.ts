@@ -25,6 +25,7 @@ const apiQueries = createApi({
   }),
   tagTypes: ["Product", "User"],
   endpoints: (builder) => ({
+
     getAllProducts: builder.query({
       query: (limit: number) => `products/?limit=${limit}`,
       providesTags: ["Product"],
@@ -84,11 +85,38 @@ const apiQueries = createApi({
       },
     }),
 
+    createNewProduct: builder.mutation({
+      query: (newProduct: Omit<ProductType, 'id'>) => ({
+        url: "/products/add",
+        method: "POST",
+        body: { ...newProduct },
+      }),
+      invalidatesTags: ["Product"],
+    }),
+
+    updateProduct: builder.mutation({
+      query: (updateData: Partial<ProductType>) => ({
+        url: `/products/${updateData.id}`,
+        method: "PUT",
+        body: { ...updateData },
+      }),
+      invalidatesTags: (result, error, arg) => [{ type: "Product", id: arg.id }],
+    }),
+
     login: builder.mutation({
       query: (loginData: LoginType) => ({
         url: "/auth/login",
         method: "POST",
         body: { ...loginData },
+      }),
+      invalidatesTags: ["User"],
+    }),
+
+    register: builder.mutation({
+      query: (registerData: Omit<UserType, "id">) => ({
+        url: "/users/add",
+        method: "POST",
+        body: { ...registerData },
       }),
       invalidatesTags: ["User"],
     }),
@@ -116,7 +144,6 @@ const apiQueries = createApi({
         }
     }),
 
-
   }),
 });
 
@@ -127,6 +154,7 @@ export const {
   useGetProductsBySearchQuery,
   useGetSortedProductsQuery,
   useLoginMutation,
+  useRegisterMutation,
   useGetCurrentUserQuery,
 } = apiQueries;
 

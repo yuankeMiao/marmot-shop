@@ -9,7 +9,7 @@ if user logout on this page, it should be able to recognize the token is gone, t
 */
 
 function ProfilePage() {
-  const token = localStorage.getItem("token");
+  const token = localStorage.getItem("token") || null;
   const { data: currentUser, error, isLoading } = useGetCurrentUserQuery(token);
 
   const navigate = useNavigate();
@@ -20,8 +20,10 @@ function ProfilePage() {
   }, [token, navigate]);
 
   if (isLoading) return <div>Loading...</div>;
-  if (error && token)
+  if (error && "status" in error && error.status === 401){
     return <div>Sorry, your login status is expired, please log in again!</div>;
+  }
+    
   if (!currentUser)
     return <div>Sorry, sonthing wrong happened, please log in again!</div>;
 

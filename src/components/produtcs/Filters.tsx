@@ -1,11 +1,11 @@
 import React from "react";
 import { CATEGORIES } from "../../misc/constants";
-import { FilterType } from "../../misc/productTypes";
+import { CategoryType, FilterType } from "../../misc/productTypes";
 
 function Filters({filter, setFilter} : {filter:FilterType ,setFilter: React.Dispatch<React.SetStateAction<FilterType>>}) {
 
   const handleCatChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const cat = e.target.value;
+    const cat = e.target.value as CategoryType;
     setFilter((prev) => ({ ...prev, category: cat }));
   }
 

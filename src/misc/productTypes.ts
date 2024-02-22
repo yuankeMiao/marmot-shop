@@ -26,6 +26,7 @@ import { CATEGORIES } from "./constants";
 //   "limit": 30
 // }
     
+export type CategoryType = typeof CATEGORIES[number] | ""
 
 export interface ProductType {
   id: number;
@@ -36,7 +37,7 @@ export interface ProductType {
   rating: number;
   stock: number;
   brand: string;
-  category: string;
+  category: CategoryType;
   thumbnail: string;
   images: string[];
 }
@@ -91,6 +92,6 @@ export interface CartState {
 
 
 export interface FilterType {
-  category: (typeof CATEGORIES)[number];
+  category: CategoryType;
   sortByPrice: "asc" | "desc" | "";
 }
