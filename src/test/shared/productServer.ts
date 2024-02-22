@@ -1,11 +1,9 @@
 import { http, HttpResponse } from "msw";
 import { setupServer } from "msw/node";
-
-import { DUMMYJSON_URL } from "../../misc/constants";
 import { ProductType } from "../../misc/productTypes";
 
 const mockProducts = {
-  produtcs: [
+  products: [
     {
       id: 1,
       title: "iPhone 9",
@@ -103,14 +101,14 @@ const mockProducts = {
   limits: 5,
 };
 
-// https://mswjs.io/docs/recipes/query-parameters/
 export const handlers = [
   // Intercept the "GET /resource" request.
-  http.get("https://dummyjson.com/products", ({ request }) => {
+  http.get("https://dummyjson.com/products", async ({ request }) => {
+    await new Promise((resolve) => setTimeout(resolve, 1000));
     // console.log("params", params);
     const limit = Number(new URL(request.url).searchParams.get("limit"));
     // console.log("limit", limit);
-    const limited = mockProducts.produtcs.slice(0, limit);
+    const limited = mockProducts.products.slice(0, limit);
     // console.log("limited", limited);
     return HttpResponse.json({
       ...mockProducts,
@@ -122,7 +120,7 @@ export const handlers = [
     "https://dummyjson.com/products/category/:category",
     ({ params }) => {
       const { category } = params;
-      const limited = mockProducts.produtcs.filter(
+      const limited = mockProducts.products.filter(
         (p) => p.category === category
       );
       return HttpResponse.json({
@@ -132,15 +130,24 @@ export const handlers = [
     }
   ),
 
-  // `products/search?q=${search}`,
+  http.get("https://dummyjson.com/products/:id", ({ params }) => {
+    const id = Number(params.id);
+    const product = mockProducts.products.find((p) => p.id === id);
+    if (!product) return HttpResponse.json(null, { status: 404 });
+    return HttpResponse.json(product);
+  }),
+
+  // https://dummyjson.com/products/search?q=phone
   http.get("https://dummyjson.com/products/search", ({ request }) => {
+    console.log("search handler called");
     const search = new URL(request.url).searchParams.get("q");
+    console.log("search", search);
     if (!search)
       return HttpResponse.json({
         ...mockProducts,
         products: [],
       });
-    const results = mockProducts.produtcs.filter((product) =>
+    const results = mockProducts.products.filter((product) =>
       product.title.toLowerCase().includes(search.toLowerCase())
     );
     // console.log("results", results);
@@ -154,7 +161,7 @@ export const handlers = [
     const product = (await request.json()) as ProductType;
     const newProduct: ProductType = {
       ...product,
-      id: mockProducts.produtcs.length + 1,
+      id: mockProducts.products.length + 1,
     };
     return HttpResponse.json(newProduct, { status: 201 });
   }),
@@ -164,15 +171,27 @@ export const handlers = [
     async ({ request, params }) => {
       const updateData = (await request.json()) as Partial<ProductType>;
       const id = Number(params.id);
-      const product = mockProducts.produtcs.find((p) => p.id === id);
-      if (!product)
-        return HttpResponse.json(null, { status: 404 });
+      const product = mockProducts.products.find((p) => p.id === id);
+      if (!product) return HttpResponse.json(null, { status: 404 });
       const updatedProduct = { ...product, ...updateData };
       return HttpResponse.json(updatedProduct, { status: 200 });
     }
   ),
 
-
+  http.delete("https://dummyjson.com/products/:id", async ({ params }) => {
+    const id = Number(params.id);
+    const product = mockProducts.products.find((p) => p.id === id);
+    if (!product) return HttpResponse.json(null, { status: 404 });
+    mockProducts.products = mockProducts.products.filter((p) => p.id !== id);
+    return HttpResponse.json(
+      {
+        ...product,
+        isDeleted: true,
+        DeletedOn: new Date().toISOString(),
+      },
+      { status: 200 }
+    );
+  }),
 ];
 
 export const productServer = setupServer(...handlers);

@@ -1,10 +1,12 @@
-// actually, it is working great!!
-// for the auth part, I learned from this video: https://www.youtube.com/watch?v=-JJFQ9bkUbo
+
+/*
+For the api queries, I put all queries and mutations here, 
+because it is recommended to use only one createApi function for one base url
+*/ 
 
 import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
 import type { ProductQueryType, ProductType } from "../../misc/productTypes";
 import { DUMMYJSON_URL } from "../../misc/constants";
-import { AppState } from "../store";
 import { LoginType, UserType } from "../../misc/userTypes";
 
 const apiQueries = createApi({
@@ -25,6 +27,9 @@ const apiQueries = createApi({
   }),
   tagTypes: ["Product", "User"],
   endpoints: (builder) => ({
+
+
+    // product related queries
 
     getAllProducts: builder.query({
       query: (limit: number) => `products/?limit=${limit}`,
@@ -77,13 +82,24 @@ const apiQueries = createApi({
       },
     }),
 
+    //https://dummyjson.com/products/search?q=phone
     getProductsBySearch: builder.query<ProductType[], string>({
       query: (search) => `products/search?q=${search}`,
       providesTags: ["Product"],
       transformResponse: (response: ProductQueryType) => {
+        console.log("search query called");
         return response.products;
       },
     }),
+
+    /* 
+    for all the mutations, they will not really change the data in the server,
+    because for the api I am using, I cannot change the database, 
+    it will only return a data to tell me if the mutation is successful or not.
+
+    However, I have all the queries and mutations tested on mock server,
+    to make sure they are working as expected
+    */
 
     createNewProduct: builder.mutation({
       query: (newProduct: Omit<ProductType, 'id'>) => ({
@@ -102,6 +118,16 @@ const apiQueries = createApi({
       }),
       invalidatesTags: (result, error, arg) => [{ type: "Product", id: arg.id }],
     }),
+
+    deleteProduct: builder.mutation({
+      query: (id: number) => ({
+        url: `/products/${id}`,
+        method: "DELETE",
+      }),
+      invalidatesTags: (result, error, id) => [{ type: "Product", id }],
+    }),
+
+    // user related queries
 
     login: builder.mutation({
       query: (loginData: LoginType) => ({
