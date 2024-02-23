@@ -90,6 +90,15 @@ export interface CartState {
   error?: string;
 }
 
+export type UserCartType = Pick<CartState, "products" | "total" | "userId" | "discountedTotal" | "totalProducts" | "totalQuantity"> & { id?: number };
+export interface CartQueryType {
+  carts: UserCartType[];
+  total: number;
+  skip: number;
+  limit: number;
+}
+
+export type ProductsInfoToCartApi = { productId: number; quantity: number };
 
 export interface FilterType {
   category: CategoryType;

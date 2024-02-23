@@ -87,12 +87,12 @@ describe("productQuery", () => {
   test("getProductsBySearch", async () => {
 
     console.log('test being called');
-    const { data, isLoading, isError } = await store.dispatch(
+    const { data } = await store.dispatch(
       apiQueries.endpoints.getProductsBySearch.initiate("phone")
     );
 
     // console.log(data);
-    console.log(store.getState().api.queries['getProductsBySearch("phone")']);
+    // console.log(store.getState().api.queries['getProductsBySearch("phone")']);
 
     expect(data).toHaveLength(2);
   });

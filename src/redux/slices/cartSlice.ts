@@ -1,8 +1,10 @@
 // This slice is for the guest cart, after user login, the app will PUT the guest cart to the user cart
 // then the guest cart will be cleared, and component will render the user cart instead
 
-import {createSlice, PayloadAction } from "@reduxjs/toolkit";
+import {createAsyncThunk, createSlice, PayloadAction } from "@reduxjs/toolkit";
 import { CartItemType, CartState } from "../../misc/productTypes";
+
+import { DUMMYJSON_URL } from "../../misc/constants";
 
 const initialState: CartState = {
     products: [],
@@ -13,6 +15,23 @@ const initialState: CartState = {
     totalQuantity: 0,
     loading: false,
 };
+
+// feetch data from server after user login, then merge the guest cart with the user cart
+
+export const fetchUserCart = createAsyncThunk(
+    "fetchUserCart",
+    async (userId: number, { rejectWithValue }) => {
+        try{
+            const response = await fetch(DUMMYJSON_URL + `/carts/user/${userId}`);
+            const data = await response.json();
+            return data.carts[0];
+        }
+        catch(error){
+            return rejectWithValue(error);
+        }
+    }
+)
+
 
 const cartSlice = createSlice({
     name: "cart",
@@ -59,10 +78,37 @@ const cartSlice = createSlice({
                 item.discountedPrice = itemDiscountedPrice;
             }
         },
+
+        initializeCart: (state) => {
+            state = initialState
+        }
     },
+
+    extraReducers: (builder) => {
+
+        builder.addCase(fetchUserCart.fulfilled, (state, action) => {
+            state.products = action.payload.products;
+            state.total = action.payload.total;
+            state.discountedTotal = action.payload.discountedTotal;
+            state.userId = action.payload.userId;
+            state.totalProducts = action.payload.totalProducts;
+            state.totalQuantity = action.payload.totalQuantity;
+            state.loading = false;
+        });
+
+        builder.addCase(fetchUserCart.pending, (state) => {
+            state.loading = true;
+        });
+
+        builder.addCase(fetchUserCart.rejected, (state, action) => {
+            state.error = action.payload as string;
+            state.loading = false;
+        });
+    }
+
 });
 
 const cartReducer = cartSlice.reducer;
 
 export default cartReducer;
-export const { addToCart, removeFromCart, updateQuantity } = cartSlice.actions;
+export const { addToCart, removeFromCart, updateQuantity, initializeCart } = cartSlice.actions;

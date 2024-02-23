@@ -16,7 +16,7 @@ import Search from "./Search";
 import { useAppSelector } from "../appHooks/reduxHooks";
 
 import Login from "./user/Login";
-import { useGetCurrentUserQuery } from "../redux/slices/apiQuery";
+import { useGetCurrentUserQuery } from "../redux/slices/userApi";
 
  function Header() {
 

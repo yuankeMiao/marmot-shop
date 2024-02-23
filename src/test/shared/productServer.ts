@@ -138,11 +138,11 @@ export const handlers = [
   }),
 
   // https://dummyjson.com/products/search?q=phone
-  http.get("https://dummyjson.com/products/search", ({ request }) => {
+  http.get("https://dummyjson.com/products/search",async({request}) => {
     console.log("search handler called");
     const search = new URL(request.url).searchParams.get("q");
-    console.log("search", search);
-    if (!search)
+    // console.log("search", search);
+    if (!search || search === "")
       return HttpResponse.json({
         ...mockProducts,
         products: [],
@@ -150,7 +150,7 @@ export const handlers = [
     const results = mockProducts.products.filter((product) =>
       product.title.toLowerCase().includes(search.toLowerCase())
     );
-    
+
     return HttpResponse.json({
       ...mockProducts,
       products: results,

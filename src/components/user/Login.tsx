@@ -3,15 +3,14 @@ import { FloatingLabel } from "flowbite-react";
 
 import { LoginType } from "../../misc/userTypes";
 
-import { useLoginMutation } from "../../redux/slices/apiQuery";
+import { useLoginMutation } from "../../redux/slices/userApi";
+
 
 function Login({
   setOpenModal,
 }: {
   setOpenModal: React.Dispatch<React.SetStateAction<boolean>>;
 }) {
-
-  
   const {
     control,
     handleSubmit,
@@ -24,15 +23,7 @@ function Login({
   });
 
   // i will handle the login status later, maybe using toast
-  const [
-    loginTrigger,
-    {
-      data: loginReturnData,
-      error: loginError,
-      isLoading: loginLoading,
-      isSuccess: loginSuccess,
-    },
-  ] = useLoginMutation();
+  const [loginTrigger, { isSuccess: loginIsSuccess }] = useLoginMutation();
 
   // when submit is clicked, trigger the login mutation
   const onSubmit: SubmitHandler<LoginType> = async (data) => {

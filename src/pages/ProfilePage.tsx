@@ -1,5 +1,5 @@
 import { useNavigate } from "react-router-dom";
-import { useGetCurrentUserQuery } from "../redux/slices/apiQuery";
+import { useGetCurrentUserQuery } from "../redux/slices/userApi";
 import { useEffect } from "react";
 
 /* 
@@ -11,6 +11,7 @@ if user logout on this page, it should be able to recognize the token is gone, t
 function ProfilePage() {
   const token = localStorage.getItem("token") || null;
   const { data: currentUser, error, isLoading } = useGetCurrentUserQuery(token);
+  
 
   const navigate = useNavigate();
 
