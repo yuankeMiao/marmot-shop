@@ -175,10 +175,13 @@ const apiQueries = createApi({
 
 export const {
   useGetAllProductsQuery,
+  useGetSortedProductsQuery,
   useGetProductByIdQuery,
   useGetProductsByCategoryQuery,
-  useGetProductsBySearchQuery,
-  useGetSortedProductsQuery,
+  useLazyGetProductsBySearchQuery,
+  useCreateNewProductMutation,
+  useUpdateProductMutation,
+  useDeleteProductMutation,
   useLoginMutation,
   useRegisterMutation,
   useGetCurrentUserQuery,

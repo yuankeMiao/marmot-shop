@@ -150,7 +150,7 @@ export const handlers = [
     const results = mockProducts.products.filter((product) =>
       product.title.toLowerCase().includes(search.toLowerCase())
     );
-    // console.log("results", results);
+    
     return HttpResponse.json({
       ...mockProducts,
       products: results,

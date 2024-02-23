@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 
-import { CartItemType, ProductType } from "../../misc/productTypes";
+import { CartItemType} from "../../misc/productTypes";
 import AmountControl from "./AmountControl";
 import { useAppDispatch } from "../../appHooks/reduxHooks";
 import { removeFromCart, updateQuantity } from "../../redux/slices/cartSlice";

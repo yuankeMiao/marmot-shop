@@ -92,6 +92,7 @@ describe("productQuery", () => {
     );
 
     // console.log(data);
+    console.log(store.getState().api.queries['getProductsBySearch("phone")']);
 
     expect(data).toHaveLength(2);
   });
