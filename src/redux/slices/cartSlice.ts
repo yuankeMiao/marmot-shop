@@ -32,7 +32,6 @@ export const fetchUserCart = createAsyncThunk(
     }
 )
 
-
 const cartSlice = createSlice({
     name: "cart",
     initialState,
@@ -87,12 +86,13 @@ const cartSlice = createSlice({
     extraReducers: (builder) => {
 
         builder.addCase(fetchUserCart.fulfilled, (state, action) => {
-            state.products = action.payload.products;
-            state.total = action.payload.total;
-            state.discountedTotal = action.payload.discountedTotal;
+            //merge the guest cart with the user cart
+            state.products = [...state.products, ...action.payload.products]
+            state.total+= action.payload.total;
+            state.discountedTotal += action.payload.discountedTotal;
             state.userId = action.payload.userId;
-            state.totalProducts = action.payload.totalProducts;
-            state.totalQuantity = action.payload.totalQuantity;
+            state.totalProducts += action.payload.totalProducts;
+            state.totalQuantity += action.payload.totalQuantity;
             state.loading = false;
         });
 
