@@ -101,7 +101,7 @@ const cartSlice = createSlice({
         });
 
         builder.addCase(fetchUserCart.rejected, (state, action) => {
-            state.error = action.payload as string;
+            state.error = action.error.message;
             state.loading = false;
         });
     }

@@ -91,6 +91,8 @@ export interface CartState {
 }
 
 export type UserCartType = Pick<CartState, "products" | "total" | "userId" | "discountedTotal" | "totalProducts" | "totalQuantity"> & { id?: number };
+
+
 export interface CartQueryType {
   carts: UserCartType[];
   total: number;

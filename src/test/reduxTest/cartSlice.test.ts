@@ -1,130 +1,144 @@
-import { createStore } from '../../redux/store'
-import { CartState } from '../../misc/productTypes';
-import cartReducer from '../../redux/slices/cartSlice';
-
-
-let store = createStore()
-
-beforeEach(() => {
-    store = createStore()
-});
+import { createStore } from "../../redux/store";
+import { CartItemType, CartState } from "../../misc/productTypes";
+import cartReducer, {
+  fetchUserCart,
+  addToCart,
+  updateQuantity,
+  removeFromCart,
+} from "../../redux/slices/cartSlice";
+import { cartServer } from "../../test/shared/cartServer";
 
 const initialState: CartState = {
-    products: [],
-    total: 0,
-    discountedTotal: 0,
-    userId: 0,
-    totalProducts: 0,
-    totalQuantity: 0,
-    loading: false,
+  products: [],
+  total: 0,
+  discountedTotal: 0,
+  userId: 0,
+  totalProducts: 0,
+  totalQuantity: 0,
+  loading: false,
 };
 
-describe('cartSlice', () => {
+let store = createStore();
 
-    const mockProducts = [
-        {
-          id: 1,
-          title: "iPhone 9",
-          description: "An apple mobile which is nothing like apple",
-          price: 549,
-          discountPercentage: 12.96,
-          rating: 4.69,
-          stock: 94,
-          brand: "Apple",
-          category: "smartphones",
-          thumbnail: "https://cdn.dummyjson.com/product-images/1/thumbnail.jpg",
-          images: [
-            "https://cdn.dummyjson.com/product-images/1/1.jpg",
-            "https://cdn.dummyjson.com/product-images/1/2.jpg",
-            "https://cdn.dummyjson.com/product-images/1/3.jpg",
-            "https://cdn.dummyjson.com/product-images/1/4.jpg",
-            "https://cdn.dummyjson.com/product-images/1/thumbnail.jpg",
-          ],
-        },
-        {
-          id: 2,
-          title: "iPhone X",
-          description:
-            "SIM-Free, Model A19211 6.5-inch Super Retina HD display with OLED technology A12 Bionic chip with ...",
-          price: 899,
-          discountPercentage: 17.94,
-          rating: 4.44,
-          stock: 34,
-          brand: "Apple",
-          category: "smartphones",
-          thumbnail: "https://cdn.dummyjson.com/product-images/2/thumbnail.jpg",
-          images: [
-            "https://cdn.dummyjson.com/product-images/2/1.jpg",
-            "https://cdn.dummyjson.com/product-images/2/2.jpg",
-            "https://cdn.dummyjson.com/product-images/2/3.jpg",
-            "https://cdn.dummyjson.com/product-images/2/thumbnail.jpg",
-          ],
-        },
-        {
-          id: 3,
-          title: "Samsung Universe 9",
-          description:
-            "Samsung's new variant which goes beyond Galaxy to the Universe",
-          price: 1249,
-          discountPercentage: 15.46,
-          rating: 4.09,
-          stock: 36,
-          brand: "Samsung",
-          category: "smartphones",
-          thumbnail: "https://cdn.dummyjson.com/product-images/3/thumbnail.jpg",
-          images: ["https://cdn.dummyjson.com/product-images/3/1.jpg"],
-        },
-        {
-          id: 4,
-          title: "Plant Hanger For Home",
-          description:
-            "Boho Decor Plant Hanger For Home Wall Decoration Macrame Wall Hanging Shelf",
-          price: 41,
-          discountPercentage: 17.86,
-          rating: 4.08,
-          stock: 131,
-          brand: "Boho Decor",
-          category: "home-decoration",
-          thumbnail: "https://cdn.dummyjson.com/product-images/26/thumbnail.jpg",
-          images: [
-            "https://cdn.dummyjson.com/product-images/26/1.jpg",
-            "https://cdn.dummyjson.com/product-images/26/2.jpg",
-            "https://cdn.dummyjson.com/product-images/26/3.jpg",
-            "https://cdn.dummyjson.com/product-images/26/4.jpg",
-            "https://cdn.dummyjson.com/product-images/26/5.jpg",
-            "https://cdn.dummyjson.com/product-images/26/thumbnail.jpg",
-          ],
-        },
-        {
-          id: 5,
-          title: "Hyaluronic Acid Serum",
-          description:
-            "L'OrÃ©al Paris introduces Hyaluron Expert Replumping Serum formulated with 1.5% Hyaluronic Acid",
-          price: 19,
-          discountPercentage: 13.31,
-          rating: 4.83,
-          stock: 110,
-          brand: "L'Oreal Paris",
-          category: "skincare",
-          thumbnail: "https://cdn.dummyjson.com/product-images/16/thumbnail.jpg",
-          images: [
-            "https://cdn.dummyjson.com/product-images/16/1.png",
-            "https://cdn.dummyjson.com/product-images/16/2.webp",
-            "https://cdn.dummyjson.com/product-images/16/3.jpg",
-            "https://cdn.dummyjson.com/product-images/16/4.jpg",
-            "https://cdn.dummyjson.com/product-images/16/thumbnail.jpg",
-          ],
-        },
-      ];
+beforeAll(() => {
+  cartServer.listen();
+});
 
-    //test 0: initial state
+beforeEach(() => {
+  store = createStore();
+});
 
-    test("should return the initial state", () => {
-       const state = cartReducer(undefined, {type: ''});
-       expect(state).toEqual(initialState);
-    })
+afterAll(() => {
+  cartServer.close();
+});
 
-    //test 1: addToCart
+describe("cartSlice", () => {
+  const mockCartItems: CartItemType[] = [
+    {
+      id: 59,
+      title: "Spring and summershoes",
+      price: 20,
+      quantity: 3,
+      total: 60,
+      discountPercentage: 8.71,
+      discountedPrice: 55,
+      thumbnail: "https://cdn.dummyjson.com/product-images/59/thumbnail.jpg",
+    },
+    {
+      id: 88,
+      title: "TC Reusable Silicone Magic Washing Gloves",
+      price: 29,
+      quantity: 2,
+      total: 58,
+      discountPercentage: 3.19,
+      discountedPrice: 56,
+      thumbnail: "https://cdn.dummyjson.com/product-images/88/thumbnail.jpg",
+    },
+    {
+      id: 18,
+      title: "Oil Free Moisturizer 100ml",
+      price: 40,
+      quantity: 2,
+      total: 80,
+      discountPercentage: 13.1,
+      discountedPrice: 70,
+      thumbnail: "https://cdn.dummyjson.com/product-images/18/thumbnail.jpg",
+    },
+  ];
+  //test 0: initial state
 
-})
+  test("should return the initial state", () => {
+    const state = cartReducer(initialState, { type: "" });
+    expect(state).toEqual(initialState);
+  });
 
+  //test 1: add to cart
+  test("should add a product to the cart", () => {
+    const state = cartReducer(initialState, addToCart(mockCartItems[0]));
+    expect(state.total).toEqual(60);
+    expect(state.discountedTotal).toEqual(55);
+    expect(state.totalProducts).toEqual(1);
+    expect(state.totalQuantity).toEqual(3);
+  });
+
+  //test 2: update quantity
+  test("should update the quantity of the item in the cart", () => {
+    const state = cartReducer(initialState, addToCart(mockCartItems[0]));
+    const updatedState = cartReducer(
+      state,
+      updateQuantity({ id: 59, quantity: 5 })
+    );
+    expect(updatedState.total).toEqual(100);
+    expect(updatedState.discountedTotal).toEqual(91);
+    expect(updatedState.totalProducts).toEqual(1);
+    expect(updatedState.totalQuantity).toEqual(5);
+  });
+
+  //test 3: remove from cart  
+  test("should remove the item from the cart", () => {
+    const state = cartReducer(initialState, addToCart(mockCartItems[1]));
+    const updatedState = cartReducer(state, removeFromCart(88));
+    expect(updatedState.total).toEqual(0);
+    expect(updatedState.discountedTotal).toEqual(0);
+    expect(updatedState.totalProducts).toEqual(0);
+    expect(updatedState.totalQuantity).toEqual(0);
+  });
+
+  test("should merge the guest cart with the user cart", async () => {
+    //add some items to the cart, so i can test if they merged
+    store.dispatch(addToCart(mockCartItems[0]));
+
+    await store.dispatch(fetchUserCart(97));
+    const state = store.getState().cart;
+    expect(state.total).toEqual(2328 + 60);
+    expect(state.userId).toEqual(97);
+    expect(state.totalProducts).toEqual(6);
+    expect(state.totalQuantity).toEqual(13);
+  });
+
+  // fulfilled
+  test("should return the fulfilled state", () => {
+    const state = cartReducer(initialState, fetchUserCart.fulfilled(initialState, "cart/fetchUserCart", 97, "fullfilled"));
+    expect(state).toEqual({
+      ...initialState,
+    });
+  })
+  // rejected
+  test("should have error", () => {
+    const error = new Error("error");
+    const state = cartReducer(initialState, fetchUserCart.rejected(error, "cart/fetchUserCart", 97, "error"));
+    expect(state).toEqual({
+      ...initialState,
+      error: "error",
+      loading: false,
+    });
+  })
+  // pending
+  test("should be loading", () => {
+    const state = cartReducer(initialState, fetchUserCart.pending("pending", 97));
+    expect(state).toEqual({
+      ...initialState,
+      loading: true,
+    });
+  })
+});
