@@ -1,9 +1,10 @@
 import { Link } from "react-router-dom";
 
+import ProductCard from "../components/produtcs/ProductCard";
 import { HERO_IMAGE } from "../misc/constants";
 import useFetchRandomQuote from "../appHooks/useFetchRandomQuote";
 import { useGetAllProductsQuery } from "../redux/slices/apiQuery";
-import ProductCard from "../components/produtcs/ProductCard";
+
 
 function HomePage() {
   const {

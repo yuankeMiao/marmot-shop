@@ -4,33 +4,18 @@ import { FloatingLabel, Toast } from "flowbite-react";
 
 import { UserType } from "../../misc/userTypes";
 import {
-  useRegisterMutation,
   useUpdateUserMutation,
 } from "../../redux/slices/userApi";
 
 function UserInfoForm({
   userInfo,
-  formType,
 }: {
   userInfo: UserType;
-  formType: "update" | "register";
 }) {
   const [
     updateUserTrigger,
     { isSuccess: updateIsSuccess, error: updateError },
   ] = useUpdateUserMutation();
-  const [
-    registerTrigger,
-    { isSuccess: registerIsSuccess, error: registerError },
-  ] = useRegisterMutation();
-
-  let submitTrigger: typeof updateUserTrigger | typeof registerTrigger;
-
-  if (formType === "update") {
-    submitTrigger = updateUserTrigger;
-  } else {
-    submitTrigger = registerTrigger;
-  }
 
   const {
     control,
@@ -41,7 +26,7 @@ function UserInfoForm({
   });
 
   const onSubmit: SubmitHandler<UserType> = (data) => {
-    submitTrigger(data)
+    updateUserTrigger(data);
   };
 
   return (

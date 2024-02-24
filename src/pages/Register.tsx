@@ -1,8 +1,19 @@
-import React from 'react'
+// in construction
 
 function Register() {
+  const userInfo = {
+    username: "",
+    email: "",
+    firstName: "",
+    lastName: "",
+    password: "",
+    confirmPassword: "",
+    image: "",
+  }
   return (
-    <div>Register</div>
+    <div>
+      
+    </div>
   )
 }
 

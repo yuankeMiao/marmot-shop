@@ -1,13 +1,11 @@
-// import { useAppDispatch, useAppSelector } from "../../appHooks/reduxHooks";
-// import { fetchAllProducts } from "../../redux/slices/productsSlice";
+import { useEffect, useState } from "react";
 import {
-  useGetAllProductsQuery,
   useGetProductsByCategoryQuery,
   useGetSortedProductsQuery
 } from "../../redux/slices/apiQuery";
 import ProductCard from "./ProductCard";
 import { FilterType, ProductType } from "../../misc/productTypes";
-import { useEffect, useState } from "react";
+
 
 function DisplayProducts({ filter }: { filter: FilterType }) {
 

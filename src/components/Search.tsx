@@ -1,9 +1,10 @@
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faMagnifyingGlass } from "@fortawesome/free-solid-svg-icons";
 
-import { Modal, TextInput } from "flowbite-react";
 import { useCallback, useState, useEffect } from "react";
 import { Link } from "react-router-dom";
+import { Modal, TextInput } from "flowbite-react";
+
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faMagnifyingGlass } from "@fortawesome/free-solid-svg-icons";
 
 import { useLazyGetProductsBySearchQuery } from "../redux/slices/apiQuery";
 

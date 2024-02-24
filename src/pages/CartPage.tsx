@@ -1,26 +1,9 @@
 import { Link } from "react-router-dom";
-import { useAppDispatch, useAppSelector } from "../appHooks/reduxHooks";
-import ProductListItem from "../components/produtcs/ProductListItem";
 
-import useCheckMe from "../appHooks/useCheckMe";
-import { useEffect } from "react";
-import { fetchUserCart } from "../redux/slices/cartSlice";
+import ProductListItem from "../components/produtcs/ProductListItem";
 import { CartState } from "../misc/productTypes";
 
 function CartPage({currentCart}: {currentCart: CartState}) {
-  // const {
-  //   currentUser,
-  //   error: currentUserError,
-  //   isLoading: curentUserIsLoading,
-  // } = useCheckMe();
-
-  // const dispatch = useAppDispatch();
-
-  // useEffect(() => {
-  //   if (currentUser?.id) dispatch(fetchUserCart(currentUser.id));
-  // }, [currentUser, dispatch]);
-
-  // const currentCart = useAppSelector((state) => state.cart);
 
   return (
     <div className="py-8 px-4">

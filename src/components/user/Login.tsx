@@ -2,9 +2,7 @@ import { useForm, Controller, SubmitHandler } from "react-hook-form";
 import { FloatingLabel } from "flowbite-react";
 
 import { LoginType } from "../../misc/userTypes";
-
 import { useLoginMutation } from "../../redux/slices/userApi";
-
 
 function Login({
   setOpenModal,
@@ -15,7 +13,7 @@ function Login({
     control,
     handleSubmit,
     formState: { errors },
-    setError
+    setError,
   } = useForm<LoginType>({
     defaultValues: {
       username: "",
@@ -29,15 +27,18 @@ function Login({
   // when submit is clicked, trigger the login mutation
   const onSubmit: SubmitHandler<LoginType> = async (data) => {
     // console.log(data);
-    await loginTrigger(data).unwrap().then((result) => {
-      window.localStorage.setItem("token", result?.token);
-      setOpenModal(false); }).catch((error) => {
+    await loginTrigger(data)
+      .unwrap()
+      .then((result) => {
+        window.localStorage.setItem("token", result?.token);
+        setOpenModal(false);
+      })
+      .catch((error) => {
         setError("password", {
           type: "manual",
           message: error.data.message,
         });
-      }
-    );
+      });
   };
 
   return (
@@ -63,7 +64,7 @@ function Login({
           }}
           render={({ field }) => (
             <FloatingLabel
-            className=""
+              className=""
               variant="outlined"
               label="Username"
               type="text"

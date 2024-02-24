@@ -109,7 +109,7 @@ return (
         <div id="change">
           <div className="invisible h-20 -mt-20"></div>
           <h2 className="text-xl font-semibold my-8">Change my info</h2>
-          <UserInfoForm userInfo ={{...currentUser}} formType="update"/>
+          <UserInfoForm userInfo ={{...currentUser}} />
         </div>
       </div>
     </div>

@@ -1,6 +1,6 @@
+import { Link } from "react-router-dom";
 
 import { ProductType } from "../../misc/productTypes";
-import { Link } from "react-router-dom";
 import ShopAndFav from "./ShopAndFav";
 
 function ProductCard({ productItem }: { productItem: ProductType }) {
