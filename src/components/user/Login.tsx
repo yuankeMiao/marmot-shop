@@ -15,6 +15,7 @@ function Login({
     control,
     handleSubmit,
     formState: { errors },
+    setError
   } = useForm<LoginType>({
     defaultValues: {
       username: "",
@@ -23,14 +24,20 @@ function Login({
   });
 
   // i will handle the login status later, maybe using toast
-  const [loginTrigger, { isSuccess: loginIsSuccess }] = useLoginMutation();
+  const [loginTrigger] = useLoginMutation();
 
   // when submit is clicked, trigger the login mutation
   const onSubmit: SubmitHandler<LoginType> = async (data) => {
     // console.log(data);
-    const result = await loginTrigger(data).unwrap();
-    window.localStorage.setItem("token", result?.token);
-    setOpenModal(false);
+    await loginTrigger(data).unwrap().then((result) => {
+      window.localStorage.setItem("token", result?.token);
+      setOpenModal(false); }).catch((error) => {
+        setError("password", {
+          type: "manual",
+          message: error.data.message,
+        });
+      }
+    );
   };
 
   return (
@@ -56,6 +63,7 @@ function Login({
           }}
           render={({ field }) => (
             <FloatingLabel
+            className=""
               variant="outlined"
               label="Username"
               type="text"

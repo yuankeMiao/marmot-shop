@@ -15,7 +15,6 @@ import ProfilePage from "./pages/ProfilePage";
 
 function App() {
   const {currentUser} = useCheckMe();
-
   const dispatch = useAppDispatch();
 
   useEffect(() => {

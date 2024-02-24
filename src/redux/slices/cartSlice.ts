@@ -1,10 +1,9 @@
-// This slice is for the guest cart, after user login, the app will PUT the guest cart to the user cart
-// then the guest cart will be cleared, and component will render the user cart instead
 
 import {createAsyncThunk, createSlice, PayloadAction } from "@reduxjs/toolkit";
 import { CartItemType, CartState } from "../../misc/productTypes";
 
 import { DUMMYJSON_URL } from "../../misc/constants";
+import { act } from "react-dom/test-utils";
 
 const initialState: CartState = {
     products: [],
@@ -77,16 +76,13 @@ const cartSlice = createSlice({
                 item.discountedPrice = itemDiscountedPrice;
             }
         },
-
-        initializeCart: (state) => {
-            state = initialState
-        }
     },
 
     extraReducers: (builder) => {
 
         builder.addCase(fetchUserCart.fulfilled, (state, action) => {
             //merge the guest cart with the user cart
+            if(!action.payload) return; // sometimes the user has no cart, then the cart[] is empty, so cart[0] is undefined
             state.products = [...state.products, ...action.payload.products]
             state.total+= action.payload.total;
             state.discountedTotal += action.payload.discountedTotal;
@@ -108,7 +104,7 @@ const cartSlice = createSlice({
 
 });
 
-const cartReducer = cartSlice.reducer;
+const cartReducer = cartSlice.reducer
 
 export default cartReducer;
-export const { addToCart, removeFromCart, updateQuantity, initializeCart } = cartSlice.actions;
+export const { addToCart, removeFromCart, updateQuantity } = cartSlice.actions;

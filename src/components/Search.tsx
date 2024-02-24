@@ -38,16 +38,17 @@ function Search() {
   },[input, debounced])
 
   return (
-    <>
+    <div>
       <button
-        className="bg-gray-100 text-gray-600 p-2 text-sm rounded-xl hover:bg-gray-300"
+        className="w-12 sm:w-40 bg-gray-100 text-gray-600 p-2 text-sm rounded-full hover:bg-gray-300"
         onClick={() => setOpenModal(true)}
       >
         <FontAwesomeIcon icon={faMagnifyingGlass} />
-        <span className="mx-4">Search by Name</span>
+        <span className="mx-4 hidden sm:inline">Search</span>
       </button>
 
-      <Modal dismissible show={openModal} onClose={() => setOpenModal(false)}>
+      <Modal dismissible show={openModal} onClose={() => setOpenModal(false)} className="pt-20 sm:p-0">
+        <Modal.Header className="sm:hidden"></Modal.Header>
         <Modal.Body>
         <TextInput
         className="pb-8 pt-4"
@@ -77,7 +78,7 @@ function Search() {
           {error && <div>Something wrong with the search!</div>}
         </Modal.Body>
       </Modal>
-    </>
+    </div>
   );
 }
 

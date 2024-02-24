@@ -23,6 +23,15 @@ const userApi = apiQueries.injectEndpoints({
       invalidatesTags: ["User"],
     }),
 
+    updateUser: builder.mutation({
+      query: (updateData: Partial<UserType>) => ({
+        url: `/users/${updateData.id}`,
+        method: "PUT",
+        body: { ...updateData },
+      }),
+      invalidatesTags: ["User"],
+    }),
+
     getCurrentUser: builder.query({
       query: (token: string | null) => {
         return {
@@ -48,4 +57,4 @@ const userApi = apiQueries.injectEndpoints({
   }),
 });
 
-export const { useLoginMutation, useRegisterMutation, useGetCurrentUserQuery } = userApi;
+export const { useLoginMutation, useRegisterMutation, useUpdateUserMutation, useLazyGetCurrentUserQuery } = userApi;

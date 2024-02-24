@@ -16,21 +16,15 @@ import Search from "./Search";
 import { useAppSelector } from "../appHooks/reduxHooks";
 
 import Login from "./user/Login";
-import { useGetCurrentUserQuery } from "../redux/slices/userApi";
+import useCheckMe, {logout} from "../appHooks/useCheckMe";
 
  function Header() {
 
-  const token = localStorage.getItem('token');
-  const { data: currentUser, error, isLoading } = useGetCurrentUserQuery(token);
+  const {currentUser, error, isLoading } = useCheckMe()
   // console.log(currentUser);
 
   const [openModal, setOpenModal] = useState(false);
   const cartAmount = useAppSelector((state) => state.cart.totalQuantity);
-
-  const handleLogout = () => {
-    localStorage.removeItem('token');
-    window.location.reload();
-  };
 
   return (
     <header className="fixed z-20 top-0 start-0 w-full h-20 bg-primary flex justify-between items-center px-4 lg:px-12">
@@ -79,7 +73,7 @@ import { useGetCurrentUserQuery } from "../redux/slices/userApi";
             />
             <Dropdown label={currentUser.username} dismissOnClick={false} inline>
               <Dropdown.Item as={Link} to="/profile">Profile</Dropdown.Item>
-              <Dropdown.Item onClick={handleLogout}>Logout</Dropdown.Item>
+              <Dropdown.Item onClick={logout}>Logout</Dropdown.Item>
             </Dropdown>
           </div>
         ) : (
