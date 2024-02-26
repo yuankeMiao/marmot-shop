@@ -41,10 +41,10 @@ function Search() {
   return (
     <div>
       <button
-        className="w-12 sm:w-40 bg-gray-100 text-gray-600 p-2 text-sm rounded-full hover:bg-gray-300"
+        className="relative w-12 sm:w-40 bg-gray-100 text-gray-600 p-2 text-sm rounded-full hover:bg-gray-300"
         onClick={() => setOpenModal(true)}
       >
-        <FontAwesomeIcon icon={faMagnifyingGlass} />
+        <FontAwesomeIcon icon={faMagnifyingGlass} className="absolute left-3 top-3" />
         <span className="mx-4 hidden sm:inline">Search</span>
       </button>
 

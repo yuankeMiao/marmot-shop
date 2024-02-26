@@ -15,7 +15,9 @@ export default function useCheckMe() {
   if (token) getCurrentUserTrigger(token);
   }, [token, getCurrentUserTrigger]);
 
-  return { currentUser, error, isLoading,};
+  const isAdmin = currentUser?.id === 1;
+
+  return { currentUser, error, isLoading, isAdmin};
 }
 
 export function logout() {

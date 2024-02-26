@@ -19,10 +19,7 @@ import useCheckMe, {logout} from "../appHooks/useCheckMe";
 
  function Header() {
 
-  const {currentUser, error, isLoading } = useCheckMe()
-
-  const isAdmin = currentUser?.id === 1;
-  // console.log(currentUser);
+  const {currentUser, isAdmin } = useCheckMe()
 
   const [openModal, setOpenModal] = useState(false);
   const cartAmount = useAppSelector((state) => state.cart.totalQuantity);

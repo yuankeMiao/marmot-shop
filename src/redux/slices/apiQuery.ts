@@ -87,7 +87,7 @@ const apiQueries = createApi({
 
     //https://dummyjson.com/products/search?q=phone
     getProductsBySearch: builder.query<ProductType[], string>({
-      query: (search) => `products/search?q=${search}`,
+      query: (search) => `products/search?limit=0&q=${search}`,
       providesTags: ["Product"],
       transformResponse: (response: ProductQueryType) => {
         // console.log("search query called");
