@@ -12,6 +12,7 @@ import ErrorPage from "./pages/ErrorPage";
 import CartPage from "./pages/CartPage";
 import AllProdutcsPage from "./pages/AllProdutcsPage";
 import ProfilePage from "./pages/ProfilePage";
+import Dashboard from "./pages/Dashboard";
 
 function App() {
   const {currentUser} = useCheckMe();
@@ -32,6 +33,7 @@ function App() {
           <Route path="product/:productId" element={<ProductPage />} />
           <Route path="profile" element={<ProfilePage />} />
           <Route path="cart" element={<CartPage currentCart={currentCart} />} />
+          <Route path="dashboard" element={<Dashboard />} />
           <Route path="*" element={<ErrorPage />} />
         </Route>
         <Route path="/register" element={<Register />} />

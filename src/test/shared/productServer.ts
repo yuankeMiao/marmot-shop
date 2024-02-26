@@ -104,12 +104,39 @@ const mockProducts = {
 export const productsHandlers = [
   // Intercept the "GET /resource" request.
   http.get("https://dummyjson.com/products", async ({ request }) => {
-    await new Promise((resolve) => setTimeout(resolve, 1000));
-    // console.log("params", params);
     const limit = Number(new URL(request.url).searchParams.get("limit"));
-    // console.log("limit", limit);
     const limited = mockProducts.products.slice(0, limit);
-    // console.log("limited", limited);
+
+    return HttpResponse.json({
+      ...mockProducts,
+      products: limited,
+    });
+  }),
+
+  http.get("https://dummyjson.com/products/search", async ({ request }) => {
+    // console.log("search handler called");
+    const search = new URL(request.url).searchParams.get("q");
+    // console.log("search", search);
+    if (!search || search === "")
+      return HttpResponse.json({
+        ...mockProducts,
+        products: [],
+      });
+    const results = mockProducts.products.filter((product) =>
+      product.title.toLowerCase().includes(search.toLowerCase())
+    );
+
+    return HttpResponse.json({
+      ...mockProducts,
+      products: results,
+    });
+  }),
+
+  http.get("https://dummyjson.com/products/category/:category", ({ params }) => {
+    const { category } = params;
+    const limited = mockProducts.products.filter(
+      (p) => p.category === category
+    );
     return HttpResponse.json({
       ...mockProducts,
       products: limited,
@@ -162,40 +189,4 @@ export const productsHandlers = [
 ];
 
 
-export const searchHandler = [
-  http.get("https://dummyjson.com/products/search", async ({ request }) => {
-    // console.log("search handler called");
-    const search = new URL(request.url).searchParams.get("q");
-    // console.log("search", search);
-    if (!search || search === "")
-      return HttpResponse.json({
-        ...mockProducts,
-        products: [],
-      });
-    const results = mockProducts.products.filter((product) =>
-      product.title.toLowerCase().includes(search.toLowerCase())
-    );
-
-    return HttpResponse.json({
-      ...mockProducts,
-      products: results,
-    });
-  }),
-];
-
-export const categoryHandler = [
-  http.get("https://dummyjson.com/products/category/:category", ({ params }) => {
-    const { category } = params;
-    const limited = mockProducts.products.filter(
-      (p) => p.category === category
-    );
-    return HttpResponse.json({
-      ...mockProducts,
-      products: limited,
-    });
-  }),
-];
-
 export const productServer = setupServer(...productsHandlers);
-export const searchServer = setupServer(...searchHandler);
-export const categoryServer = setupServer(...categoryHandler);

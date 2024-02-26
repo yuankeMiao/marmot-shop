@@ -20,6 +20,8 @@ import useCheckMe, {logout} from "../appHooks/useCheckMe";
  function Header() {
 
   const {currentUser, error, isLoading } = useCheckMe()
+
+  const isAdmin = currentUser?.id === 1;
   // console.log(currentUser);
 
   const [openModal, setOpenModal] = useState(false);
@@ -71,6 +73,7 @@ import useCheckMe, {logout} from "../appHooks/useCheckMe";
               alt={currentUser.username}
             />
             <Dropdown label={currentUser.username} dismissOnClick={false} inline>
+              {isAdmin && <Dropdown.Item as={Link} to="/dashboard">Dashbord</Dropdown.Item>}
               <Dropdown.Item as={Link} to="/profile">Profile</Dropdown.Item>
               <Dropdown.Item onClick={logout}>Logout</Dropdown.Item>
             </Dropdown>

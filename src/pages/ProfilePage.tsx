@@ -3,7 +3,6 @@ import { Table } from "flowbite-react";
 
 import useCheckMe, { logout } from "../appHooks/useCheckMe";
 import UserInfoForm from "../components/user/UserInfoForm";
-import { UserType } from "../misc/userTypes";
 
 /* 
 my plan for this page:

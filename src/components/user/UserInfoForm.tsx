@@ -155,6 +155,7 @@ function UserInfoForm({
           />
         </div>
         {mode === "register" && (
+          <>
           <div className="w-full grid grid-flow-col justify-stretch space-x-4">
             <Controller
               name="password"
@@ -204,6 +205,22 @@ function UserInfoForm({
               )}
             />
           </div>
+          <div className="w-full grid grid-flow-col justify-stretch space-x-4">
+            <Controller
+              name="image"
+              control={control}
+              render={({ field }) => (
+                <FloatingLabel
+                  variant="outlined"
+                  label="Avatar URL"
+                  type="text"
+                  helperText={errors.image && errors.image.message}
+                  {...field}
+                />
+              )}
+            />
+          </div>
+          </>
         )}
         {mode === "update" && (
           <>

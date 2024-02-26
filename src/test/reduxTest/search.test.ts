@@ -1,11 +1,11 @@
 import apiQueries from "../../redux/slices/apiQuery";
 import { createStore } from "../../redux/store";
-import { searchServer } from "../shared/productServer";
+import { productServer } from "../shared/productServer";
 
 let store = createStore();
 
 beforeAll(() => {
-  searchServer.listen();
+  productServer.listen();
 });
 
 beforeEach(() => {
@@ -13,7 +13,7 @@ beforeEach(() => {
 });
 
 afterEach(() => {
-  searchServer.resetHandlers();
+  productServer.resetHandlers();
 });
 
 describe("searchQuery", () => {

@@ -47,7 +47,7 @@ const apiQueries = createApi({
     */
     getSortedProducts: builder.query<ProductQueryType, { limit: number; skip:number; sort: string }>({
       query: ({ limit, skip, sort }) =>
-        `products/?limit=${limit}&skip=${skip}`,
+        `products?limit=${limit}&skip=${skip}`,
       providesTags: ["Product"],
       transformResponse: (response: ProductQueryType, meta, arg) => {
         if (arg.sort === "asc") {
@@ -70,7 +70,7 @@ const apiQueries = createApi({
     // the same with the sorting here
     getProductsByCategory: builder.query<ProductQueryType, { category: string; limit:number; skip: number; sort: string }>({
       query: ({ category, limit, skip, sort }) =>
-        `products/category/${category}/?limit=${limit}&skip=${skip}`,
+        `products/category/${category}?limit=${limit}&skip=${skip}`,
       providesTags: ["Product"],
       transformResponse: (response: ProductQueryType, meta, arg) => {
         if (arg.sort === "asc") {
@@ -137,7 +137,7 @@ export const {
   useGetAllProductsQuery,
   useGetSortedProductsQuery,
   useGetProductByIdQuery,
-  useGetProductsByCategoryQuery,
+  useLazyGetProductsByCategoryQuery,
   useLazyGetProductsBySearchQuery,
   useCreateNewProductMutation,
   useUpdateProductMutation,
