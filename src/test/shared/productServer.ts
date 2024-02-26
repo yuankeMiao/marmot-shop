@@ -164,7 +164,7 @@ export const productsHandlers = [
 
 export const searchHandler = [
   http.get("https://dummyjson.com/products/search", async ({ request }) => {
-    console.log("search handler called");
+    // console.log("search handler called");
     const search = new URL(request.url).searchParams.get("q");
     // console.log("search", search);
     if (!search || search === "")

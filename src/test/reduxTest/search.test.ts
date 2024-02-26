@@ -21,7 +21,7 @@ describe("searchQuery", () => {
     let data: any;
     await store.dispatch(apiQueries.endpoints.getProductsBySearch.initiate("phone"))
     .then((result) => {
-      console.log(result);
+      // console.log(result);
         data = result.data;
     })
     .catch((error) => {
