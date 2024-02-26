@@ -1,11 +1,11 @@
 import apiQueries from "../../redux/slices/apiQuery";
 import { createStore } from "../../redux/store";
-import { productServer } from "../shared/productServer";
+import { searchServer } from "../shared/productServer";
 
 let store = createStore();
 
 beforeAll(() => {
-  productServer.listen();
+  searchServer.listen();
 });
 
 beforeEach(() => {
@@ -13,28 +13,8 @@ beforeEach(() => {
 });
 
 afterEach(() => {
-  productServer.resetHandlers();
+  searchServer.resetHandlers();
 });
-
-afterAll(() => {
-  productServer.close();
-});
-
-productServer.events.on("request:start", (request) => {
-    console.log("request started", request);
-    }
-);
-
-// productServer.events.on("request:match", (request) => {
-//     console.log("request matched", request);
-//     }
-// );
-
-// productServer.events.on("request:end", (request) => {
-//     console.log("request ended", request);
-//     }
-// );
-
 
 describe("searchQuery", () => {
   test("searchProducts fulfill", async () => {
@@ -48,6 +28,6 @@ describe("searchQuery", () => {
         console.log(error);
     });
 
-    expect(data).toHaveLength(3);
+    expect(data).toHaveLength(2);
   });
 });

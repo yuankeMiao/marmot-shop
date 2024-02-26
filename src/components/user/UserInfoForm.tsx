@@ -1,24 +1,39 @@
-// this form is for register and update user info
+// this form is for update and register user info
+
+import { useEffect } from "react";
+import { useNavigate } from "react-router-dom";
 import { useForm, Controller, SubmitHandler } from "react-hook-form";
 import { FloatingLabel, Toast } from "flowbite-react";
 
-import { UserType } from "../../misc/userTypes";
+import { RegisterType, UserType } from "../../misc/userTypes";
 import {
   useUpdateUserMutation,
+  useRegisterMutation,
 } from "../../redux/slices/userApi";
 
 function UserInfoForm({
   userInfo,
+  mode,
 }: {
-  userInfo: UserType;
+  userInfo: Partial<UserType>;
+  mode: "update" | "register";
 }) {
   const [
     updateUserTrigger,
     { isSuccess: updateIsSuccess, error: updateError },
   ] = useUpdateUserMutation();
 
+  const [
+    registerTrigger,
+    { isSuccess: registerIsSuccess, error: registerError },
+  ] = useRegisterMutation();
+
+  const navigate = useNavigate();
+
   const {
     control,
+    register,
+    getValues,
     handleSubmit,
     formState: { errors },
   } = useForm<UserType>({
@@ -26,12 +41,25 @@ function UserInfoForm({
   });
 
   const onSubmit: SubmitHandler<UserType> = (data) => {
-    updateUserTrigger(data);
+    if (mode === "update") {
+      updateUserTrigger(data as UserType);
+    } else {
+      registerTrigger(data as RegisterType);
+    }
   };
+
+  useEffect(() => {
+    if (registerIsSuccess) {
+      navigate("/profile");
+    }
+  }, [registerIsSuccess]);
 
   return (
     <>
-      <form onSubmit={handleSubmit(onSubmit)} className="w-full flex flex-col gap-2">
+      <form
+        onSubmit={handleSubmit(onSubmit)}
+        className="w-full flex flex-col gap-2"
+      >
         <div className="w-full grid grid-flow-col justify-stretch space-x-4">
           <Controller
             name="username"
@@ -75,6 +103,7 @@ function UserInfoForm({
             )}
           />
         </div>
+
         <div className="w-full grid grid-flow-col justify-stretch space-x-4">
           <Controller
             name="firstName"
@@ -125,72 +154,127 @@ function UserInfoForm({
             )}
           />
         </div>
-        <div className="w-full grid grid-flow-col justify-stretch space-x-4">
-          <Controller
-            name="address.address"
-            control={control}
-            render={({ field }) => (
-              <FloatingLabel
-                variant="outlined"
-                label="Address"
-                type="text"
-                {...field}
+        {mode === "register" && (
+          <div className="w-full grid grid-flow-col justify-stretch space-x-4">
+            <Controller
+              name="password"
+              control={control}
+              rules={{
+                required: "Password is required",
+                maxLength: {
+                  value: 20,
+                  message: "Password should not be more than 20 characters",
+                },
+                minLength: {
+                  value: 6,
+                  message: "Password should not be less than 6 characters",
+                },
+
+              }}
+              render={({ field }) => (
+                <FloatingLabel
+                  variant="outlined"
+                  label="Password"
+                  type="password"
+                  helperText={errors.password && errors.password.message}
+                  {...field}
+                />
+              )}
+            />
+
+            <Controller
+              name="confirmPassword"
+              control={control}
+              rules={{
+                required: "Password is required",
+                validate: (value) =>
+                  value === getValues("password") ||
+                  "The passwords do not match",
+              }}
+              render={({ field }) => (
+                <FloatingLabel
+                  variant="outlined"
+                  label="Confirm Password"
+                  type="password"
+                  helperText={
+                    errors.confirmPassword && errors.confirmPassword.message
+                  }
+                  {...field}
+                />
+              )}
+            />
+          </div>
+        )}
+        {mode === "update" && (
+          <>
+            <div className="w-full grid grid-flow-col justify-stretch space-x-4">
+              <Controller
+                name="address.address"
+                control={control}
+                render={({ field }) => (
+                  <FloatingLabel
+                    variant="outlined"
+                    label="Address"
+                    type="text"
+                    {...field}
+                  />
+                )}
               />
-            )}
-          />
-          <Controller
-            name="address.city"
-            control={control}
-            render={({ field }) => (
-              <FloatingLabel
-                variant="outlined"
-                label="City"
-                type="text"
-                {...field}
+              <Controller
+                name="address.city"
+                control={control}
+                render={({ field }) => (
+                  <FloatingLabel
+                    variant="outlined"
+                    label="City"
+                    type="text"
+                    {...field}
+                  />
+                )}
               />
-            )}
-          />
-        </div>
-        <div className="w-full grid grid-flow-col justify-stretch space-x-4">
-          <Controller
-            name="address.state"
-            control={control}
-            render={({ field }) => (
-              <FloatingLabel
-                variant="outlined"
-                label="State"
-                type="text"
-                {...field}
+            </div>
+            <div className="w-full grid grid-flow-col justify-stretch space-x-4">
+              <Controller
+                name="address.state"
+                control={control}
+                render={({ field }) => (
+                  <FloatingLabel
+                    variant="outlined"
+                    label="State"
+                    type="text"
+                    {...field}
+                  />
+                )}
               />
-            )}
-          />
-          <Controller
-            name="address.postalCode"
-            control={control}
-            render={({ field }) => (
-              <FloatingLabel
-                variant="outlined"
-                label="Postal Code"
-                type="text"
-                {...field}
+              <Controller
+                name="address.postalCode"
+                control={control}
+                render={({ field }) => (
+                  <FloatingLabel
+                    variant="outlined"
+                    label="Postal Code"
+                    type="text"
+                    {...field}
+                  />
+                )}
               />
-            )}
-          />
-        </div>
+            </div>
+          </>
+        )}
         <button
           type="submit"
           aria-label="Login"
           className="btn-primary self-center w-60"
         >
-          Confirm Change
+          Confirm
         </button>
       </form>
       {updateIsSuccess && (
         <Toast className="absolute">
-            <p className="text-sm text-teal-500">Info updated!</p>
-            <Toast.Toggle></Toast.Toggle>
+          <p className="text-sm text-teal-500">Info updated!</p>
+          <Toast.Toggle></Toast.Toggle>
         </Toast>
-    )}
+      )}
     </>
   );
 }

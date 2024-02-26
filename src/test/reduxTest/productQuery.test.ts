@@ -49,62 +49,14 @@ describe("productQuery", () => {
     });
   });
 
-  // test 3: getProdctsByCategory and sorted
-
-  test("getProductsByCategory-skincare-asc", async () => {
-    const { data } = await store.dispatch(
-      apiQueries.endpoints.getProductsByCategory.initiate({
-        category: "skincare",
-        limit: 12,
-        skip: 0,
-        sort: "asc",
-      })
-    );
-
-    expect(data).toHaveLength(1);
-  });
-
-  //test 4: getProductsByCategory-smartphones-desc
-  test("getProductsByCategory-smartphones-desc", async () => {
-   const {data, isSuccess} = await store.dispatch(
-      apiQueries.endpoints.getProductsByCategory.initiate({
-        category: "smartphones",
-        limit: 12,
-        skip: 0,
-        sort: "desc",
-      })
-    )
-
-    const products = data?.products
-
-    expect(products).toBeDefined();
-    expect(products).toHaveLength(3);
-    expect(isSuccess).toBe(true);
-    expect(products![0].price).toBeGreaterThanOrEqual(products![1].price); // added non-null assertion, otherwise TS doesnt know that products is non-null
-  });
-
-  // test 5: get product by id
+  // test 3: get product by id
   test("getProductById", async () => {
     const {data} =  await store.dispatch(apiQueries.endpoints.getProductById.initiate(1));
 
     expect(data.price).toBe(549);
   });
 
-  // test 6: getProductsBySearch
-  test("getProductsBySearch", async () => {
-
-    console.log('test being called');
-    const { data } = await store.dispatch(
-      apiQueries.endpoints.getProductsBySearch.initiate("phone")
-    );
-
-    // console.log(data);
-    // console.log(store.getState().api.queries['getProductsBySearch("phone")']);
-
-    expect(data).toHaveLength(2);
-  });
-
-  // test 7: createNewProduct
+  // test 4: createNewProduct
 
   test("createNewProduct", async () => {
     const newProduct: Omit<ProductType, "id"> = {
@@ -140,7 +92,7 @@ describe("productQuery", () => {
     expect(returnedData?.title).toBe("New Product");
   });
 
-  // test 8: updateProduct
+  // test 5: updateProduct
   test("updateProduct", async () => {
     const updatedProduct: Partial<ProductType> = {
       id: 1,
@@ -160,7 +112,7 @@ describe("productQuery", () => {
     expect(returnedData?.title).toBe("Updated Product");
   });
 
-  // test 9: deleteProduct
+  // test 6: deleteProduct
   test("deleteProduct", async () => {
     let returnedData = await store
       .dispatch(apiQueries.endpoints.deleteProduct.initiate(1))

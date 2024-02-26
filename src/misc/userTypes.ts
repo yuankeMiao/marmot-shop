@@ -24,4 +24,16 @@ export type UserType = {
     lastName: string;
     image: string;
     address?: AddressType;
+    password?: string;
+    confirmPassword?: string;
 };
+
+export type RegisterType = {
+    username: string;
+    email: string;
+    password: string;
+    confirmPassword: string;
+    firstName: string;
+    lastName: string;
+    image: string;
+}

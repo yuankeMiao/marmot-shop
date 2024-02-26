@@ -101,7 +101,7 @@ const mockProducts = {
   limits: 5,
 };
 
-export const handlers = [
+export const productsHandlers = [
   // Intercept the "GET /resource" request.
   http.get("https://dummyjson.com/products", async ({ request }) => {
     await new Promise((resolve) => setTimeout(resolve, 1000));
@@ -116,20 +116,6 @@ export const handlers = [
     });
   }),
 
-  http.get(
-    "https://dummyjson.com/products/category/:category",
-    ({ params }) => {
-      const { category } = params;
-      const limited = mockProducts.products.filter(
-        (p) => p.category === category
-      );
-      return HttpResponse.json({
-        ...mockProducts,
-        products: limited,
-      });
-    }
-  ),
-
   http.get("https://dummyjson.com/products/:id", ({ params }) => {
     const id = Number(params.id);
     const product = mockProducts.products.find((p) => p.id === id);
@@ -137,25 +123,6 @@ export const handlers = [
     return HttpResponse.json(product);
   }),
 
-  // https://dummyjson.com/products/search?q=phone
-  http.get("https://dummyjson.com/products/search",async({request}) => {
-    console.log("search handler called");
-    const search = new URL(request.url).searchParams.get("q");
-    // console.log("search", search);
-    if (!search || search === "")
-      return HttpResponse.json({
-        ...mockProducts,
-        products: [],
-      });
-    const results = mockProducts.products.filter((product) =>
-      product.title.toLowerCase().includes(search.toLowerCase())
-    );
-
-    return HttpResponse.json({
-      ...mockProducts,
-      products: results,
-    });
-  }),
 
   http.post("https://dummyjson.com/products/add", async ({ request }) => {
     const product = (await request.json()) as ProductType;
@@ -194,4 +161,41 @@ export const handlers = [
   }),
 ];
 
-export const productServer = setupServer(...handlers);
+
+export const searchHandler = [
+  http.get("https://dummyjson.com/products/search", async ({ request }) => {
+    console.log("search handler called");
+    const search = new URL(request.url).searchParams.get("q");
+    // console.log("search", search);
+    if (!search || search === "")
+      return HttpResponse.json({
+        ...mockProducts,
+        products: [],
+      });
+    const results = mockProducts.products.filter((product) =>
+      product.title.toLowerCase().includes(search.toLowerCase())
+    );
+
+    return HttpResponse.json({
+      ...mockProducts,
+      products: results,
+    });
+  }),
+];
+
+export const categoryHandler = [
+  http.get("https://dummyjson.com/products/category/:category", ({ params }) => {
+    const { category } = params;
+    const limited = mockProducts.products.filter(
+      (p) => p.category === category
+    );
+    return HttpResponse.json({
+      ...mockProducts,
+      products: limited,
+    });
+  }),
+];
+
+export const productServer = setupServer(...productsHandlers);
+export const searchServer = setupServer(...searchHandler);
+export const categoryServer = setupServer(...categoryHandler);

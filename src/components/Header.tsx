@@ -83,7 +83,7 @@ import useCheckMe, {logout} from "../appHooks/useCheckMe";
             >
               Login
             </button>
-            <button className="px-2">Register</button>
+            <button className="px-2"><Link to="/register">Register</Link></button>
           </div>
         )}
       </div>
