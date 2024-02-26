@@ -45,17 +45,19 @@ const apiQueries = createApi({
     thus, this reducer is not working with pagination, because it only sort after the data is fetched
     but since our assignmnent requires us to use the sort reducer, I have to implement it
     */
-    getSortedProducts: builder.query({
-      query: ({ limit, sort }: { limit: number; sort: string }) =>
-        `products/?limit=${limit}`,
+    getSortedProducts: builder.query<ProductQueryType, { limit: number; skip:number; sort: string }>({
+      query: ({ limit, skip, sort }) =>
+        `products/?limit=${limit}&skip=${skip}`,
       providesTags: ["Product"],
       transformResponse: (response: ProductQueryType, meta, arg) => {
         if (arg.sort === "asc") {
-          return response.products.sort((a, b) => a.price - b.price);
+          response.products.sort((a, b) => a.price - b.price);
+          return response;
         } else if (arg.sort === "desc") {
-          return response.products.sort((a, b) => b.price - a.price);
+          response.products.sort((a, b) => b.price - a.price);
+          return response;
         } else {
-          return response.products;
+          return response;
         }
       },
     }),
@@ -66,17 +68,19 @@ const apiQueries = createApi({
     }),
 
     // the same with the sorting here
-    getProductsByCategory: builder.query({
-      query: ({ category, sort }: { category: string; sort: string }) =>
-        `products/category/${category}`,
+    getProductsByCategory: builder.query<ProductQueryType, { category: string; limit:number; skip: number; sort: string }>({
+      query: ({ category, limit, skip, sort }) =>
+        `products/category/${category}/?limit=${limit}&skip=${skip}`,
       providesTags: ["Product"],
       transformResponse: (response: ProductQueryType, meta, arg) => {
         if (arg.sort === "asc") {
-          return response.products.sort((a, b) => a.price - b.price);
+          response.products.sort((a, b) => a.price - b.price);
+          return response;
         } else if (arg.sort === "desc") {
-          return response.products.sort((a, b) => b.price - a.price);
+          response.products.sort((a, b) => b.price - a.price);
+          return response;
         } else {
-          return response.products;
+          return response;
         }
       },
     }),

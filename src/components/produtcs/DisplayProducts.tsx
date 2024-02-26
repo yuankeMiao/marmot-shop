@@ -11,20 +11,19 @@ function DisplayProducts({ filter }: { filter: FilterType }) {
 
   const [productList, setProductList] = useState<ProductType[]>([]);
 
-  // const { data, error, isLoading } = useGetAllProductsQuery(12);
-  const { data, error, isLoading } = useGetSortedProductsQuery({limit: 12, sort: filter.sortByPrice});
+  const { data, error, isLoading } = useGetSortedProductsQuery({limit: 12, skip: 0, sort: filter.sortByPrice});
 
   const {
     data: productsByCategory,
     error: errorByCategory,
     isLoading: isLoadingByCategory,
-  } = useGetProductsByCategoryQuery({category: filter.category, sort: filter.sortByPrice});
+  } = useGetProductsByCategoryQuery({category: filter.category, limit: 12, skip: 0, sort: filter.sortByPrice});
 
   useEffect(() => {
     if (filter.category === "") {
-      setProductList(data || []);
+      setProductList(data?.products || []);
     } else {
-      setProductList(productsByCategory || []);
+      setProductList(productsByCategory?.products || []);
     }
   }, [filter.category, data, productsByCategory]);
 

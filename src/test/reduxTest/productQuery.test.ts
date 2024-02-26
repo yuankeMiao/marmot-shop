@@ -55,6 +55,8 @@ describe("productQuery", () => {
     const { data } = await store.dispatch(
       apiQueries.endpoints.getProductsByCategory.initiate({
         category: "skincare",
+        limit: 12,
+        skip: 0,
         sort: "asc",
       })
     );
@@ -64,16 +66,21 @@ describe("productQuery", () => {
 
   //test 4: getProductsByCategory-smartphones-desc
   test("getProductsByCategory-smartphones-desc", async () => {
-   const {data = [], isSuccess} = await store.dispatch(
+   const {data, isSuccess} = await store.dispatch(
       apiQueries.endpoints.getProductsByCategory.initiate({
         category: "smartphones",
+        limit: 12,
+        skip: 0,
         sort: "desc",
       })
     )
 
-    expect(data).toHaveLength(3);
+    const products = data?.products
+
+    expect(products).toBeDefined();
+    expect(products).toHaveLength(3);
     expect(isSuccess).toBe(true);
-    expect(data[0].price).toBeGreaterThanOrEqual(data[1].price);
+    expect(products![0].price).toBeGreaterThanOrEqual(products![1].price); // added non-null assertion, otherwise TS doesnt know that products is non-null
   });
 
   // test 5: get product by id
