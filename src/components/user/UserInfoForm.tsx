@@ -58,9 +58,9 @@ function UserInfoForm({
     <>
       <form
         onSubmit={handleSubmit(onSubmit)}
-        className="w-full flex flex-col gap-2"
+        className="form-control"
       >
-        <div className="w-full grid grid-flow-col justify-stretch space-x-4">
+        <div className="form-row">
           <Controller
             name="username"
             control={control}
@@ -104,7 +104,7 @@ function UserInfoForm({
           />
         </div>
 
-        <div className="w-full grid grid-flow-col justify-stretch space-x-4">
+        <div className="form-row">
           <Controller
             name="firstName"
             control={control}
@@ -156,7 +156,7 @@ function UserInfoForm({
         </div>
         {mode === "register" && (
           <>
-          <div className="w-full grid grid-flow-col justify-stretch space-x-4">
+          <div className="form-row">
             <Controller
               name="password"
               control={control}
@@ -205,7 +205,7 @@ function UserInfoForm({
               )}
             />
           </div>
-          <div className="w-full grid grid-flow-col justify-stretch space-x-4">
+          <div className="form-row">
             <Controller
               name="image"
               control={control}
@@ -224,7 +224,7 @@ function UserInfoForm({
         )}
         {mode === "update" && (
           <>
-            <div className="w-full grid grid-flow-col justify-stretch space-x-4">
+            <div className="form-row">
               <Controller
                 name="address.address"
                 control={control}
@@ -250,7 +250,7 @@ function UserInfoForm({
                 )}
               />
             </div>
-            <div className="w-full grid grid-flow-col justify-stretch space-x-4">
+            <div className="form-row">
               <Controller
                 name="address.state"
                 control={control}

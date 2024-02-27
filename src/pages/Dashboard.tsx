@@ -1,14 +1,17 @@
 import { useState, useEffect, useCallback } from "react";
-import { TextInput, Button, Table, Modal } from "flowbite-react";
+import { TextInput, Table, Modal } from "flowbite-react";
 
-import useCheckMe from "../appHooks/useCheckMe";
 import { useLazyGetProductsBySearchQuery, useDeleteProductMutation } from "../redux/slices/apiQuery";
+import ProductManageForm from "../components/admin/ProductManageForm";
+import { set } from "react-hook-form";
+import { ProductType } from "../misc/productTypes";
 
 const debounce = require("lodash.debounce");
 
 function Dashboard() {
-  const { currentUser, error: UserError, isAdmin } = useCheckMe();
   const [DeleteModalOpen, setDeleteModalOpen] = useState(false);
+  const [InfoFormModalOpen, setInfoFormModalOpen] = useState(false);
+  const [selectedProduct, setSelectedProduct] = useState<ProductType | null>(null);
 
   const [
     getProductsBySearchTrigger,
@@ -21,14 +24,15 @@ function Dashboard() {
     deleteProductTrigger(id);
   }
 
-  // commented them out for convenience of styling
-  // if(serError || !currentUser) {
-  //   return <div>Please Login</div>
-  // }
+  const handleEdit = (product: ProductType) => {
+    setInfoFormModalOpen(true);
+    setSelectedProduct(product);
+  }
 
-  // if(!isAdmin) {
-  //   return <div>Please login the admin user</div>
-  // }
+  const handleAdd = () => {
+    setSelectedProduct(null);
+    setInfoFormModalOpen(true);
+  }
 
   const [input, setInput] = useState<string>("");
 
@@ -53,7 +57,7 @@ function Dashboard() {
 
   return (
     <div className="p-8 flex flex-col gap-8">
-      <button className="btn-primary max-w-min">Add New Product</button>
+      <button className="btn-primary max-w-min" onClick={() => handleAdd()}>Add New Product</button>
       <label htmlFor="search" className="sr-only">
         Search
       </label>
@@ -66,6 +70,10 @@ function Dashboard() {
         onChange={handleInput}
       />
       <div>
+      {(isLoading || isFetching) && <div>Loading ...</div>}
+            {input.length > 0 && searchResult?.length === 0 && (
+              <div>There is no result, try another keyword.</div>
+            )}
         <Table hoverable>
           <Table.Head>
             <Table.HeadCell className="hidden md:table-cell">
@@ -90,10 +98,6 @@ function Dashboard() {
             </Table.HeadCell>
           </Table.Head>
           <Table.Body className="divide-y">
-            {(isLoading || isFetching) && <div>Loading ...</div>}
-            {input.length > 0 && searchResult?.length === 0 && (
-              <div>There is no result, try another keyword.</div>
-            )}
             {searchResult?.map((product) => (
               <Table.Row key={product.id}>
                 <Table.Cell className="hidden md:table-cell">
@@ -115,7 +119,7 @@ function Dashboard() {
                 </Table.Cell>
                 <Table.Cell>{product.stock}</Table.Cell>
                 <Table.Cell>
-                  <button className="text-blue-600 font-semibold underline">
+                  <button className="text-blue-600 font-semibold underline" onClick={() => handleEdit(product)}>
                     Edit
                   </button>
                 </Table.Cell>
@@ -129,6 +133,13 @@ function Dashboard() {
           </Table.Body>
         </Table>
       </div>
+
+      <Modal show={InfoFormModalOpen} onClose={() => {setInfoFormModalOpen(false); setSelectedProduct(null)}}>
+        <Modal.Header>{selectedProduct ? "Edit Product" : "Add New Product"}</Modal.Header>
+        <Modal.Body>
+          <ProductManageForm initialValue={selectedProduct} />
+        </Modal.Body>
+      </Modal>
 
       <Modal dismissible show={DeleteModalOpen} onClose={() => setDeleteModalOpen(false)}>
         <Modal.Header>Delete Product</Modal.Header>

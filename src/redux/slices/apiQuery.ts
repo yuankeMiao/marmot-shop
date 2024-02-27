@@ -114,8 +114,8 @@ const apiQueries = createApi({
     }),
 
     updateProduct: builder.mutation({
-      query: (updateData: Partial<ProductType>) => ({
-        url: `/products/${updateData.id}`,
+      query: ({id, ...updateData}: Partial<ProductType>) => ({
+        url: `/products/${id}`,
         method: "PUT",
         body: { ...updateData },
       }),
