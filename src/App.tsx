@@ -1,6 +1,12 @@
-import { BrowserRouter, Routes, Route } from "react-router-dom";
+import {
+  BrowserRouter,
+  Routes,
+  Route,
+  Outlet,
+  Navigate,
+} from "react-router-dom";
 import useCheckMe from "./appHooks/useCheckMe";
-import { useEffect } from "react";
+import { Children, useEffect } from "react";
 import { fetchUserCart } from "./redux/slices/cartSlice";
 import { useAppDispatch, useAppSelector } from "./appHooks/reduxHooks";
 
@@ -15,8 +21,15 @@ import ProfilePage from "./pages/ProfilePage";
 import Dashboard from "./pages/Dashboard";
 
 function App() {
-  const {currentUser} = useCheckMe();
+  const { currentUser, isAdmin, error } = useCheckMe();
   const dispatch = useAppDispatch();
+
+  const ProtectedRoute = ({ isAllowed }: { isAllowed: boolean }) => {
+    if (!isAllowed) {
+      return <Navigate to="/" replace />;
+    }
+    return <Outlet />;
+  };
 
   useEffect(() => {
     if (currentUser?.id) dispatch(fetchUserCart(currentUser.id));
@@ -31,9 +44,13 @@ function App() {
           <Route index element={<HomePage />} />
           <Route path="all-products" element={<AllProdutcsPage />} />
           <Route path="product/:productId" element={<ProductPage />} />
-          <Route path="profile" element={<ProfilePage />} />
           <Route path="cart" element={<CartPage currentCart={currentCart} />} />
-          <Route path="dashboard" element={<Dashboard />} />
+          <Route element={<ProtectedRoute isAllowed={!!currentUser} />}>
+            <Route path="profile" element={<ProfilePage />} />
+          </Route>
+          <Route element={<ProtectedRoute isAllowed={isAdmin} />}>
+            <Route path="dashboard" element={<Dashboard />} />
+          </Route>
           <Route path="*" element={<ErrorPage />} />
         </Route>
         <Route path="/register" element={<Register />} />
