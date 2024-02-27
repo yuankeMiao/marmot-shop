@@ -67,6 +67,7 @@ function Login({
               variant="outlined"
               label="Username"
               type="text"
+              color={errors.username && "error"}
               helperText={errors.username && errors.username.message}
               className="dark:bg-gray-700"
               {...field}
@@ -92,6 +93,7 @@ function Login({
               variant="outlined"
               label="Password"
               type="password"
+              color={errors.password && "error"}
               helperText={errors.password && errors.password.message}
               className="dark:bg-gray-700"
               {...field}

@@ -80,6 +80,7 @@ function UserInfoForm({
                 variant="outlined"
                 label="Username"
                 type="text"
+                color={errors.username && "error"}
                 helperText={errors.username && errors.username.message}
                 {...field}
               />
@@ -97,6 +98,7 @@ function UserInfoForm({
                 variant="outlined"
                 label="Email"
                 type="email"
+                color={errors.email && "error"}
                 helperText={errors.email && errors.email.message}
                 {...field}
               />
@@ -124,6 +126,7 @@ function UserInfoForm({
                 variant="outlined"
                 label="Firstname"
                 type="text"
+                color={errors.firstName && "error"}
                 helperText={errors.lastName && errors.lastName.message}
                 {...field}
               />
@@ -148,6 +151,7 @@ function UserInfoForm({
                 variant="outlined"
                 label="Lastname"
                 type="text"
+                color={errors.lastName && "error"}
                 helperText={errors.lastName && errors.lastName.message}
                 {...field}
               />
@@ -177,6 +181,7 @@ function UserInfoForm({
                   variant="outlined"
                   label="Password"
                   type="password"
+                  color={errors.password && "error"}
                   helperText={errors.password && errors.password.message}
                   {...field}
                 />
@@ -197,6 +202,7 @@ function UserInfoForm({
                   variant="outlined"
                   label="Confirm Password"
                   type="password"
+                  color={errors.confirmPassword && "error"}
                   helperText={
                     errors.confirmPassword && errors.confirmPassword.message
                   }
