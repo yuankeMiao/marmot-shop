@@ -49,9 +49,6 @@ function ShopAndFav({
         <FontAwesomeIcon icon={faCartShopping} className="mx-2" />
         Add to Bag
       </button>
-      <button className=" text-red-500 hover:text-red-300">
-        <FontAwesomeIcon icon={faHeart} className="w-8 h-8" />
-      </button>
 
       <Modal show={openModal} onClose={() => setOpenModal(false)}>
         <Modal.Header>Added to My Bag!</Modal.Header>

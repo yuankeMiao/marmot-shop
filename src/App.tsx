@@ -5,8 +5,7 @@ import {
   Outlet,
   Navigate,
 } from "react-router-dom";
-import useCheckMe from "./appHooks/useCheckMe";
-import { Children, useEffect } from "react";
+import { useEffect } from "react";
 import { fetchUserCart } from "./redux/slices/cartSlice";
 import { useAppDispatch, useAppSelector } from "./appHooks/reduxHooks";
 
@@ -19,6 +18,9 @@ import CartPage from "./pages/CartPage";
 import AllProdutcsPage from "./pages/AllProdutcsPage";
 import ProfilePage from "./pages/ProfilePage";
 import Dashboard from "./pages/Dashboard";
+
+import useCheckMe from "./appHooks/useCheckMe";
+import ScrollToTop from "./components/utils/ScrollToTop";
 
 function App() {
   const { currentUser, isAdmin, error } = useCheckMe();
@@ -39,6 +41,7 @@ function App() {
 
   return (
     <BrowserRouter basename="/">
+      <ScrollToTop />
       <Routes>
         <Route path="/" element={<Layout />}>
           <Route index element={<HomePage />} />
@@ -46,7 +49,7 @@ function App() {
           <Route path="product/:productId" element={<ProductPage />} />
           <Route path="cart" element={<CartPage currentCart={currentCart} />} />
           <Route element={<ProtectedRoute isAllowed={!!currentUser} />}>
-            <Route path="profile" element={<ProfilePage />} />
+            <Route path="profile" element={<ProfilePage currentUser={currentUser|| null} />} />
           </Route>
           <Route element={<ProtectedRoute isAllowed={isAdmin} />}>
             <Route path="dashboard" element={<Dashboard />} />

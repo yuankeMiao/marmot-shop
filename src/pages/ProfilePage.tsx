@@ -1,17 +1,23 @@
 import { Link, useNavigate } from "react-router-dom";
 import { Table } from "flowbite-react";
 
-import useCheckMe, { logout } from "../appHooks/useCheckMe";
+import { logout } from "../appHooks/useCheckMe";
 import UserInfoForm from "../components/user/UserInfoForm";
+import { UserType } from "../misc/userTypes";
 
 /* 
 my plan for this page:
 if user logout on this page, it should be able to recognize the token is gone, then redirect to home page
 */
 
-function ProfilePage() {
-  const { currentUser, error, isLoading } = useCheckMe();
+function ProfilePage({ currentUser }: { currentUser: UserType | null}) {
   const navigate = useNavigate();
+  if(!currentUser) return (
+    <div className="py-20">
+      <p className="text-center text-xl">Please log in to chcek your profile!</p>
+    </div>
+  )
+
   const handleLogout = () => {
     navigate("/");
     logout();

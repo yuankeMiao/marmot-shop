@@ -4,7 +4,6 @@ import { Modal, Dropdown } from "flowbite-react";
 
 import {
   faCartShopping,
-  faHeart,
   faBars,
 } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
@@ -51,16 +50,11 @@ import useCheckMe, {logout} from "../appHooks/useCheckMe";
       <Search />
 
       <div className="flex gap-4 items-center">
-        <div className="flex gap-2">
-          <Badge amount={15}>
-            <FontAwesomeIcon icon={faHeart} className="w-5 h-5" />
-          </Badge>
           <Badge amount={cartAmount}>
             <Link to="/cart">
               <FontAwesomeIcon icon={faCartShopping} className="w-5 h-5" />
             </Link>
           </Badge>
-        </div>
 
         {currentUser ? (
           <div className="flex gap-2 items-center">

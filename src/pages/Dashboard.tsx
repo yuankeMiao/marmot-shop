@@ -3,7 +3,6 @@ import { TextInput, Table, Modal } from "flowbite-react";
 
 import { useLazyGetProductsBySearchQuery, useDeleteProductMutation } from "../redux/slices/apiQuery";
 import ProductManageForm from "../components/admin/ProductManageForm";
-import { set } from "react-hook-form";
 import { ProductType } from "../misc/productTypes";
 
 const debounce = require("lodash.debounce");
