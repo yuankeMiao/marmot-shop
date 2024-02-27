@@ -135,7 +135,7 @@ const apiQueries = createApi({
 
 export const {
   useGetAllProductsQuery,
-  useGetSortedProductsQuery,
+  useLazyGetSortedProductsQuery,
   useGetProductByIdQuery,
   useLazyGetProductsByCategoryQuery,
   useLazyGetProductsBySearchQuery,
