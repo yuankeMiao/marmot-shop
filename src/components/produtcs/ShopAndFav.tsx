@@ -53,7 +53,7 @@ function ShopAndFav({
       <Modal show={openModal} onClose={() => setOpenModal(false)}>
         <Modal.Header>Added to My Bag!</Modal.Header>
         <Modal.Body>
-          <div className="space-y-6">
+          <div className="space-y-6 dark:text-gray-100">
             <div className="flex gap-8">
               <img
                 src={addToCartItem.thumbnail}

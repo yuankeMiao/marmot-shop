@@ -44,10 +44,10 @@ function Login({
   return (
     <div>
       <form
-        className="bg-white mt-8 w-full p-4 flex flex-col gap-8 "
+        className="mt-8 w-full p-4 flex flex-col gap-8"
         onSubmit={handleSubmit(onSubmit)}
       >
-        <h3 className="text-3xl -mt-12">Login form</h3>
+        <h3 className="text-3xl -mt-12 dark:text-gray-100">Login form</h3>
         <Controller
           name="username"
           control={control}
@@ -64,11 +64,11 @@ function Login({
           }}
           render={({ field }) => (
             <FloatingLabel
-              className=""
               variant="outlined"
               label="Username"
               type="text"
               helperText={errors.username && errors.username.message}
+              className="dark:bg-gray-700"
               {...field}
             />
           )}
@@ -93,6 +93,7 @@ function Login({
               label="Password"
               type="password"
               helperText={errors.password && errors.password.message}
+              className="dark:bg-gray-700"
               {...field}
             />
           )}

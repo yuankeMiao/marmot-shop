@@ -119,6 +119,7 @@ function ProductManageForm({
                 type="text"
                 color={errors.title && "error"}
                 helperText={errors.title && errors.title.message}
+                className="dark:bg-gray-700"
                 {...field}
               />
             )}
@@ -169,6 +170,7 @@ function ProductManageForm({
                 type="number"
                 color={errors.price && "error"}
                 helperText={errors.price && errors.price.message}
+                className="dark:bg-gray-700"
                 {...field}
               />
             )}
@@ -195,6 +197,7 @@ function ProductManageForm({
                 helperText={
                   errors.discountPercentage && errors.discountPercentage.message
                 }
+                className="dark:bg-gray-700"
                 {...field}
               />
             )}
@@ -223,6 +226,7 @@ function ProductManageForm({
                 type="number"
                 color={errors.stock && "error"}
                 helperText={errors.stock && errors.stock.message}
+                className="dark:bg-gray-700"
                 {...field}
               />
             )}
@@ -247,6 +251,7 @@ function ProductManageForm({
                 type="text"
                 color={errors.brand && "error"}
                 helperText={errors.brand && errors.brand.message}
+                className="dark:bg-gray-700"
                 {...field}
               />
             )}
@@ -274,6 +279,7 @@ function ProductManageForm({
                 maxLength={500}
                 color={errors.description && "failure"}
                 helperText={errors.description && errors.description.message}
+                className="dark:bg-gray-700"
                 {...field}
               />
             )}
@@ -297,6 +303,7 @@ function ProductManageForm({
                 type="text"
                 color={errors.thumbnail && "error"}
                 helperText={errors.thumbnail && errors.thumbnail.message}
+                className="dark:bg-gray-700"
                 {...field}
               />
             )}
@@ -319,6 +326,7 @@ function ProductManageForm({
                   variant="outlined"
                   label={`Image URL ${index + 1}`}
                   type="text"
+                  className="dark:bg-gray-700"
                   {...field}
                 />
               )}

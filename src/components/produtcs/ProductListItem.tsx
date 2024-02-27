@@ -18,7 +18,7 @@ function ProductListItem({ product }: { product: CartItemType }) {
   };
 
   return (
-    <div className="flex gap-8 my-2 p-8 border-b-2 last:border-none">
+    <div className="flex gap-8 my-2 p-8 border-b-2 last:border-none dark:border-gray-400">
       <img
         src={product.thumbnail}
         alt={product.title}

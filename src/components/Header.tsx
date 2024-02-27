@@ -15,6 +15,7 @@ import { useAppSelector } from "../appHooks/reduxHooks";
 
 import Login from "./user/Login";
 import useCheckMe, {logout} from "../appHooks/useCheckMe";
+import ToggleDarkMode from "./utils/ToggleDarkMode";
 
  function Header() {
 
@@ -50,6 +51,7 @@ import useCheckMe, {logout} from "../appHooks/useCheckMe";
       <Search />
 
       <div className="flex gap-4 items-center">
+        <ToggleDarkMode />
           <Badge amount={cartAmount}>
             <Link to="/cart">
               <FontAwesomeIcon icon={faCartShopping} className="w-5 h-5" />
@@ -88,7 +90,7 @@ import useCheckMe, {logout} from "../appHooks/useCheckMe";
         size="md"
         popup
       >
-        <Modal.Header />
+        <Modal.Header/>
         <Modal.Body>
           <Login setOpenModal={setOpenModal} />
         </Modal.Body>

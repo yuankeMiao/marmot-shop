@@ -14,7 +14,7 @@ function ProfilePage({ currentUser }: { currentUser: UserType | null}) {
   const navigate = useNavigate();
   if(!currentUser) return (
     <div className="py-20">
-      <p className="text-center text-xl">Please log in to chcek your profile!</p>
+      <p className="text-center text-xl dark:text-gray-100">Please log in to chcek your profile!</p>
     </div>
   )
 
@@ -26,13 +26,13 @@ function ProfilePage({ currentUser }: { currentUser: UserType | null}) {
   if (!currentUser)
     return (
       <div className="py-20">
-        <p className="text-center text-xl">Please log in to chcek your profile!</p>
+        <p className="text-center text-xl dark:text-gray-100">Please log in to chcek your profile!</p>
       </div>
     );
 
   return (
     <div className="p-8 flex flex-col lg:flex-row gap-8">
-      <div className="relative min-w-56 flex flex-col bg-gray-100 rounded-xl overflow-hidden h-full text-lg *:border-b-2 *:p-4 hover:*:bg-gray-200">
+      <div className="relative min-w-56 flex flex-col bg-gray-100 dark:bg-gray-700 rounded-xl overflow-hidden h-full text-lg *:border-b-2 dark:*:border-gray-500 *:p-4 hover:*:bg-gray-200">
         <a href="#overview">Account overview</a>
         <a href="#orders">My orders</a>
         <a href="#address">My address</a>
@@ -56,7 +56,7 @@ function ProfilePage({ currentUser }: { currentUser: UserType | null}) {
           <div className="invisible h-20 -mt-20"></div>
           <h2 className="text-xl font-semibold my-8">Acount Overveiw</h2>
           <Table>
-            <Table.Body className="divide-y">
+            <Table.Body className="divide-y dark:bg-gray-800">
               <Table.Row>
                 <Table.Cell className="font-bold">Name</Table.Cell>
                 <Table.Cell>{`${currentUser.firstName} ${currentUser.lastName}`}</Table.Cell>
@@ -72,7 +72,7 @@ function ProfilePage({ currentUser }: { currentUser: UserType | null}) {
         <div id="orders">
           <div className="invisible h-20 -mt-20"></div>
           <h2 className="text-xl font-semibold my-8">My orders</h2>
-          <div className="bg-gray-100 p-8 rounded-xl flex flex-col items-center gap-8">
+          <div className="bg-gray-100 dark:bg-gray-800 p-8 rounded-xl flex flex-col items-center gap-8">
             <p>You don't have any order yet, checkout your items now!</p>
             <button className="btn-primary w-40">
               <Link to="/cart">Go to cart</Link>
@@ -85,7 +85,7 @@ function ProfilePage({ currentUser }: { currentUser: UserType | null}) {
           <h2 className="text-xl font-semibold my-8">My address</h2>
           <div>
             <Table>
-              <Table.Body className="divide-y">
+              <Table.Body className="divide-y dark:bg-gray-800">
                 <Table.Row>
                   <Table.Cell className="font-bold">Address</Table.Cell>
                   <Table.Cell>{currentUser.address?.address}</Table.Cell>

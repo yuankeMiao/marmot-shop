@@ -60,11 +60,11 @@ function Search() {
           />
           {(isLoading || isFetching) && (<div>Loading ...</div>)}
           {(input.length > 0 && searchResult?.length === 0) && (
-          <div>
+          <div className="dark:text-gray-100">
             <p>There is no result, try another keyword.</p>
             </div>)}
           {input.length>0 &&  searchResult?.map((product) => (
-            <div  key={product.id}  className="border-b-2 last:border-none">
+            <div  key={product.id}  className="border-b-2 dark:border-gray-400 last:border-none dark:text-gray-100">
               <Link to={`/product/${product.id}`} onClick={handleClickProduct} className="flex gap-8 items-center py-2 ">
                 <img
                   src={product.thumbnail}

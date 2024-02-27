@@ -38,7 +38,7 @@ function AmountControl({
       </Button>
       <input
         type="text"
-        className="w-16 bg-gray-50 border border-gray-300 text-gray-900 text-md text-center"
+        className="w-16 bg-gray-50 dark:bg-gray-600 border border-gray-300 dark:border-gray-400 text-gray-900 dark:text-gray-50 text-md text-center"
         value={amount}
         onChange={handleInputAmount}
       />

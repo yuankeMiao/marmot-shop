@@ -18,7 +18,7 @@ function HomePage() {
   // console.log(data);
 
   return (
-    <div className="*:mb-12 last:mb-40">
+    <div className="*:mb-12 last:pb-40" >
       <div className="relative w-full aspect-[3/2] md:aspect-[3/1]">
         <img
           className="w-full h-full object-cover"
