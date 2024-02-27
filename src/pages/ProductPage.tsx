@@ -1,5 +1,5 @@
-import { useEffect, useState } from "react";
-import { useParams } from "react-router-dom";
+import { useState } from "react";
+import { useParams, Link } from "react-router-dom";
 import { Breadcrumb, Rating, Carousel } from "flowbite-react";
 
 import { useGetProductByIdQuery } from "../redux/slices/apiQuery";
@@ -8,9 +8,6 @@ import ShopAndFav from "../components/produtcs/ShopAndFav";
 import AmountControl from "../components/produtcs/AmountControl";
 
 function ProductPage() {
-  useEffect(() => {
-    window.scrollTo(0, 0);
-  }, []);
 
   const productId = Number(useParams().productId);
   const { data, error, isLoading } = useGetProductByIdQuery(productId); //Yay!!!!
@@ -24,9 +21,9 @@ function ProductPage() {
       {product && (
         <div className="*:m-4">
           <Breadcrumb aria-label="breadcrumb">
-            <Breadcrumb.Item href="/">Home</Breadcrumb.Item>
-            <Breadcrumb.Item href="/all-products">Products</Breadcrumb.Item>
-            <Breadcrumb.Item href="/">
+          <Breadcrumb.Item><Link to="/">Home</Link></Breadcrumb.Item>
+          <Breadcrumb.Item><Link to="/all-products">Products</Link></Breadcrumb.Item>
+            <Breadcrumb.Item>
               {product.category.replace(
                 product.category[0],
                 product.category[0].toUpperCase()

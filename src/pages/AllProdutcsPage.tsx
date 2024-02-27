@@ -5,6 +5,7 @@ import DisplayProducts from "../components/produtcs/DisplayProducts";
 import Filters from "../components/produtcs/Filters";
 
 import type { FilterType } from "../misc/productTypes";
+import { Link } from "react-router-dom";
 
 
 function AllProdutcsPage() {
@@ -26,8 +27,8 @@ function AllProdutcsPage() {
       </div>
       <main className="py-8 lg:px-8">
         <Breadcrumb aria-label="breadcrumb">
-          <Breadcrumb.Item href="/">Home</Breadcrumb.Item>
-          <Breadcrumb.Item href="/all-products">Products</Breadcrumb.Item>
+          <Breadcrumb.Item><Link to="/">Home</Link></Breadcrumb.Item>
+          <Breadcrumb.Item><Link to="/all-products">Products</Link></Breadcrumb.Item>
         </Breadcrumb>
         <DisplayProducts filter={filter} />
       </main>
