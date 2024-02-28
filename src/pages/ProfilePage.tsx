@@ -4,11 +4,7 @@ import { Table } from "flowbite-react";
 import { logout } from "../appHooks/useCheckMe";
 import UserInfoForm from "../components/user/UserInfoForm";
 import { UserType } from "../misc/userTypes";
-
-/* 
-my plan for this page:
-if user logout on this page, it should be able to recognize the token is gone, then redirect to home page
-*/
+import AddressTable from "../components/user/AddressTable";
 
 function ProfilePage({ currentUser }: { currentUser: UserType | null}) {
   const navigate = useNavigate();
@@ -22,13 +18,6 @@ function ProfilePage({ currentUser }: { currentUser: UserType | null}) {
     navigate("/");
     logout();
   };
-
-  if (!currentUser)
-    return (
-      <div className="py-20">
-        <p className="text-center text-xl dark:text-gray-100">Please log in to chcek your profile!</p>
-      </div>
-    );
 
   return (
     <div className="p-8 flex flex-col lg:flex-row gap-8">
@@ -83,36 +72,9 @@ function ProfilePage({ currentUser }: { currentUser: UserType | null}) {
         <div id="address">
           <div className="invisible h-20 -mt-20"></div>
           <h2 className="text-xl font-semibold my-8">My address</h2>
-          <div>
-            <Table>
-              <Table.Body className="divide-y dark:bg-gray-800">
-                <Table.Row>
-                  <Table.Cell className="font-bold">Address</Table.Cell>
-                  <Table.Cell>{currentUser.address?.address}</Table.Cell>
-                </Table.Row>
-                <Table.Row>
-                  <Table.Cell className="font-bold">City</Table.Cell>
-                  <Table.Cell>{currentUser.address?.city}</Table.Cell>
-                </Table.Row>
-                <Table.Row>
-                  <Table.Cell className="font-bold">State</Table.Cell>
-                  <Table.Cell>{currentUser.address?.state}</Table.Cell>
-                </Table.Row>
-                <Table.Row>
-                  <Table.Cell className="font-bold">Postal code</Table.Cell>
-                  <Table.Cell>{currentUser.address?.postalCode}</Table.Cell>
-                </Table.Row>
-              </Table.Body>
-            </Table>
-            <iframe
-              loading="lazy"
-              width="100%"
-              height="300px"
-              className="rounded-xl my-8"
-              title="Google map"
-              src={`https://maps.google.com/maps?q=${currentUser.address?.coordinates.lat},${currentUser.address?.coordinates.lng}&t=&z=15&ie=UTF8&iwloc=&output=embed`}
-            />
-          </div>
+          {currentUser.address &&
+            <AddressTable address={currentUser.address} />
+          }
         </div>
 
         <div id="change">

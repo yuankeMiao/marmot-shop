@@ -8,39 +8,49 @@ import {
 import ProductCard from "./ProductCard";
 import { FilterType, ProductType } from "../../misc/productTypes";
 
-
 function DisplayProducts({ filter }: { filter: FilterType }) {
-
-    // pagination
-    const itemsPerPage = 12;
-    const [currentPage, setCurrentPage] = useState(1);
-    const [totalItems, setTotalItems] = useState(0);
-    const onPageChange = (page: number) => setCurrentPage(page);
-
+  // pagination
+  const itemsPerPage = 12;
+  const [currentPage, setCurrentPage] = useState(1);
+  const [totalItems, setTotalItems] = useState(0);
+  const onPageChange = (page: number) => setCurrentPage(page);
 
   const [productList, setProductList] = useState<ProductType[]>([]);
-  const { data, isError, isLoading }=
-    useGetSortedProductsQuery({        limit: itemsPerPage,
-      skip: (currentPage - 1) * itemsPerPage,
-      sort: filter.sortByPrice}, {
-      refetchOnMountOrArgChange: true,
-      skip: filter.category !== "",
-      });
-  const 
+  const { data, isError, isLoading, refetch } = useGetSortedProductsQuery(
     {
-      data: productsByCategory,
-      isError: errorByCategory,
-      isLoading: isLoadingByCategory,
+      limit: itemsPerPage,
+      skip: (currentPage - 1) * itemsPerPage,
+      sort: filter.sortByPrice,
+    },
+    {
+      skip: filter.category !== "",
     }
-  = useGetProductsByCategoryQuery({
-    category: filter.category,
-    limit: itemsPerPage,
-    skip: (currentPage - 1) * itemsPerPage,
-    sort: filter.sortByPrice,
-  }, {
-    refetchOnMountOrArgChange: true,
-    skip: filter.category === "", 
-  });
+  );
+  const {
+    data: productsByCategory,
+    isError: errorByCategory,
+    isLoading: isLoadingByCategory,
+    refetch: refetchByCategory,
+  } = useGetProductsByCategoryQuery(
+    {
+      category: filter.category,
+      limit: itemsPerPage,
+      skip: (currentPage - 1) * itemsPerPage,
+      sort: filter.sortByPrice,
+    },
+    {
+      skip: filter.category === "",
+    }
+  );
+
+  useEffect(() => {
+    if (filter.category !== "") {
+      refetchByCategory();
+    } else {
+      refetch();
+    }
+  }
+  , [filter, refetch, refetchByCategory]);
 
   useEffect(() => {
     if (data) {
@@ -52,8 +62,7 @@ function DisplayProducts({ filter }: { filter: FilterType }) {
     }
   }, [data, productsByCategory]);
 
-
-  // no need to calculate total pages if totalItems didn't change
+  // no need to calculate total pages if totalItems didn't change, ie. on all products
   const totalPages = useMemo(
     () => Math.ceil(totalItems / itemsPerPage),
     [totalItems]
