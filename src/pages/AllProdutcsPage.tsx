@@ -15,10 +15,7 @@ function AllProdutcsPage() {
     category: "",
     sortByPrice: "",
   });
-
   // then I pass the filter to the DisplayProducts component. setter to the Filters component
-
-  // console.log(filter); // working
 
   return (
     <div className="flex flex-col lg:flex-row">

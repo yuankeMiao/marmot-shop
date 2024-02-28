@@ -1,69 +1,70 @@
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { Pagination } from "flowbite-react";
 
 import {
-  useLazyGetProductsByCategoryQuery,
-  useLazyGetSortedProductsQuery,
+  useGetProductsByCategoryQuery,
+  useGetSortedProductsQuery,
 } from "../../redux/slices/apiQuery";
 import ProductCard from "./ProductCard";
 import { FilterType, ProductType } from "../../misc/productTypes";
-import { set } from "react-hook-form";
+
 
 function DisplayProducts({ filter }: { filter: FilterType }) {
+
+    // pagination
+    const itemsPerPage = 12;
+    const [currentPage, setCurrentPage] = useState(1);
+    const [totalItems, setTotalItems] = useState(0);
+    const onPageChange = (page: number) => setCurrentPage(page);
+
+
   const [productList, setProductList] = useState<ProductType[]>([]);
-  const [getSortedProductsTrigger, { data, isError, isLoading }] =
-    useLazyGetSortedProductsQuery();
-  const [
-    getProductsByCatTrigger,
+  const { data, isError, isLoading }=
+    useGetSortedProductsQuery({        limit: itemsPerPage,
+      skip: (currentPage - 1) * itemsPerPage,
+      sort: filter.sortByPrice}, {
+      refetchOnMountOrArgChange: true,
+      skip: filter.category !== "",
+      });
+  const 
     {
       data: productsByCategory,
       isError: errorByCategory,
       isLoading: isLoadingByCategory,
-    },
-  ] = useLazyGetProductsByCategoryQuery();
-
-  // pagination
-  const itemsPerPage = 12;
-  const [currentPage, setCurrentPage] = useState(1);
-  const [totalItems, setTotalItems] = useState(0);
-  const onPageChange = (page: number) => setCurrentPage(page);
+    }
+  = useGetProductsByCategoryQuery({
+    category: filter.category,
+    limit: itemsPerPage,
+    skip: (currentPage - 1) * itemsPerPage,
+    sort: filter.sortByPrice,
+  }, {
+    refetchOnMountOrArgChange: true,
+    skip: filter.category === "", 
+  });
 
   useEffect(() => {
-    if (filter.category === "") {
-      getSortedProductsTrigger({
-        limit: itemsPerPage,
-        skip: (currentPage - 1) * itemsPerPage,
-        sort: filter.sortByPrice,
-      });
-      setProductList(data?.products || []);
-      setTotalItems(data?.total || 0);
-    } else {
-      getProductsByCatTrigger({
-        category: filter.category,
-        limit: itemsPerPage,
-        skip: (currentPage - 1) * itemsPerPage,
-        sort: filter.sortByPrice,
-      });
-      setProductList(productsByCategory?.products || []);
-      setTotalItems(productsByCategory?.total || 0);
+    if (data) {
+      setProductList(data.products);
+      setTotalItems(data.total);
+    } else if (productsByCategory) {
+      setProductList(productsByCategory.products);
+      setTotalItems(productsByCategory.total);
     }
-  }, [
-    filter.category,
-    data,
-    productsByCategory,
-    filter.sortByPrice,
-    getProductsByCatTrigger,
-    getSortedProductsTrigger,
-    currentPage,
-  ]);
+  }, [data, productsByCategory]);
 
-  // console.log(productList)
+
+  // no need to calculate total pages if totalItems didn't change
+  const totalPages = useMemo(
+    () => Math.ceil(totalItems / itemsPerPage),
+    [totalItems]
+  );
+
   return (
     <>
       <div className="flex overflow-x-auto sm:justify-center my-4">
         <Pagination
           currentPage={currentPage}
-          totalPages={Math.ceil(totalItems / itemsPerPage)}
+          totalPages={totalPages}
           onPageChange={onPageChange}
         />
       </div>
@@ -79,7 +80,7 @@ function DisplayProducts({ filter }: { filter: FilterType }) {
       <div className="flex overflow-x-auto sm:justify-center my-4">
         <Pagination
           currentPage={currentPage}
-          totalPages={Math.ceil(totalItems / itemsPerPage)}
+          totalPages={totalPages}
           onPageChange={onPageChange}
         />
       </div>

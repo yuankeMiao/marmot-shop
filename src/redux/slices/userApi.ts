@@ -57,6 +57,6 @@ const userApi = apiQueries.injectEndpoints({
   }),
 });
 
-export const { useLoginMutation, useRegisterMutation, useUpdateUserMutation, useLazyGetCurrentUserQuery } = userApi;
+export const { useLoginMutation, useRegisterMutation, useUpdateUserMutation, useGetCurrentUserQuery } = userApi;
 
 export default userApi;

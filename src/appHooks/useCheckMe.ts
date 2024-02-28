@@ -4,16 +4,13 @@ if no, return false;
 if yes, return user
 */
 
-import { useEffect } from "react";
-import { useLazyGetCurrentUserQuery } from "../redux/slices/userApi";
+import { useGetCurrentUserQuery } from "../redux/slices/userApi";
 
 export default function useCheckMe() {
   const token = localStorage.getItem("token") || null;
-  const [getCurrentUserTrigger, { data: currentUser, error, isLoading }] = useLazyGetCurrentUserQuery();
-
-  useEffect(() => {
-  if (token) getCurrentUserTrigger(token);
-  }, [token, getCurrentUserTrigger]);
+  const { data: currentUser, error, isLoading } = useGetCurrentUserQuery(token, {
+    skip: !token, // so it will not run if token is null
+  });
 
   const isAdmin = currentUser?.id === 1;
 
