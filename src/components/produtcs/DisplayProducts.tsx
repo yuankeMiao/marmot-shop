@@ -50,17 +50,17 @@ function DisplayProducts({ filter }: { filter: FilterType }) {
       refetch();
     }
   }
-  , [filter, refetch, refetchByCategory]);
+  , [filter.category, refetch, refetchByCategory]);
 
   useEffect(() => {
-    if (data) {
+    if (filter.category === "" && data) {
       setProductList(data.products);
       setTotalItems(data.total);
-    } else if (productsByCategory) {
+    } else if (filter.category !== "" && productsByCategory ) {
       setProductList(productsByCategory.products);
       setTotalItems(productsByCategory.total);
     }
-  }, [data, productsByCategory]);
+  }, [data, productsByCategory, filter.category]);
 
   // no need to calculate total pages if totalItems didn't change, ie. on all products
   const totalPages = useMemo(

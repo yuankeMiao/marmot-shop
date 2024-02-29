@@ -21,12 +21,13 @@ import Dashboard from "./pages/Dashboard";
 
 import useCheckMe from "./appHooks/useCheckMe";
 import ScrollToTop from "./components/utils/ScrollToTop";
+import { UserType } from "./misc/userTypes";
 
 function App() {
   const { currentUser, isAdmin, error } = useCheckMe();
   const dispatch = useAppDispatch();
 
-  const ProtectedRoute = ({ isAllowed }: { isAllowed: boolean }) => {
+  const ProtectedRoute = ({ isAllowed}: { isAllowed: boolean }) => {
     if (!isAllowed) {
       return <Navigate to="/" replace />;
     }
@@ -48,10 +49,10 @@ function App() {
           <Route path="all-products" element={<AllProdutcsPage />} />
           <Route path="product/:productId" element={<ProductPage />} />
           <Route path="cart" element={<CartPage currentCart={currentCart} />} />
-          <Route element={<ProtectedRoute isAllowed={!!currentUser} />}>
-            <Route path="profile" element={<ProfilePage currentUser={currentUser|| null} />} />
+          <Route element={<ProtectedRoute isAllowed={!!currentUser}/>}>
+            <Route path="profile" element={<ProfilePage currentUser={currentUser} />} />
           </Route>
-          <Route element={<ProtectedRoute isAllowed={isAdmin} />}>
+          <Route element={<ProtectedRoute isAllowed={isAdmin}/>}>
             <Route path="dashboard" element={<Dashboard />} />
           </Route>
           <Route path="*" element={<ErrorPage />} />

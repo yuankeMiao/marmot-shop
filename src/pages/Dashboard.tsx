@@ -8,9 +8,12 @@ import {
 import ProductManageForm from "../components/admin/ProductManageForm";
 import { ProductType } from "../misc/productTypes";
 
+import useCheckMe from "../appHooks/useCheckMe";
+
 const debounce = require("lodash.debounce");
 
 function Dashboard() {
+  const {currentUser, isAdmin} = useCheckMe();
   const [DeleteModalOpen, setDeleteModalOpen] = useState(false);
   const [InfoFormModalOpen, setInfoFormModalOpen] = useState(false);
   const [selectedProduct, setSelectedProduct] = useState<ProductType | null>(
@@ -75,6 +78,9 @@ function Dashboard() {
       debounced.cancel();
     };
   }, [input, debounced, getProductsBySearchTrigger]);
+
+
+  if(!isAdmin) return <div>You are not authorized to access this page</div>;
 
   return (
     <div className="p-8 flex flex-col gap-8">

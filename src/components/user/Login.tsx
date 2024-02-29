@@ -30,7 +30,7 @@ function Login({
     await loginTrigger(data)
       .unwrap()
       .then((result) => {
-        window.localStorage.setItem("token", result?.token);
+        window.localStorage.setItem("token", result.token);
         setOpenModal(false);
       })
       .catch((error) => {
