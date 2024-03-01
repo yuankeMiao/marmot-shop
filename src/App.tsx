@@ -12,7 +12,6 @@ import { useAppDispatch, useAppSelector } from "./appHooks/reduxHooks";
 import Layout from "./pages/Layout";
 import HomePage from "./pages/HomePage";
 import ProductPage from "./pages/ProductPage";
-import Register from "./pages/Register";
 import ErrorPage from "./pages/ErrorPage";
 import CartPage from "./pages/CartPage";
 import AllProdutcsPage from "./pages/AllProdutcsPage";
@@ -57,7 +56,6 @@ function App() {
           </Route>
           <Route path="*" element={<ErrorPage />} />
         </Route>
-        <Route path="/register" element={<Register />} />
       </Routes>
     </BrowserRouter>
   );

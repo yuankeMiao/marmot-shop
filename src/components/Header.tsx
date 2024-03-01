@@ -2,10 +2,7 @@ import { useState } from "react";
 import { Link } from "react-router-dom";
 import { Modal, Dropdown } from "flowbite-react";
 
-import {
-  faCartShopping,
-  faBars,
-} from "@fortawesome/free-solid-svg-icons";
+import { faCartShopping, faBars } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 
 import Badge from "./buttons/Bagde";
@@ -14,14 +11,16 @@ import Search from "./Search";
 import { useAppSelector } from "../appHooks/reduxHooks";
 
 import Login from "./user/Login";
-import useCheckMe, {logout} from "../appHooks/useCheckMe";
+import useCheckMe, { logout } from "../appHooks/useCheckMe";
 import ToggleDarkMode from "./utils/ToggleDarkMode";
+import Register from "../pages/Register";
 
- function Header() {
+function Header() {
+  const { currentUser, isAdmin } = useCheckMe();
 
-  const {currentUser, isAdmin } = useCheckMe()
+  const [openLoginModal, setOpenLoginModal] = useState(false);
+  const [openRegisterModal, setOpenRegisterModal] = useState(false);
 
-  const [openModal, setOpenModal] = useState(false);
   const cartAmount = useAppSelector((state) => state.cart.totalQuantity);
 
   return (
@@ -52,11 +51,11 @@ import ToggleDarkMode from "./utils/ToggleDarkMode";
 
       <div className="flex gap-4 items-center">
         <ToggleDarkMode />
-          <Badge amount={cartAmount}>
-            <Link to="/cart">
-              <FontAwesomeIcon icon={faCartShopping} className="w-5 h-5" />
-            </Link>
-          </Badge>
+        <Badge amount={cartAmount}>
+          <Link to="/cart">
+            <FontAwesomeIcon icon={faCartShopping} className="w-5 h-5" />
+          </Link>
+        </Badge>
 
         {currentUser ? (
           <div className="flex gap-2 items-center">
@@ -65,9 +64,19 @@ import ToggleDarkMode from "./utils/ToggleDarkMode";
               src={currentUser.image}
               alt={currentUser.username}
             />
-            <Dropdown label={currentUser.username} dismissOnClick={false} inline>
-              {isAdmin && <Dropdown.Item as={Link} to="/dashboard">Dashbord</Dropdown.Item>}
-              <Dropdown.Item as={Link} to="/profile">Profile</Dropdown.Item>
+            <Dropdown
+              label={currentUser.username}
+              dismissOnClick={false}
+              inline
+            >
+              {isAdmin && (
+                <Dropdown.Item as={Link} to="/dashboard">
+                  Dashbord
+                </Dropdown.Item>
+              )}
+              <Dropdown.Item as={Link} to="/profile">
+                Profile
+              </Dropdown.Item>
               <Dropdown.Item onClick={logout}>Logout</Dropdown.Item>
             </Dropdown>
           </div>
@@ -75,26 +84,41 @@ import ToggleDarkMode from "./utils/ToggleDarkMode";
           <div className="font-bold text-sm">
             <button
               className="border-r px-2"
-              onClick={() => setOpenModal(true)}
+              onClick={() => setOpenLoginModal(true)}
             >
               Login
             </button>
-            <button className="px-2"><Link to="/register">Register</Link></button>
+            <button className="px-2" onClick={() => setOpenRegisterModal(true)}>
+              Register
+            </button>
           </div>
         )}
       </div>
 
       <Modal
-        show={openModal}
-        onClose={() => setOpenModal(false)}
+        dismissible
+        show={openLoginModal}
+        onClose={() => setOpenLoginModal(false)}
         size="md"
         popup
       >
-        <Modal.Header/>
+        <Modal.Header />
         <Modal.Body>
-          <Login setOpenModal={setOpenModal} />
+          <Login setOpenLoginModal={setOpenLoginModal} setOpenRegisterModal={setOpenRegisterModal}/>
         </Modal.Body>
       </Modal>
+
+      <Modal
+        dismissible
+        show={openRegisterModal}
+        onClose={() => setOpenRegisterModal(false)}
+        size="md"
+        popup>
+        <Modal.Header />
+        <Modal.Body>
+          <Register setOpenRegisterModal={setOpenRegisterModal} setOpenLoginModal = {setOpenLoginModal} />
+        </Modal.Body>
+        </Modal>
     </header>
   );
 }

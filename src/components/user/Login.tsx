@@ -6,9 +6,11 @@ import { useLoginMutation } from "../../redux/slices/userApi";
 
 
 function Login({
-  setOpenModal,
+  setOpenLoginModal,
+  setOpenRegisterModal
 }: {
-  setOpenModal: React.Dispatch<React.SetStateAction<boolean>>;
+  setOpenLoginModal: React.Dispatch<React.SetStateAction<boolean>>,
+  setOpenRegisterModal: React.Dispatch<React.SetStateAction<boolean>>,
 }) {
   const {
     control,
@@ -31,7 +33,7 @@ function Login({
       .unwrap()
       .then((result) => {
         window.localStorage.setItem("token", result.token);
-        setOpenModal(false);
+        setOpenLoginModal(false);
       })
       .catch((error) => {
         setError("password", {
@@ -39,6 +41,11 @@ function Login({
           message: error.data.message,
         });
       });
+  };
+
+  const handleRegisterViaLogin = () => {
+    setOpenLoginModal(false);
+    setOpenRegisterModal(true);
   };
 
   return (
@@ -108,6 +115,15 @@ function Login({
           Login
         </button>
       </form>
+      <p className="text-sm text-center my-2 text-gray-600 dark:text-gray-200">
+        Don't have account yet?{" "}
+        <span
+          className="underline cursor-pointer text-blue-700"
+          onClick={handleRegisterViaLogin}
+        >
+          Register
+        </span>
+      </p>
     </div>
   );
 }

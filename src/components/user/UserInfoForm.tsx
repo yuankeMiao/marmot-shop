@@ -14,9 +14,11 @@ import {
 function UserInfoForm({
   userInfo,
   mode,
+  setOpenModal
 }: {
   userInfo: Partial<UserType>;
   mode: "update" | "register";
+  setOpenModal?: React.Dispatch<React.SetStateAction<boolean>>;
 }) {
   const [
     updateUserTrigger,
@@ -32,7 +34,6 @@ function UserInfoForm({
 
   const {
     control,
-    register,
     getValues,
     handleSubmit,
     formState: { errors },
@@ -50,9 +51,10 @@ function UserInfoForm({
 
   useEffect(() => {
     if (registerIsSuccess) {
-      navigate("/profile");
+      setOpenModal && setOpenModal(false);
+      navigate("/");
     }
-  }, [registerIsSuccess]);
+  }, [registerIsSuccess, setOpenModal, navigate]);
 
   return (
     <>
