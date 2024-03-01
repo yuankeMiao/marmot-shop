@@ -13,7 +13,7 @@ import { useAppSelector, useAppDispatch } from "../appHooks/reduxHooks";
 import Login from "./user/Login";
 import useGetCurrentUser from "../appHooks/useGetCurrentUser";
 import ToggleDarkMode from "./utils/ToggleDarkMode";
-import Register from "../pages/Register";
+import Register from "./user/Register";
 import { logout } from "../redux/slices/currentUserSlice";
 
 function Header() {

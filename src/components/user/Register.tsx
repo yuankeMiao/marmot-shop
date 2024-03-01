@@ -2,8 +2,8 @@ import { useNavigate } from "react-router-dom";
 import { useForm, Controller, SubmitHandler } from "react-hook-form";
 import { FloatingLabel } from "flowbite-react";
 
-import { RegisterType, UserType } from "../misc/userTypes";
-import { useRegisterMutation } from "../redux/slices/userApi";
+import { RegisterType, UserType } from "../../misc/userTypes";
+import { useRegisterMutation } from "../../redux/slices/userApi";
 
 
 function Register({
