@@ -2,8 +2,11 @@ import { Link } from "react-router-dom";
 
 import ProductListItem from "../components/produtcs/ProductListItem";
 import { CartState } from "../misc/productTypes";
+import { useAppSelector } from "../appHooks/reduxHooks";
 
-function CartPage({currentCart}: {currentCart: CartState}) {
+function CartPage() {
+
+  const currentCart: CartState =  useAppSelector((state) => state.cart);
 
   return (
     <div className="py-8 px-4">

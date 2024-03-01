@@ -3,7 +3,6 @@ import {createAsyncThunk, createSlice, PayloadAction } from "@reduxjs/toolkit";
 import { CartItemType, CartState } from "../../misc/productTypes";
 
 import { DUMMYJSON_URL } from "../../misc/constants";
-import { act } from "react-dom/test-utils";
 
 const initialState: CartState = {
     products: [],
@@ -19,7 +18,7 @@ const initialState: CartState = {
 
 export const fetchUserCart = createAsyncThunk(
     "fetchUserCart",
-    async (userId: number, { rejectWithValue }) => {
+    async (userId: number, {getState, rejectWithValue }) => {
         try{
             const response = await fetch(DUMMYJSON_URL + `/carts/user/${userId}`);
             const data = await response.json();

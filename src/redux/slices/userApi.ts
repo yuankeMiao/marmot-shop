@@ -31,32 +31,9 @@ const userApi = apiQueries.injectEndpoints({
       }),
       invalidatesTags: ["User"],
     }),
-
-    getCurrentUser: builder.query({
-      query: (token: string | null) => {
-        return {
-          url: "/auth/me",
-          headers: {
-            authorization: `Bearer ${token}`,
-          },
-        };
-      },
-      providesTags: ["User"],
-      transformResponse: (response: any): UserType => {
-        return {
-          id: response.id,
-          username: response.username,
-          email: response.email,
-          firstName: response.firstName,
-          lastName: response.lastName,
-          image: response.image,
-          address: response.address,
-        };
-      },
-    }),
   }),
 });
 
-export const { useLoginMutation, useRegisterMutation, useUpdateUserMutation, useGetCurrentUserQuery } = userApi;
+export const { useLoginMutation, useRegisterMutation, useUpdateUserMutation } = userApi;
 
 export default userApi;

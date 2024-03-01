@@ -1,13 +1,17 @@
 import { Link, useNavigate } from "react-router-dom";
 import { Table } from "flowbite-react";
 
-import { logout } from "../appHooks/useCheckMe";
-import UserInfoForm from "../components/user/UserInfoForm";
-import { UserType } from "../misc/userTypes";
+import { useAppDispatch } from "../appHooks/reduxHooks";
+import UpdateForm from "../components/user/UpdateForm";
+import { CurrentUserType } from "../misc/userTypes";
 import AddressTable from "../components/user/AddressTable";
+import { logout } from "../redux/slices/currentUserSlice";
 
-function ProfilePage({ currentUser }: { currentUser: UserType | null}) {
+function ProfilePage({ currentUser }: { currentUser: CurrentUserType | null}) {
   const navigate = useNavigate();
+  const dispatch = useAppDispatch();
+
+  // console.log(currentUser);
   if(!currentUser) return (
     <div className="py-20">
       <p className="text-center text-xl dark:text-gray-100">Please log in to chcek your profile!</p>
@@ -16,7 +20,7 @@ function ProfilePage({ currentUser }: { currentUser: UserType | null}) {
 
   const handleLogout = () => {
     navigate("/");
-    logout();
+    dispatch(logout());
   };
 
   return (
@@ -80,7 +84,7 @@ function ProfilePage({ currentUser }: { currentUser: UserType | null}) {
         <div id="change">
           <div className="invisible h-20 -mt-20"></div>
           <h2 className="text-xl font-semibold my-8">Change my info</h2>
-          <UserInfoForm userInfo={{ ...currentUser }} mode="update" />
+          <UpdateForm userInfo={{ ...currentUser }}/>
         </div>
       </div>
     </div>

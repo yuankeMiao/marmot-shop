@@ -8,12 +8,14 @@ import {
 import ProductManageForm from "../components/admin/ProductManageForm";
 import { ProductType } from "../misc/productTypes";
 
-import useCheckMe from "../appHooks/useCheckMe";
+import useGetCurrentUser from "../appHooks/useGetCurrentUser";
+import { useAppSelector } from "../appHooks/reduxHooks";
 
 const debounce = require("lodash.debounce");
 
 function Dashboard() {
-  const {currentUser, isAdmin} = useCheckMe();
+  useGetCurrentUser()
+    const currentUser = useAppSelector((state) => state.currentUser.user);
   const [DeleteModalOpen, setDeleteModalOpen] = useState(false);
   const [InfoFormModalOpen, setInfoFormModalOpen] = useState(false);
   const [selectedProduct, setSelectedProduct] = useState<ProductType | null>(
@@ -80,7 +82,7 @@ function Dashboard() {
   }, [input, debounced, getProductsBySearchTrigger]);
 
 
-  if(!isAdmin) return <div>You are not authorized to access this page</div>;
+  if(currentUser?.role !== "admin") return <div>You are not authorized to access this page</div>;
 
   return (
     <div className="p-8 flex flex-col gap-8">

@@ -1,17 +1,23 @@
+
+import React, { useEffect, useState } from "react";
 import { useForm, Controller, SubmitHandler } from "react-hook-form";
 import { FloatingLabel } from "flowbite-react";
-
 import { LoginType } from "../../misc/userTypes";
 import { useLoginMutation } from "../../redux/slices/userApi";
-
+import LoginWithGoogle from "./LoginWithGoogle";
+import { fetchCurrentUser, fetchCurrentUserWithGoogle } from "../../redux/slices/currentUserSlice";
+import { useAppDispatch } from "../../appHooks/reduxHooks";
+import { fetchUserCart } from "../../redux/slices/cartSlice";
 
 function Login({
   setOpenLoginModal,
-  setOpenRegisterModal
+  setOpenRegisterModal,
 }: {
-  setOpenLoginModal: React.Dispatch<React.SetStateAction<boolean>>,
-  setOpenRegisterModal: React.Dispatch<React.SetStateAction<boolean>>,
+  setOpenLoginModal: React.Dispatch<React.SetStateAction<boolean>>;
+  setOpenRegisterModal: React.Dispatch<React.SetStateAction<boolean>>;
 }) {
+
+  const dispatch = useAppDispatch();
   const {
     control,
     handleSubmit,
@@ -25,14 +31,24 @@ function Login({
   });
 
   // i will handle the login status later, maybe using toast
-  const [loginTrigger, {error: loginError}] = useLoginMutation();
+  const [loginTrigger, { error: loginError }] = useLoginMutation();
+  const [isSuccessWithGoogle, setIsSuccessWithGoogle] = useState(false);
 
-  // when submit is clicked, trigger the login mutation
-  const onSubmit: SubmitHandler<LoginType> = async (data) => {
+  const handleRegisterViaLogin = () => {
+    setOpenLoginModal(false);
+    setOpenRegisterModal(true);
+  };
+
+   // when submit is clicked, trigger the login mutation
+   const onSubmit: SubmitHandler<LoginType> = async (data) => {
     await loginTrigger(data)
       .unwrap()
       .then((result) => {
         window.localStorage.setItem("token", result.token);
+        dispatch(fetchCurrentUser(result.token)).then((user) => {
+          dispatch(fetchUserCart(user.payload.id));
+        });
+
         setOpenLoginModal(false);
       })
       .catch((error) => {
@@ -43,10 +59,14 @@ function Login({
       });
   };
 
-  const handleRegisterViaLogin = () => {
-    setOpenLoginModal(false);
-    setOpenRegisterModal(true);
-  };
+  useEffect(() => {
+    if (isSuccessWithGoogle) {
+      dispatch(fetchCurrentUserWithGoogle(localStorage.getItem("googleToken") || ""))
+        .then(() => {
+          setOpenLoginModal(false);
+        });
+    }
+  }, [isSuccessWithGoogle, setOpenLoginModal, dispatch]);
 
   return (
     <div>
@@ -76,7 +96,7 @@ function Login({
               type="text"
               color={errors.username && "error"}
               helperText={errors.username && errors.username.message}
-              className="dark:bg-gray-700"
+              className="dark:bg-gray-700 dark:inputDarkModeOverride"
               {...field}
             />
           )}
@@ -102,7 +122,7 @@ function Login({
               type="password"
               color={errors.password && "error"}
               helperText={errors.password && errors.password.message}
-              className="dark:bg-gray-700"
+              className="dark:bg-gray-700 dark:inputDarkModeOverride"
               {...field}
             />
           )}
@@ -118,12 +138,14 @@ function Login({
       <p className="text-sm text-center my-2 text-gray-600 dark:text-gray-200">
         Don't have account yet?{" "}
         <span
-          className="underline cursor-pointer text-blue-700"
+          className="underline cursor-pointer text-blue-700 dark:text-blue-400"
           onClick={handleRegisterViaLogin}
         >
           Register
         </span>
       </p>
+      <LoginWithGoogle setIsSuccessWithGoogle={setIsSuccessWithGoogle} />
+
     </div>
   );
 }

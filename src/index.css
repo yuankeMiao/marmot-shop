@@ -47,4 +47,12 @@ code {
   .form-row {
     @apply w-full grid grid-flow-col justify-stretch space-x-4;
   }
+
+  .inputDarkModeOverride:-webkit-autofill,
+  .inputDarkModeOverride:-webkit-autofill:hover,
+  .inputDarkModeOverride:-webkit-autofill:focus,
+  .inputDarkModeOverride:-webkit-autofill:active {
+    box-shadow: 0 0 0 30px #374151 inset;
+    -webkit-text-fill-color: white !important;
+  }
 }

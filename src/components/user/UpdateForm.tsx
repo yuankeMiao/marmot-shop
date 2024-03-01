@@ -1,63 +1,31 @@
-import { useNavigate } from "react-router-dom";
+
+
 import { useForm, Controller, SubmitHandler } from "react-hook-form";
-import { FloatingLabel } from "flowbite-react";
+import { FloatingLabel, Toast } from "flowbite-react";
 
-import { RegisterType, UserType } from "../misc/userTypes";
-import { useRegisterMutation } from "../redux/slices/userApi";
+import { CurrentUserType, UserType } from "../../misc/userTypes";
+import { useUpdateUserMutation } from "../../redux/slices/userApi";
 
+function UpdateForm({ userInfo }: { userInfo: Partial<CurrentUserType> }) {
+  const [
+    updateUserTrigger,
+    { isSuccess: updateIsSuccess, error: updateError },
+  ] = useUpdateUserMutation();
 
-function Register({
-  setOpenRegisterModal,
-  setOpenLoginModal,
-}: {
-  setOpenRegisterModal: React.Dispatch<React.SetStateAction<boolean>>;
-  setOpenLoginModal: React.Dispatch<React.SetStateAction<boolean>>;
-}) {
-  const [registerTrigger, { isSuccess, isLoading, error }] =
-    useRegisterMutation();
-
-  const navigate = useNavigate();
-
-  const initialUserInfo = {
-    username: "",
-    email: "",
-    firstName: "",
-    lastName: "",
-    password: "",
-    confirmPassword: "",
-    image: "",
-  };
   const {
     control,
-    getValues,
     handleSubmit,
     formState: { errors },
   } = useForm<UserType>({
-    defaultValues: initialUserInfo,
+    defaultValues: userInfo as UserType,
   });
 
   const onSubmit: SubmitHandler<UserType> = (data) => {
-    registerTrigger(data as RegisterType);
+    updateUserTrigger(data as UserType);
   };
-
-  const handleLoginViaRegister = () => {
-    setOpenRegisterModal(false);
-    setOpenLoginModal(true);
-  };
-
-  if (isSuccess) {
-    return (
-      <div>
-        <p className="my-4 text-center">Now you can login!</p>
-        <button className="btn-primary" onClick={handleLoginViaRegister}>
-          Login
-        </button>
-      </div>
-    );
-  }
 
   return (
-    <div>
+    <>
       <form onSubmit={handleSubmit(onSubmit)} className="form-control">
         <div className="form-row">
           <Controller
@@ -81,7 +49,6 @@ function Register({
                 type="text"
                 color={errors.username && "error"}
                 helperText={errors.username && errors.username.message}
-                className="dark:bg-gray-700 dark:inputDarkModeOverride"
                 {...field}
               />
             )}
@@ -100,7 +67,6 @@ function Register({
                 type="email"
                 color={errors.email && "error"}
                 helperText={errors.email && errors.email.message}
-                className="dark:bg-gray-700 dark:inputDarkModeOverride"
                 {...field}
               />
             )}
@@ -129,7 +95,6 @@ function Register({
                 type="text"
                 color={errors.firstName && "error"}
                 helperText={errors.lastName && errors.lastName.message}
-                className="dark:bg-gray-700 dark:inputDarkModeOverride"
                 {...field}
               />
             )}
@@ -155,58 +120,33 @@ function Register({
                 type="text"
                 color={errors.lastName && "error"}
                 helperText={errors.lastName && errors.lastName.message}
-                className="dark:bg-gray-700 dark:inputDarkModeOverride"
                 {...field}
               />
             )}
           />
         </div>
-        <div className="form-row">
-          <Controller
-            name="password"
-            control={control}
-            rules={{
-              required: "Password is required",
-              maxLength: {
-                value: 20,
-                message: "Password should not be more than 20 characters",
-              },
-              minLength: {
-                value: 6,
-                message: "Password should not be less than 6 characters",
-              },
-            }}
-            render={({ field }) => (
-              <FloatingLabel
-                variant="outlined"
-                label="Password"
-                type="password"
-                color={errors.password && "error"}
-                helperText={errors.password && errors.password.message}
-                className="dark:bg-gray-700 dark:inputDarkModeOverride"
-                {...field}
-              />
-            )}
-          />
 
+        <div className="form-row">
           <Controller
-            name="confirmPassword"
+            name="address.address"
             control={control}
-            rules={{
-              required: "Password is required",
-              validate: (value) =>
-                value === getValues("password") || "The passwords do not match",
-            }}
             render={({ field }) => (
               <FloatingLabel
                 variant="outlined"
-                label="Confirm Password"
-                type="password"
-                color={errors.confirmPassword && "error"}
-                helperText={
-                  errors.confirmPassword && errors.confirmPassword.message
-                }
-                className="dark:bg-gray-700 dark:inputDarkModeOverride"
+                label="Address"
+                type="text"
+                {...field}
+              />
+            )}
+          />
+          <Controller
+            name="address.city"
+            control={control}
+            render={({ field }) => (
+              <FloatingLabel
+                variant="outlined"
+                label="City"
+                type="text"
                 {...field}
               />
             )}
@@ -214,20 +154,31 @@ function Register({
         </div>
         <div className="form-row">
           <Controller
-            name="image"
+            name="address.state"
             control={control}
             render={({ field }) => (
               <FloatingLabel
                 variant="outlined"
-                label="Avatar URL"
+                label="State"
                 type="text"
-                helperText={errors.image && errors.image.message}
-                className="dark:bg-gray-700 dark:inputDarkModeOverride"
+                {...field}
+              />
+            )}
+          />
+          <Controller
+            name="address.postalCode"
+            control={control}
+            render={({ field }) => (
+              <FloatingLabel
+                variant="outlined"
+                label="Postal Code"
+                type="text"
                 {...field}
               />
             )}
           />
         </div>
+
         <button
           type="submit"
           aria-label="Login"
@@ -236,17 +187,14 @@ function Register({
           Confirm
         </button>
       </form>
-      <p className="text-sm text-center my-2 text-gray-600 dark:text-gray-200">
-        Already have account?{" "}
-        <span
-          className="underline cursor-pointer text-blue-700 dark:text-blue-400"
-          onClick={handleLoginViaRegister}
-        >
-          Login
-        </span>
-      </p>
-    </div>
+      {updateIsSuccess && (
+        <Toast className="absolute">
+          <p className="text-sm text-teal-500">Info updated!</p>
+          <Toast.Toggle></Toast.Toggle>
+        </Toast>
+      )}
+    </>
   );
 }
 
-export default Register;
+export default UpdateForm;

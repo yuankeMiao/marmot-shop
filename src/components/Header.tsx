@@ -8,20 +8,27 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import Badge from "./buttons/Bagde";
 import Search from "./Search";
 
-import { useAppSelector } from "../appHooks/reduxHooks";
+import { useAppSelector, useAppDispatch } from "../appHooks/reduxHooks";
 
 import Login from "./user/Login";
-import useCheckMe, { logout } from "../appHooks/useCheckMe";
+import useGetCurrentUser from "../appHooks/useGetCurrentUser";
 import ToggleDarkMode from "./utils/ToggleDarkMode";
 import Register from "../pages/Register";
+import { logout } from "../redux/slices/currentUserSlice";
 
 function Header() {
-  const { currentUser, isAdmin } = useCheckMe();
+  useGetCurrentUser()
+  const dispatch = useAppDispatch();
+  const currentUser = useAppSelector((state) => state.currentUser.user);
 
   const [openLoginModal, setOpenLoginModal] = useState(false);
   const [openRegisterModal, setOpenRegisterModal] = useState(false);
 
   const cartAmount = useAppSelector((state) => state.cart.totalQuantity);
+
+  const handleLogout = () => {
+    dispatch(logout());
+  };
 
   return (
     <header className="fixed z-20 top-0 start-0 w-full h-20 bg-primary flex justify-between items-center px-4 lg:px-12">
@@ -69,7 +76,7 @@ function Header() {
               dismissOnClick={false}
               inline
             >
-              {isAdmin && (
+              {currentUser.role === "admin" && (
                 <Dropdown.Item as={Link} to="/dashboard">
                   Dashbord
                 </Dropdown.Item>
@@ -77,7 +84,7 @@ function Header() {
               <Dropdown.Item as={Link} to="/profile">
                 Profile
               </Dropdown.Item>
-              <Dropdown.Item onClick={logout}>Logout</Dropdown.Item>
+              <Dropdown.Item onClick={handleLogout}>Logout</Dropdown.Item>
             </Dropdown>
           </div>
         ) : (
