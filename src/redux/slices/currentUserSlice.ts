@@ -1,5 +1,5 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
-import axios from "axios";
+import axios, { AxiosError } from "axios";
 
 import { CurrentUserStateType } from "../../misc/userTypes";
 import { DUMMYJSON_URL } from "../../misc/constants";
@@ -7,12 +7,12 @@ import { DUMMYJSON_URL } from "../../misc/constants";
 const initialState: CurrentUserStateType = {
   user: null,
   isLoading: false,
-  error: "",
+  error: null,
 };
 
 export const fetchCurrentUser = createAsyncThunk(
   "fetchCurrentUser",
-  async (accessToken: string, {rejectWithValue }) => {
+  async (accessToken: string, { rejectWithValue }) => {
     try {
       const response = await axios.get(DUMMYJSON_URL + `/auth/me`, {
         headers: {
@@ -21,7 +21,8 @@ export const fetchCurrentUser = createAsyncThunk(
       });
       return response.data;
     } catch (error) {
-        localStorage.removeItem("token");
+      // console.log(error);
+      localStorage.removeItem("token");
       return rejectWithValue(error);
     }
   }
@@ -38,7 +39,7 @@ export const fetchCurrentUserWithGoogle = createAsyncThunk(
       // console.log(response.data);
       return response.data;
     } catch (error) {
-        localStorage.removeItem("googleToken");
+      localStorage.removeItem("googleToken");
       return rejectWithValue(error);
     }
   }
@@ -59,17 +60,20 @@ const currentUserSlice = createSlice({
     builder.addCase(fetchCurrentUser.fulfilled, (state, action) => {
       state.user = {
         ...action.payload,
-        role:(action.payload.id === 1 ? "admin" : "user") 
+        role: action.payload.id === 1 ? "admin" : "user",
         // because my api doesn't have role field
         // so I added this by myself by setting the No.1 user as admin
-      }
+      };
       state.isLoading = false;
     });
     builder.addCase(fetchCurrentUser.pending, (state) => {
       state.isLoading = true;
     });
     builder.addCase(fetchCurrentUser.rejected, (state, action) => {
-      state.error = action.payload as string;
+      if (action.payload) {
+        state.error = (action.payload as AxiosError)?.response?.request
+          .status as number;
+      }
     });
 
     // because the data shape of google is different from my api
@@ -103,4 +107,4 @@ const currentUserSlice = createSlice({
 const currentUserReducer = currentUserSlice.reducer;
 
 export default currentUserReducer;
-export const {logout } = currentUserSlice.actions;
+export const { logout } = currentUserSlice.actions;

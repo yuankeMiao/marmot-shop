@@ -31,7 +31,7 @@ export type UserType = {
 export type CurrentUserStateType= {
   user: CurrentUserType | null;
   isLoading: boolean;
-  error: string;
+  error: number | null | string;
 };
 
 export type CurrentUserType = {

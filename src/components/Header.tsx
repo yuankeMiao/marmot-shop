@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from "react";
 import { Link, useLocation } from "react-router-dom";
-import { Modal, Dropdown, Navbar, Avatar } from "flowbite-react";
+import { Modal, Dropdown, Navbar, Avatar, Banner } from "flowbite-react";
 
 import { faCartShopping } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
@@ -21,13 +21,20 @@ import { logout } from "../redux/slices/currentUserSlice";
 function Header() {
   useGetCurrentUser();
 
-  const {pathname} = useLocation()
-  
+  const { pathname } = useLocation();
+
   const dispatch = useAppDispatch();
-  const currentUser = useAppSelector((state) => state.currentUser.user);
+  const { user: currentUser, error: userError } = useAppSelector(
+    (state) => state.currentUser
+  );
 
   const [openLoginModal, setOpenLoginModal] = useState(false);
   const [openRegisterModal, setOpenRegisterModal] = useState(false);
+  const [openReLoginModal, setOpenReLoginModal] = useState(false);
+
+  useEffect(() => {
+    if(userError === 401) setOpenReLoginModal(true)
+  } ,[userError])
 
   const cartAmount = useAppSelector((state) => state.cart.totalQuantity);
 
@@ -44,17 +51,18 @@ function Header() {
           className="bg-transparent dark:bg-transparent mx-4 xl:mx-8 "
         >
           <Navbar.Toggle />
-          <Navbar.Brand as={Link}
-            to="/"
-            className="text-xl font-bold"
-          >
+          <Navbar.Brand as={Link} to="/" className="text-xl font-bold">
             Marmot Shop
           </Navbar.Brand>
           <Navbar.Collapse>
             <Navbar.Link as={Link} to="/" active={pathname === "/"}>
               Home
             </Navbar.Link>
-            <Navbar.Link as={Link} to="/all-products" active={pathname === "/all-products"}>
+            <Navbar.Link
+              as={Link}
+              to="/all-products"
+              active={pathname === "/all-products"}
+            >
               Products
             </Navbar.Link>
             <Navbar.Link as={Link} to="/">
@@ -67,20 +75,31 @@ function Header() {
             <ToggleDarkMode />
             <Badge amount={cartAmount}>
               <Link to="/cart">
-                <FontAwesomeIcon icon={faCartShopping} className="w-5 h-5 text-sky-950 dark:text-white" />
+                <FontAwesomeIcon
+                  icon={faCartShopping}
+                  className="w-5 h-5 text-sky-950 dark:text-white"
+                />
               </Link>
             </Badge>
 
             {currentUser ? (
               <div className="flex gap-2 items-center">
                 <Dropdown
-                  label={<Avatar alt="user setting" img={currentUser.image} rounded />}
+                  label={
+                    <Avatar
+                      alt="user setting"
+                      img={currentUser.image}
+                      rounded
+                    />
+                  }
                   dismissOnClick={true}
                   inline
                   arrowIcon={false}
                 >
                   <Dropdown.Header>
-                    <span className="block text-sm font-semibold">{currentUser.username}</span>
+                    <span className="block text-sm font-semibold">
+                      {currentUser.username}
+                    </span>
                     <span className="block text-sm">{currentUser.email}</span>
                   </Dropdown.Header>
                   {currentUser.role === "admin" && (
@@ -143,6 +162,15 @@ function Header() {
             setOpenRegisterModal={setOpenRegisterModal}
             setOpenLoginModal={setOpenLoginModal}
           />
+        </Modal.Body>
+      </Modal>
+
+      <Modal dismissible show={openReLoginModal} onClose={() => setOpenReLoginModal(false)} size="md" popup>
+        <Modal.Body>
+          <div className="h-40 dark:text-gray-100 mt-12">
+            <p className="text-center">Hi, your login is expired, please login again!</p>
+            <button className="btn-primary mt-12" onClick={() => {setOpenReLoginModal(false); setOpenLoginModal(true)}}>Login</button>
+          </div>
         </Modal.Body>
       </Modal>
     </header>

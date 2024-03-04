@@ -83,7 +83,7 @@ function DisplayProducts({ filter }: { filter: FilterType }) {
         />
       </div>
       <div className="grid grid-cols-2 lg:grid-cols-3 gap-4 min-w-full  max-h-screen overflow-y-scroll">
-        {/* {(isLoading || isLoadingByCategory) && (
+        {(isLoading || isLoadingByCategory) && (
           <>
             <CardLoader />
             <CardLoader />
@@ -92,7 +92,7 @@ function DisplayProducts({ filter }: { filter: FilterType }) {
             <CardLoader />
             <CardLoader />
           </>
-        )} */}
+        )}
         {(error || errorByCategory) && (
           <div>Something went wrong, please try again later</div>
         )}
