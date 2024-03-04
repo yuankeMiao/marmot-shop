@@ -44,8 +44,8 @@ function Header() {
           className="bg-transparent dark:bg-transparent mx-4 xl:mx-8 "
         >
           <Navbar.Toggle />
-          <Navbar.Brand
-            href="https://marmotshop.yuankedev.fun/"
+          <Navbar.Brand as={Link}
+            to="/"
             className="text-xl font-bold"
           >
             Marmot Shop
@@ -74,7 +74,7 @@ function Header() {
             {currentUser ? (
               <div className="flex gap-2 items-center">
                 <Dropdown
-                  label={<Avatar alt="user setting" img={currentUser.image} rounded className="bg-white"/>}
+                  label={<Avatar alt="user setting" img={currentUser.image} rounded />}
                   dismissOnClick={true}
                   inline
                   arrowIcon={false}

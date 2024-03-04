@@ -4,6 +4,7 @@ import ProductCard from "../components/produtcs/ProductCard";
 import { HERO_IMAGE } from "../misc/constants";
 import useFetchRandomQuote from "../appHooks/useFetchRandomQuote";
 import { useGetAllProductsQuery } from "../redux/slices/apiQuery";
+import CardLoader from "../components/skeleton/CardLoader";
 
 
 function HomePage() {
@@ -47,7 +48,6 @@ function HomePage() {
           Explore our latest collections and find your perfect fit!
         </p>
         <div className="h-[32rem] py-4 flex gap-8 overflow-x-scroll *:min-w-[18rem]">
-          {isLoading && <p>Loading...</p>}
           {error && <p>Something went wrong</p>}
           {data?.map((product) => (
             <ProductCard productItem={product} key={product.id} />

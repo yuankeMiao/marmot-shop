@@ -31,10 +31,6 @@ function Dashboard() {
     deleteProductTrigger,
     { isSuccess: deleteSuccess, error: deleteError, isLoading: deleteLoading },
   ] = useDeleteProductMutation();
-  // const handleDelete = (id: number) => {
-  //   setDeleteModalOpen(true);
-  //   deleteProductTrigger(id);
-  // }
 
   const handleDelete = useCallback(
     (id: number) => {
@@ -43,11 +39,6 @@ function Dashboard() {
     },
     [deleteProductTrigger]
   );
-
-  // const handleEdit = (product: ProductType) => {
-  //   setInfoFormModalOpen(true);
-  //   setSelectedProduct(product);
-  // }
 
   const handleEdit = useCallback((product: ProductType) => {
     setSelectedProduct(product);
@@ -75,7 +66,7 @@ function Dashboard() {
 
   useEffect(() => {
     if (input.length > 0) debounced();
-    else getProductsBySearchTrigger(input);
+    else getProductsBySearchTrigger("");
     return () => {
       debounced.cancel();
     };
@@ -89,13 +80,15 @@ function Dashboard() {
       <button className="btn-primary max-w-min" onClick={() => handleAdd()}>
         Add New Product
       </button>
-      <label htmlFor="search" className="sr-only">
+      <label htmlFor="search-admin" className="sr-only">
         Search
       </label>
       <TextInput
-        id="search"
+        id="search-admin"
+        name="search-admin"
         className="pb-8 pt-4 w-96"
         type="text"
+        autoComplete="off"
         placeholder="Search products"
         value={input}
         onChange={handleInput}

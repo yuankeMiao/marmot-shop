@@ -134,6 +134,7 @@ export const productsHandlers = [
 
   http.get("https://dummyjson.com/products/category/:category", ({ params }) => {
     const { category } = params;
+    // console.log("category", category);
     const limited = mockProducts.products.filter(
       (p) => p.category === category
     );

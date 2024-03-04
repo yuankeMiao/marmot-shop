@@ -7,6 +7,7 @@ import {
 } from "../../redux/slices/apiQuery";
 import ProductCard from "./ProductCard";
 import { FilterType, ProductType } from "../../misc/productTypes";
+import CardLoader from "../skeleton/CardLoader";
 
 function DisplayProducts({ filter }: { filter: FilterType }) {
   // pagination
@@ -49,19 +50,17 @@ function DisplayProducts({ filter }: { filter: FilterType }) {
     } else {
       refetch();
     }
-  }
-  , [filter.category, refetch, refetchByCategory]);
+  }, [filter.category, refetch, refetchByCategory]);
 
   useEffect(() => {
     if (filter.category === "" && data) {
       setProductList(data.products);
       setTotalItems(data.total);
-    } else if (filter.category !== "" && productsByCategory ) {
+    } else if (filter.category !== "" && productsByCategory) {
       setProductList(productsByCategory.products);
       setTotalItems(productsByCategory.total);
     }
   }, [data, productsByCategory, filter.category]);
-
 
   // otherwise after user on other page, then choose category, it will not work, becasue currentPage is still the same
   useEffect(() => {
@@ -84,7 +83,16 @@ function DisplayProducts({ filter }: { filter: FilterType }) {
         />
       </div>
       <div className="grid grid-cols-2 lg:grid-cols-3 gap-4 min-w-full  max-h-screen overflow-y-scroll">
-        {(isLoading || isLoadingByCategory) && <div>Loading...</div>}
+        {/* {(isLoading || isLoadingByCategory) && (
+          <>
+            <CardLoader />
+            <CardLoader />
+            <CardLoader />
+            <CardLoader />
+            <CardLoader />
+            <CardLoader />
+          </>
+        )} */}
         {(error || errorByCategory) && (
           <div>Something went wrong, please try again later</div>
         )}

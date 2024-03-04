@@ -30,14 +30,12 @@ function Filters({
 
   return (
     <div className="sidebar">
-      <div className="h-full px-4 py-4 overflow-y-auto ">
-        <ul className="*:py-4">
-          <li className="border-b-2">
-            <button className="btn-primary mb-4" onClick={handleReset}>
-              Reset All
-            </button>
-          </li>
-          <li>
+      <div className="h-full mx-auto px-4 py-4 overflow-y-auto ">
+        <button className="btn-primary mb-4 max-w-36" onClick={handleReset}>
+          Reset All
+        </button>
+        <ul className="*:py-4 flex gap-8 around lg:block">
+          <li className="flex-1">
             <label htmlFor="category-select" className="font-bold">
               Choose Category
             </label>
@@ -57,7 +55,7 @@ function Filters({
             </select>
           </li>
 
-          <li>
+          <li className="flex-1">
             <label htmlFor="sortBy" className="font-bold">
               Sort By
             </label>
