@@ -58,9 +58,6 @@ function HomePage() {
       <div className="mt-40 px-4 xl:px-8 text-center">
         <h3 className="text-5xl lg:text-7xl font-bold my-8">Join our membership</h3>
         <p>Get 10% off your first order</p>
-        <button className="btn-primary w-40 m-8">
-          <Link to="/register">Register Now</Link>
-        </button>
       </div>
     </div>
   );

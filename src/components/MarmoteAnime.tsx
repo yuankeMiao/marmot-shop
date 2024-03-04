@@ -6,13 +6,10 @@ import marmot from "../statics/marmot-1.png"
 
 // this small animation is copied from my portfolio home page :)
 
-function Loading() {
+function MarmoteAnime() {
   return (
     <div>
-        <h1>Just a moment</h1>
-        <div
-          className="left-container"
-        >
+        <div>
           <img id="marmot" src={marmot} alt="marmot" />
           <span className="cloud cloud1">
             <FontAwesomeIcon icon={faCloud} />
@@ -28,4 +25,4 @@ function Loading() {
   )
 }
 
-export default Loading
+export default MarmoteAnime

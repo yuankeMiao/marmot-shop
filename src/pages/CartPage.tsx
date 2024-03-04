@@ -1,12 +1,16 @@
+import { useState } from "react";
 import { Link } from "react-router-dom";
+import { Modal } from "flowbite-react";
 
 import ProductListItem from "../components/produtcs/ProductListItem";
 import { CartState } from "../misc/productTypes";
 import { useAppSelector } from "../appHooks/reduxHooks";
 
 function CartPage() {
+  const [openModal, setOpenModal] = useState(false);
+  const handleCheckout = () => {};
 
-  const currentCart: CartState =  useAppSelector((state) => state.cart);
+  const currentCart: CartState = useAppSelector((state) => state.cart);
 
   return (
     <div className="py-8 px-4">
@@ -49,11 +53,23 @@ function CartPage() {
           <button
             className="btn-primary disabled:bg-gray-300 "
             disabled={currentCart.products.length === 0}
+            onClick={handleCheckout}
           >
             Checkout
           </button>
         </div>
       </div>
+
+      <Modal dismissible show={openModal} onClose={() => setOpenModal(false)}>
+        <Modal.Header>Thanks for view!</Modal.Header>
+        <Modal.Body>
+          <p>
+            Hi, thanks for view! This frontend demo ends here. If you want to
+              know more about this demo or want to know more about me, please
+              visit my <a href="https://github.com/yuankeMiao">Github</a>, <a href="www.linkedin.com/in/yuankemiao">LinkedIn</a> or <a href="https://yuankedev.fun/">portfolio</a>.
+          </p>
+        </Modal.Body>
+      </Modal>
     </div>
   );
 }

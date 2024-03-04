@@ -6,11 +6,14 @@ import { useGetProductByIdQuery } from "../redux/slices/apiQuery";
 import { ProductType } from "../misc/productTypes";
 import ShopAndFav from "../components/produtcs/ShopAndFav";
 import AmountControl from "../components/produtcs/AmountControl";
+import { ErrorType } from "../misc/errorTypes";
+
+
 
 function ProductPage() {
 
   const productId = Number(useParams().productId);
-  const { data, error, isLoading } = useGetProductByIdQuery(productId); //Yay!!!!
+  const { data, error, isLoading } = useGetProductByIdQuery(productId); 
   const product: ProductType = data;
 
   const [amount, setAmount] = useState(1);
@@ -18,6 +21,7 @@ function ProductPage() {
   return (
     <div className="py-4 mx-auto md:max-w-2xl lg:max-w-screen-lg xl:max-w-screen-xl 2xl:max-w-screen-2xl">
       {isLoading && <p>Loading...</p>}
+      {error && 'data' in error && <p>{(error as ErrorType).data.message}</p>}
       {product && (
         <div className="*:m-4">
           <Breadcrumb aria-label="breadcrumb">

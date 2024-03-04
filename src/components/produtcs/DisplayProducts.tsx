@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useState, useRef } from "react";
 import { Pagination } from "flowbite-react";
 
 import {
@@ -16,7 +16,7 @@ function DisplayProducts({ filter }: { filter: FilterType }) {
   const onPageChange = (page: number) => setCurrentPage(page);
 
   const [productList, setProductList] = useState<ProductType[]>([]);
-  const { data, isError, isLoading, refetch } = useGetSortedProductsQuery(
+  const { data, error, isLoading, refetch } = useGetSortedProductsQuery(
     {
       limit: itemsPerPage,
       skip: (currentPage - 1) * itemsPerPage,
@@ -28,7 +28,7 @@ function DisplayProducts({ filter }: { filter: FilterType }) {
   );
   const {
     data: productsByCategory,
-    isError: errorByCategory,
+    error: errorByCategory,
     isLoading: isLoadingByCategory,
     refetch: refetchByCategory,
   } = useGetProductsByCategoryQuery(
@@ -62,6 +62,12 @@ function DisplayProducts({ filter }: { filter: FilterType }) {
     }
   }, [data, productsByCategory, filter.category]);
 
+
+  // otherwise after user on other page, then choose category, it will not work, becasue currentPage is still the same
+  useEffect(() => {
+    setCurrentPage(1);
+  }, [filter.category]);
+
   // no need to calculate total pages if totalItems didn't change, ie. on all products
   const totalPages = useMemo(
     () => Math.ceil(totalItems / itemsPerPage),
@@ -70,28 +76,21 @@ function DisplayProducts({ filter }: { filter: FilterType }) {
 
   return (
     <>
-      <div className="flex overflow-x-auto sm:justify-center my-4">
+      <div className="flex sm:justify-center my-4">
         <Pagination
           currentPage={currentPage}
           totalPages={totalPages}
           onPageChange={onPageChange}
         />
       </div>
-      <div className="grid grid-cols-2 lg:grid-cols-3 gap-4 min-w-full">
+      <div className="grid grid-cols-2 lg:grid-cols-3 gap-4 min-w-full  max-h-screen overflow-y-scroll">
         {(isLoading || isLoadingByCategory) && <div>Loading...</div>}
-        {(isError || errorByCategory) && (
-          <div>Something wrong with the data, please refresh the page </div>
+        {(error || errorByCategory) && (
+          <div>Something went wrong, please try again later</div>
         )}
         {productList?.map((product) => (
           <ProductCard productItem={product} key={product.id} />
         ))}
-      </div>
-      <div className="flex overflow-x-auto sm:justify-center my-4">
-        <Pagination
-          currentPage={currentPage}
-          totalPages={totalPages}
-          onPageChange={onPageChange}
-        />
       </div>
     </>
   );

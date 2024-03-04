@@ -1,4 +1,4 @@
-import { createSlice, createAsyncThunk, isAsyncThunkAction, isFulfilled, current } from "@reduxjs/toolkit";
+import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import axios from "axios";
 
 import { CurrentUserStateType } from "../../misc/userTypes";
@@ -12,7 +12,7 @@ const initialState: CurrentUserStateType = {
 
 export const fetchCurrentUser = createAsyncThunk(
   "fetchCurrentUser",
-  async (accessToken: string, {dispatch, getState, rejectWithValue }) => {
+  async (accessToken: string, {rejectWithValue }) => {
     try {
       const response = await axios.get(DUMMYJSON_URL + `/auth/me`, {
         headers: {
@@ -35,7 +35,7 @@ export const fetchCurrentUserWithGoogle = createAsyncThunk(
       const response = await axios.get(
         `https://www.googleapis.com/oauth2/v1/userinfo?access_token=${accessToken}`
       );
-      console.log(response.data);
+      // console.log(response.data);
       return response.data;
     } catch (error) {
         localStorage.removeItem("googleToken");
@@ -59,7 +59,9 @@ const currentUserSlice = createSlice({
     builder.addCase(fetchCurrentUser.fulfilled, (state, action) => {
       state.user = {
         ...action.payload,
-        role:(action.payload.id === 1 ? "admin" : "user")
+        role:(action.payload.id === 1 ? "admin" : "user") 
+        // because my api doesn't have role field
+        // so I added this by myself by setting the No.1 user as admin
       }
       state.isLoading = false;
     });
@@ -70,6 +72,9 @@ const currentUserSlice = createSlice({
       state.error = action.payload as string;
     });
 
+    // because the data shape of google is different from my api
+    // so I need to modify the data shape
+    // for all the google user, the are by default non-admin users
     builder.addCase(fetchCurrentUserWithGoogle.fulfilled, (state, action) => {
       state.user = {
         ...state.user,

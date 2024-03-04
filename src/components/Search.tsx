@@ -7,6 +7,7 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faMagnifyingGlass } from "@fortawesome/free-solid-svg-icons";
 
 import { useLazyGetProductsBySearchQuery } from "../redux/slices/apiQuery";
+import { ErrorType } from "../misc/errorTypes";
 
 const debounce = require("lodash.debounce");
 
@@ -58,7 +59,7 @@ function Search() {
             value={input}
             onChange={handleInput}
           />
-          {(isLoading || isFetching) && (<div>Loading ...</div>)}
+          {(isLoading || isFetching) && (<div className="dark:text-gray-100">Loading ...</div>)}
           {(input.length > 0 && searchResult?.length === 0) && (
           <div className="dark:text-gray-100">
             <p>There is no result, try another keyword.</p>
@@ -76,7 +77,11 @@ function Search() {
               </Link>
             </div>
           ))}
-          {error && <div>Something wrong with the search!</div>}
+          {(error && ("data" in error)) && (
+            <div className="dark:text-gray-100">
+              <p>{(error as ErrorType).data.message}</p>
+            </div>
+          )}
         </Modal.Body>
       </Modal>
     </div>

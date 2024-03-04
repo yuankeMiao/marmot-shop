@@ -1,10 +1,9 @@
-import { useNavigate } from "react-router-dom";
 import { useForm, Controller, SubmitHandler } from "react-hook-form";
-import { FloatingLabel } from "flowbite-react";
+import { FloatingLabel, Toast } from "flowbite-react";
 
 import { RegisterType, UserType } from "../../misc/userTypes";
 import { useRegisterMutation } from "../../redux/slices/userApi";
-
+import { ErrorType } from "../../misc/errorTypes";
 
 function Register({
   setOpenRegisterModal,
@@ -13,10 +12,7 @@ function Register({
   setOpenRegisterModal: React.Dispatch<React.SetStateAction<boolean>>;
   setOpenLoginModal: React.Dispatch<React.SetStateAction<boolean>>;
 }) {
-  const [registerTrigger, { isSuccess, isLoading, error }] =
-    useRegisterMutation();
-
-  const navigate = useNavigate();
+  const [registerTrigger, { isSuccess, isLoading, error }] = useRegisterMutation();
 
   const initialUserInfo = {
     username: "",
@@ -232,6 +228,7 @@ function Register({
           type="submit"
           aria-label="Login"
           className="btn-primary self-center w-60"
+          disabled={isLoading}
         >
           Confirm
         </button>
@@ -245,6 +242,12 @@ function Register({
           Login
         </span>
       </p>
+      {error && (
+        <Toast>
+          'data' in error && <p>{(error as ErrorType).data.message}</p>
+          <Toast.Toggle />
+        </Toast>
+      )}
     </div>
   );
 }

@@ -12,6 +12,7 @@ import {
 function Footer() {
   return (
     <div className="bg-primary w-full px-4 py-8 md:px-12">
+      <div className="max-w-screen-2xl mx-auto ">
       <div>
         <div>
           <Link to="/">
@@ -77,6 +78,7 @@ function Footer() {
       <div className="text-center pt-8 mt-8 border-t">
         <p>This website is a demo of Yuanke's frontend project for Integrify's Fullstack Program</p>
         <p>Check the repository of this project on <a href="not public yet" className="font-bold underline">Github</a></p>
+      </div>
       </div>
     </div>
   );

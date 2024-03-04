@@ -7,7 +7,7 @@ function Layout() {
   return (
     <>
       <Header />
-      <div className="min-h-screen pt-20 xl:px-12 dark:bg-black dark:text-gray-100 transition-all duration-700">
+      <div className="max-w-screen-2xl mx-auto min-h-screen pt-20 xl:px-12">
         <Outlet />
       </div>
       <Footer />

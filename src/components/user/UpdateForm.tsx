@@ -5,6 +5,7 @@ import { FloatingLabel, Toast } from "flowbite-react";
 
 import { CurrentUserType, UserType } from "../../misc/userTypes";
 import { useUpdateUserMutation } from "../../redux/slices/userApi";
+import { ErrorType } from "../../misc/errorTypes";
 
 function UpdateForm({ userInfo }: { userInfo: Partial<CurrentUserType> }) {
   const [
@@ -25,7 +26,7 @@ function UpdateForm({ userInfo }: { userInfo: Partial<CurrentUserType> }) {
   };
 
   return (
-    <>
+    <div className="dark:bg-gray-700 py-4 rounded-xl">
       <form onSubmit={handleSubmit(onSubmit)} className="form-control">
         <div className="form-row">
           <Controller
@@ -49,6 +50,7 @@ function UpdateForm({ userInfo }: { userInfo: Partial<CurrentUserType> }) {
                 type="text"
                 color={errors.username && "error"}
                 helperText={errors.username && errors.username.message}
+                className="dark:bg-gray-700 dark:inputDarkModeOverride"
                 {...field}
               />
             )}
@@ -67,6 +69,7 @@ function UpdateForm({ userInfo }: { userInfo: Partial<CurrentUserType> }) {
                 type="email"
                 color={errors.email && "error"}
                 helperText={errors.email && errors.email.message}
+                className="dark:bg-gray-700 dark:inputDarkModeOverride"
                 {...field}
               />
             )}
@@ -95,6 +98,7 @@ function UpdateForm({ userInfo }: { userInfo: Partial<CurrentUserType> }) {
                 type="text"
                 color={errors.firstName && "error"}
                 helperText={errors.lastName && errors.lastName.message}
+                className="dark:bg-gray-700 dark:inputDarkModeOverride"
                 {...field}
               />
             )}
@@ -120,6 +124,7 @@ function UpdateForm({ userInfo }: { userInfo: Partial<CurrentUserType> }) {
                 type="text"
                 color={errors.lastName && "error"}
                 helperText={errors.lastName && errors.lastName.message}
+                className="dark:bg-gray-700 dark:inputDarkModeOverride"
                 {...field}
               />
             )}
@@ -135,6 +140,7 @@ function UpdateForm({ userInfo }: { userInfo: Partial<CurrentUserType> }) {
                 variant="outlined"
                 label="Address"
                 type="text"
+                className="dark:bg-gray-700 dark:inputDarkModeOverride"
                 {...field}
               />
             )}
@@ -147,6 +153,7 @@ function UpdateForm({ userInfo }: { userInfo: Partial<CurrentUserType> }) {
                 variant="outlined"
                 label="City"
                 type="text"
+                className="dark:bg-gray-700 dark:inputDarkModeOverride"
                 {...field}
               />
             )}
@@ -161,6 +168,7 @@ function UpdateForm({ userInfo }: { userInfo: Partial<CurrentUserType> }) {
                 variant="outlined"
                 label="State"
                 type="text"
+                className="dark:bg-gray-700 dark:inputDarkModeOverride"
                 {...field}
               />
             )}
@@ -173,6 +181,7 @@ function UpdateForm({ userInfo }: { userInfo: Partial<CurrentUserType> }) {
                 variant="outlined"
                 label="Postal Code"
                 type="text"
+                className="dark:bg-gray-700 dark:inputDarkModeOverride"
                 {...field}
               />
             )}
@@ -193,7 +202,14 @@ function UpdateForm({ userInfo }: { userInfo: Partial<CurrentUserType> }) {
           <Toast.Toggle></Toast.Toggle>
         </Toast>
       )}
-    </>
+
+      {updateError && (
+        <Toast className="absolute">
+          {updateError && <p>{(updateError as ErrorType).data.message}</p>}
+          <Toast.Toggle></Toast.Toggle>
+        </Toast>
+      )}
+    </div>
   );
 }
 

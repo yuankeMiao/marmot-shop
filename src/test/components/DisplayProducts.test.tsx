@@ -28,7 +28,7 @@ const wrapper = ({ children }: PropsWithChildren) => (
 );
 
 describe("DisplayProducts component", () => {
-  test("hsould render all products from api - fulfilled", async () => {
+  test("should render all products from api - fulfilled", async () => {
     render(
       <DisplayProducts
         filter={{
