@@ -25,7 +25,7 @@ code {
 
 @layer components {
   .bg-primary {
-    @apply bg-gradient-to-r from-black to-sky-700 text-white;
+    @apply bg-gradient-to-r from-white to-sky-300 dark:from-black dark:to-sky-700 text-sky-950 dark:text-white;
   }
 
   .btn-primary {

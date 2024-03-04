@@ -40,13 +40,13 @@ function Search() {
   },[input, debounced])
 
   return (
-    <div>
+    <>
       <button
-        className="relative w-12 sm:w-40 bg-gray-100 text-gray-600 p-2 text-sm rounded-full hover:bg-gray-300"
+        className="relative w-10 h-10 md:w-40 bg-white dark:bg-gray-100 text-gray-600 p-2 text-sm rounded-full hover:bg-gray-300"
         onClick={() => setOpenModal(true)}
       >
         <FontAwesomeIcon icon={faMagnifyingGlass} className="absolute left-3 top-3" />
-        <span className="mx-4 hidden sm:inline">Search</span>
+        <span className="mx-4 hidden md:inline">Search</span>
       </button>
 
       <Modal dismissible show={openModal} onClose={() => setOpenModal(false)} className="pt-20 sm:p-0">
@@ -84,7 +84,7 @@ function Search() {
           )}
         </Modal.Body>
       </Modal>
-    </div>
+    </>
   );
 }
 

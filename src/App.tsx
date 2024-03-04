@@ -31,7 +31,7 @@ function App() {
   };
 
   return (
-    <div className="dark:bg-gray-800 dark:text-gray-100 transition-all duration-700">
+    <div className="dark:bg-gray-800 dark:text-gray-100 transition-all duration-700 relative">
     <BrowserRouter basename="/">
       <ScrollToTop />
       <Routes>

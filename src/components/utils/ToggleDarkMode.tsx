@@ -38,7 +38,7 @@ function ToggleDarkMode() {
       after:content-[''] after:absolute after:top-0.5 after:start-[2px] 
       after:bg-white after:border-gray-300 after:border after:rounded-full 
       after:h-5 after:w-5 after:transition-all dark:border-gray-600 
-      peer-checked:bg-sky-950"
+      peer-checked:bg-black"
       >
         <svg
           className="w-4 h-4 absolute top-1 left-1"

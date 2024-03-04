@@ -75,7 +75,7 @@ function Footer() {
         </div>
       </div>
 
-      <div className="text-center pt-8 mt-8 border-t">
+      <div className="text-center pt-8 mt-8 border-t border-sky-950 dark:border-gray-100">
         <p>This website is a demo of Yuanke's frontend project for Integrify's Fullstack Program</p>
         <p>Check the repository of this project on <a href="not public yet" className="font-bold underline">Github</a></p>
       </div>
