@@ -3,7 +3,6 @@ import { Modal } from "flowbite-react";
 import { useNavigate } from "react-router-dom";
 
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faHeart } from "@fortawesome/free-regular-svg-icons";
 import { faCartShopping } from "@fortawesome/free-solid-svg-icons";
 
 import { useAppDispatch } from "../../appHooks/reduxHooks";

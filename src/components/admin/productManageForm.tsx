@@ -5,7 +5,7 @@ import {
   useFieldArray,
 } from "react-hook-form";
 
-import { FloatingLabel, Select, Label, Textarea, Toast } from "flowbite-react";
+import { FloatingLabel, Select, Textarea, Toast } from "flowbite-react";
 
 import {
   useCreateNewProductMutation,

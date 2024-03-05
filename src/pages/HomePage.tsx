@@ -1,4 +1,3 @@
-import { Link } from "react-router-dom";
 
 import ProductCard from "../components/produtcs/ProductCard";
 import { HERO_IMAGE } from "../misc/constants";
@@ -49,6 +48,16 @@ function HomePage() {
         </p>
         <div className="h-[32rem] py-4 flex gap-8 overflow-x-scroll *:min-w-[18rem]">
           {error && <p>Something went wrong</p>}
+          {isLoading && (
+            <>
+              <CardLoader />
+              <CardLoader />
+              <CardLoader />
+              <CardLoader />
+              <CardLoader />
+              <CardLoader />
+            </>
+          )}
           {data?.map((product) => (
             <ProductCard productItem={product} key={product.id} />
           ))}

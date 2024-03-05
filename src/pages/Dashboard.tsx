@@ -20,7 +20,7 @@ function Dashboard({ currentUser }: { currentUser: CurrentUserType | null}) {
 
   const [
     getProductsBySearchTrigger,
-    { data: searchResult, isLoading, isFetching, error: searchError },
+    { data: searchResult, isLoading, isFetching },
   ] = useLazyGetProductsBySearchQuery();
 
   const [

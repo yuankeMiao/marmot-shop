@@ -1,7 +1,7 @@
 
 import React, { useEffect, useState } from "react";
 import { useForm, Controller, SubmitHandler } from "react-hook-form";
-import { FloatingLabel } from "flowbite-react";
+import { FloatingLabel, Toast } from "flowbite-react";
 import { LoginType } from "../../misc/userTypes";
 import { useLoginMutation } from "../../redux/slices/userApi";
 import LoginWithGoogle from "./LoginWithGoogle";
@@ -145,7 +145,11 @@ function Login({
         </span>
       </p>
       <LoginWithGoogle setIsSuccessWithGoogle={setIsSuccessWithGoogle} />
-
+      {loginError && (
+        <Toast className="bg-red-200 dark:bg-red-500">
+          <p className="text-xs text-sky-950 dark:text-gray-100">Something wrong with login, please try again!</p>
+          <Toast.Toggle />
+        </Toast>)}
     </div>
   );
 }

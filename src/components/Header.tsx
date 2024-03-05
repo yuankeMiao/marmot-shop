@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from "react";
 import { Link, useLocation } from "react-router-dom";
-import { Modal, Dropdown, Navbar, Avatar, Banner } from "flowbite-react";
+import { Modal, Dropdown, Navbar, Avatar } from "flowbite-react";
 
 import { faCartShopping } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
