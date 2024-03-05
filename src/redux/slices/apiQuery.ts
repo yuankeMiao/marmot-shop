@@ -90,7 +90,7 @@ const apiQueries = createApi({
       query: (search) => `products/search?limit=0&q=${search}`,
       providesTags: ["Product"],
       transformResponse: (response: ProductQueryType) => {
-        // console.log("search query called");
+        console.log("search query called");
         return response.products;
       },
     }),

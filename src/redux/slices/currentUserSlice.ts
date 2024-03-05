@@ -21,7 +21,6 @@ export const fetchCurrentUser = createAsyncThunk(
       });
       return response.data;
     } catch (error) {
-      // console.log(error);
       localStorage.removeItem("token");
       return rejectWithValue(error);
     }

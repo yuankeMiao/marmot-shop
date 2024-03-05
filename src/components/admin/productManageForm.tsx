@@ -356,8 +356,8 @@ function ProductManageForm({
         )}
 
         {(createNewProductSuccess || updateProductSuccess) && (
-          <Toast className="bg-green-200">
-            <div className="text-sm text-black">
+          <Toast className="bg-green-200 dark:bg-green-700">
+            <div className="text-sm text-sky-950 dark:text-gray-100">
               <p>
                 {initialValue
                   ? "Product updated!"

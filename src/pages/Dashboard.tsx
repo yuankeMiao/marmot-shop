@@ -7,15 +7,11 @@ import {
 } from "../redux/slices/apiQuery";
 import ProductManageForm from "../components/admin/ProductManageForm";
 import { ProductType } from "../misc/productTypes";
-
-import useGetCurrentUser from "../appHooks/useGetCurrentUser";
-import { useAppSelector } from "../appHooks/reduxHooks";
+import { CurrentUserType } from "../misc/userTypes";
 
 const debounce = require("lodash.debounce");
 
-function Dashboard() {
-  useGetCurrentUser();
-  const currentUser = useAppSelector((state) => state.currentUser.user);
+function Dashboard({ currentUser }: { currentUser: CurrentUserType | null}) {
   const [DeleteModalOpen, setDeleteModalOpen] = useState(false);
   const [InfoFormModalOpen, setInfoFormModalOpen] = useState(false);
   const [selectedProduct, setSelectedProduct] = useState<ProductType | null>(
@@ -57,20 +53,18 @@ function Dashboard() {
     setInput(e.target.value);
   };
 
-  const debounced = useCallback(
-    debounce(() => {
-      getProductsBySearchTrigger(input);
-    }, 1000),
-    [input]
-  );
+  const handleSearch =() => {
+    getProductsBySearchTrigger(input)
+  }
+
+  const debounced = useCallback(debounce(handleSearch, 1000),[input])
 
   useEffect(() => {
-    if (input.length > 0) debounced();
-    else getProductsBySearchTrigger("");
+      debounced();
     return () => {
       debounced.cancel();
     };
-  }, [input, debounced, getProductsBySearchTrigger]);
+  }, [input, debounced]);
 
   if (currentUser?.role !== "admin")
     return <div>You are not authorized to access this page</div>;
@@ -88,7 +82,6 @@ function Dashboard() {
         name="search-admin"
         className="pb-8 pt-4 w-96"
         type="text"
-        autoComplete="off"
         placeholder="Search products"
         value={input}
         onChange={handleInput}
@@ -165,6 +158,7 @@ function Dashboard() {
       </div>
 
       <Modal
+      dismissible
         show={InfoFormModalOpen}
         onClose={() => {
           setInfoFormModalOpen(false);

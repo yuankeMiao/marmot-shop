@@ -44,7 +44,7 @@ function App() {
             <Route path="profile" element={<ProfilePage currentUser={currentUser} />} />
           </Route>
           <Route element={<ProtectedRoute isAllowed={currentUser?.role === "admin"}/>}>
-            <Route path="dashboard" element={<Dashboard />} />
+            <Route path="dashboard" element={<Dashboard currentUser={currentUser}  />} />
           </Route>
           <Route path="*" element={<ErrorPage />} />
         </Route>

@@ -3,7 +3,6 @@ import { setupServer } from "msw/node";
 import { LoginType, UserType } from "../../misc/userTypes";
 import { DUMMYJSON_URL } from "../../misc/constants";
 
-
 // i just copy the data from the api i'm using
 const mockUsers = [
   {
@@ -66,25 +65,40 @@ const mockUsers = [
 ];
 
 export const handlers = [
-
+  // should receive a request bearing token and return the user info
+  http.get(DUMMYJSON_URL + "/auth/me", async ({ request }) => {
+    const token = request.headers.get("Authorization")?.split(" ")[1];
+    if (token === "validToken") {
+      const user = mockUsers.find((user) => user.id === 1);
+      if (user) {
+        return HttpResponse.json(user, { status: 200 });
+      }
+    } else if (token === "expiredToken") {
+      return HttpResponse.json(null, { status: 401 });
+    } else return HttpResponse.json(null, { status: 404 });
+  }),
 
   // should receive a request of username and password, and return an object of user info includes token
-  http.post(DUMMYJSON_URL+"/auth/login", async ({request}) => {
-    const { username, password } = await (request.json()) as LoginType;
+  http.post(DUMMYJSON_URL + "/auth/login", async ({ request }) => {
+    const { username, password } = (await request.json()) as LoginType;
     // console.log(username, password);
-    const user = mockUsers.find((user) => user.username === username && user.password === password);
+    const user = mockUsers.find(
+      (user) => user.username === username && user.password === password
+    );
     if (user) {
       // console.log("user found");
-      return HttpResponse.json({ ...user, token: "fakeToken"} , { status: 200 });
+      return HttpResponse.json(
+        { ...user, token: "fakeToken" },
+        { status: 200 }
+      );
     } else return HttpResponse.json(null, { status: 404 });
   }),
 
   // register a new user, receive a user object and return the same object with an id
-  http.post(DUMMYJSON_URL+"/users/add", async ({request}) => {
-    const newUser = await (request.json()) as Omit<UserType, "id">;
+  http.post(DUMMYJSON_URL + "/users/add", async ({ request }) => {
+    const newUser = (await request.json()) as Omit<UserType, "id">;
     return HttpResponse.json({ ...newUser, id: 4 }, { status: 200 });
   }),
-]
-
+];
 
 export const userServer = setupServer(...handlers);

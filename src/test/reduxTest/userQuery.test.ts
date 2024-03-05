@@ -1,7 +1,6 @@
 import { createStore } from "../../redux/store";
 import { userServer } from "../shared/userServer";
 import userApi from "../../redux/slices/userApi";
-import { error } from "console";
 
 let store = createStore();
 
