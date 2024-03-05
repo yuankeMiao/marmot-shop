@@ -7,8 +7,8 @@ import { Modal, Dropdown, Navbar, Avatar } from "flowbite-react";
 import { faCartShopping } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 
-import Badge from "./buttons/Bagde";
-import Search from "./Search";
+import Badge from "./utils/Bagde";
+import Search from "./produtcs/Search";
 
 import { useAppSelector, useAppDispatch } from "../appHooks/reduxHooks";
 

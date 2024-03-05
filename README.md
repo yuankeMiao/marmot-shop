@@ -1,50 +1,192 @@
-# Frontend project
+# Frontend project - Marmot Shop
+This is a frontend demo website for e-commerce.
 
-This repository for the Frontend project to build an e-commerce website.
+## Introduction
+The marmot Shop is built using: 
+- React for framework
+- Typescript for programming language
+- Redux for state management
+- React Router Dom for router management
+- TailwindCSS and flowbite for styling
+- Dummyjson for demo API.
 
-## Requirements
+## Table of content
+1. [Getting Started](#getting-started)
+2. [Features](#features)
+3. [Architecture & Design](#architecture--design)
+4. [Testing](#testing)
+5. [Deployment](#deployment)
 
-### Basic requirements
+## 1 Getting start
+```
+git clone https://github.com/yuankeMiao/marmot-shop.git
+```
+Then install the dependencies:
+```
+cd fs17-fe-project
+npm install
+```
 
-The Front end project must use TypeScript and Redux toolkit.
+To start the development server:
+```
+npm start
+```
 
-1. Use the API endpoint `https://fakeapi.platzi.com/`.
+To deploy it:
+```
+npm run build
+```
 
-2. Create at lease 4 pages (can be more if you want): Page for all products, product page, profile page (only available if user logins), and cart page (cart page could be a page or a modal)
+## 2 Features
 
-3. Create Redux store for following features:
+### 2.1 Routers and pages
+This project uses [react-router-dom](https://reactrouter.com/en/main) for the client side router control. 
 
-   - product reducer: get all products, find a single products, filter products by categories, sort products by price. Create, update and delete a product (enable update & delete features only for admin of the webapp)
-   - user reducer: register and login
-   - cart reducer: add product to cart, remove products, update products's quantity in cart
+Component `<Outlet>` is used in this app to provide a universal header and footer. All other pages are wrapped in.
 
-4. When adding routers to your application, set certain routes to be private. For example, route to user profile page should not be accessible if user has not logged in.
+This app also has a customized prtected router to check if the current user is allowed to visit a certain route.
 
-5. Styling: must have responsive
+### 2.2 For all viewers
+Home page ('/'), all product page ('/all-product'), single product page('/product/:id), error page ('/*/**') are avaliable for all visitors. 
 
-6. Implement unit testing for the reducers
+#### 2.2.1 Navigation
+The header is sticky to the window, so it will be always on top the the window. Navbar has three items, it will highlight the active one.
 
-7. **Deploy** the application and rewrite README file.
+#### 2.2.2 Search feature
+This is a button in header, click this button will open a modal with a search input field, type any text in the search field, after 1s stop, it will show the result. Click anywhere  outside the modal to close the modal.
 
-### Additional features:
+![search modal](readmeImg/search-user.png)
 
-- Use Context API to switch theme
-- Use pagination when fetching/displaying all the products
-- Implement performance optimization where applicable
+#### 2.2.3 Dark mode
+The toggle button on header will toggle a whole app theme change via useContext and TailwindCSS. However, it is worth to note that, useContext hook is not nessesary in this case, because TaiwindCSS reads localStorage for theme info then toggle different mode. This project is using a simple useContext mainly because the requirements of this assignment.
 
-## Grading (1-5)
+The toggle button also change from a sun icon to a moon icon when the theme changes from light to dark.
 
-1: Late submission or not complete basic requirements
+#### 2.2.4 Cart
+Even non-authorized users can use the cart to store the products they want to add. There is a cart icon with number badge in header to show how many items in the cart.
 
-2: Basic requirement + Presentation
+Click that icon will navigate to cart page, users can check the items in cart, change the amount of an item or delete it.
 
-3: Folder structure + follow convention(naming convention ,loading, error) + some additional features
+#### 2.2.5 Login & Register
 
-4: All additional features + reusable logic + custom hook
+### 2.3 For login users
 
-5: UI-UX (for example: send alert when user add same product) + styling (animation or transition, scroll to top) + advanced feature (google log in)
+### 2.4 For admin
 
-## Deadline
+### 2.5 User experience
 
-- Presentation: **7/3** and **8/3/ 2024**
-- Submitting Front-end project **10am 8/3/2024**
+### 2.6 Performance
+
+### 2.7 Accessibility
+
+
+## 3 Architecture & Design
+### 3.1 Folder structure
+```
+.
+├── App.tsx
+├── appHooks
+│   ├── reduxHooks.ts
+│   ├── useFetchRandomQuote.ts
+│   ├── useGetCurrentUser.ts
+│   └── useThemeContext.tsx
+├── components
+│   ├── Footer.tsx
+│   ├── Header.tsx
+│   ├── MarmoteAnime.tsx
+│   ├── admin
+│   │   └── ProductManageForm.tsx
+│   ├── produtcs
+│   │   ├── AmountControl.tsx
+│   │   ├── DisplayProducts.tsx
+│   │   ├── Filters.tsx
+│   │   ├── ProductCard.tsx
+│   │   ├── ProductListItem.tsx
+│   │   ├── Search.tsx
+│   │   └── ShopAndFav.tsx
+│   ├── skeleton
+│   │   └── CardLoader.tsx
+│   ├── user
+│   │   ├── AddressTable.tsx
+│   │   ├── Login.tsx
+│   │   ├── LoginWithGoogle.tsx
+│   │   ├── Register.tsx
+│   │   └── UpdateForm.tsx
+│   └── utils
+│       ├── Bagde.tsx
+│       ├── ScrollToTop.tsx
+│       └── ToggleDarkMode.tsx
+├── index.css
+├── index.tsx
+├── misc
+│   ├── constants.ts
+│   ├── errorTypes.ts
+│   ├── productTypes.ts
+│   ├── themeTypes.ts
+│   └── userTypes.ts
+├── pages
+│   ├── AllProdutcsPage.tsx
+│   ├── CartPage.tsx
+│   ├── Dashboard.tsx
+│   ├── ErrorPage.tsx
+│   ├── HomePage.tsx
+│   ├── Layout.tsx
+│   ├── ProductPage.tsx
+│   └── ProfilePage.tsx
+├── react-app-env.d.ts
+├── redux
+│   ├── slices
+│   │   ├── apiQuery.ts
+│   │   ├── cartSlice.ts
+│   │   ├── currentUserSlice.ts
+│   │   └── userApi.ts
+│   └── store.ts
+├── reportWebVitals.ts
+├── setupTests.ts
+├── statics
+│   └── marmot-1.png
+└── test
+    ├── reduxTest
+    │   ├── cartSlice.test.ts
+    │   ├── categoryQuery.test.ts
+    │   ├── currentUserSlice.test.ts
+    │   ├── productQuery.test.ts
+    │   ├── search.test.ts
+    │   └── userQuery.test.ts
+    └── shared
+        ├── cartServer.ts
+        ├── productServer.ts
+        └── userServer.ts
+```
+### 3.2 Redux structure
+
+_If the text is too small, please check [here](https://app.wisemapping.com/c/maps/1682840/public) to zoom in._
+![redux structure](<readmeImg/Marmot shop.svg>)
+
+
+### 3.3 Data flow and main components
+- Symbol in this illustration: 
+  - white: component
+  - blue: reducer action
+  - yellow: customized hook
+
+_if the text is too small, please check [here](https://app.wisemapping.com/c/maps/1682877/public) to zoom in._
+
+![data flow](<readmeImg/marmot shop components.svg>)
+
+## 4 Testing
+
+Tests are written with Jest and React Testing library, using msw for mock server.
+There is three mock servers for products, cart and users.
+
+ To run the tests and check the coverage:
+```
+npm test
+```
+Test result:
+![test result](readmeImg/test-result.png)
+
+_Note: This project only tested redux logics, because some of the external libraries in components do not support the testing library._
+
+## 5 Deployment
+The Marmot Shop is deployed using Hostinger [here](https://marmotshop.yuankedev.fun/).

@@ -4,7 +4,7 @@ import { Breadcrumb, Rating, Carousel } from "flowbite-react";
 
 import { useGetProductByIdQuery } from "../redux/slices/apiQuery";
 import { ProductType } from "../misc/productTypes";
-import ShopAndFav from "../components/produtcs/ShopAndFav";
+import ShopButton from "../components/produtcs/ShopButton";
 import AmountControl from "../components/produtcs/AmountControl";
 import { ErrorType } from "../misc/errorTypes";
 
@@ -66,7 +66,7 @@ function ProductPage() {
 
               <AmountControl amount={amount} setAmount={setAmount} />
 
-              <ShopAndFav newItem={product} quantity={amount} />
+              <ShopButton newItem={product} quantity={amount} />
             </div>
           </div>
 

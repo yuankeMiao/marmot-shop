@@ -1,7 +1,7 @@
 import { Link } from "react-router-dom";
 
 import { ProductType } from "../../misc/productTypes";
-import ShopAndFav from "./ShopAndFav";
+import ShopButton from "./ShopButton";
 
 function ProductCard({ productItem }: { productItem: ProductType }) {
 
@@ -19,7 +19,7 @@ function ProductCard({ productItem }: { productItem: ProductType }) {
       </Link>
       <span className="mt-4 h-12 font-bold">{productItem.title}</span>
       <span className="text-lg font-bold py-4">{productItem.price} €</span>
-      <ShopAndFav newItem={productItem} quantity={1} />
+      <ShopButton newItem={productItem} quantity={1} />
     </div>
   );
 }

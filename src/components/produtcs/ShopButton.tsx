@@ -9,7 +9,7 @@ import { useAppDispatch } from "../../appHooks/reduxHooks";
 import { addToCart } from "../../redux/slices/cartSlice";
 import { CartItemType, ProductType } from "../../misc/productTypes";
 
-function ShopAndFav({
+function ShopButton({
   newItem,
   quantity,
 }: {
@@ -80,4 +80,4 @@ function ShopAndFav({
   );
 }
 
-export default ShopAndFav;
+export default ShopButton;

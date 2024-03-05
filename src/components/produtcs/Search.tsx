@@ -5,8 +5,8 @@ import { Modal, TextInput } from "flowbite-react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faMagnifyingGlass } from "@fortawesome/free-solid-svg-icons";
 
-import { useLazyGetProductsBySearchQuery } from "../redux/slices/apiQuery";
-import { ErrorType } from "../misc/errorTypes";
+import { useLazyGetProductsBySearchQuery } from "../../redux/slices/apiQuery";
+import { ErrorType } from "../../misc/errorTypes";
 
 const debounce = require("lodash.debounce");
 

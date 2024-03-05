@@ -12,17 +12,6 @@ const apiQueries = createApi({
   reducerPath: "api",
   baseQuery: fetchBaseQuery({
     baseUrl: DUMMYJSON_URL,
-    // prepareHeaders: (headers, { getState }) => {
-    //   console.log('prepareHeaders is called');
-    //   // const state = getState() as AppState;
-    //   // const token = state.auth.accessToken;
-    //   const token = window.localStorage.getItem("token");
-    //   console.log('token', token);
-    //   if (token) {
-    //     headers.set("authorization", `Bearer ${token}`);
-    //   }
-    //   return headers;
-    // },
   }),
   tagTypes: ["Product", "User", "Cart"],
   endpoints: (builder) => ({

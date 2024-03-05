@@ -45,6 +45,7 @@ function Login({
       .unwrap()
       .then((result) => {
         window.localStorage.setItem("token", result.token);
+        //after login, trigger fetchCurrentUser immediately
         dispatch(fetchCurrentUser(result.token)).then((user) => {
           dispatch(fetchUserCart(user.payload.id));
         });
