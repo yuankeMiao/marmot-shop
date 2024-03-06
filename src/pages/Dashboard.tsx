@@ -8,10 +8,11 @@ import {
 import ProductManageForm from "../components/admin/ProductManageForm";
 import { ProductType } from "../misc/productTypes";
 import { CurrentUserType } from "../misc/userTypes";
+import TableItemLoader from "../components/skeleton/TableItemLoader";
 
 const debounce = require("lodash.debounce");
 
-function Dashboard({ currentUser }: { currentUser: CurrentUserType | null}) {
+function Dashboard({ currentUser }: { currentUser: CurrentUserType | null }) {
   const [DeleteModalOpen, setDeleteModalOpen] = useState(false);
   const [InfoFormModalOpen, setInfoFormModalOpen] = useState(false);
   const [selectedProduct, setSelectedProduct] = useState<ProductType | null>(
@@ -53,14 +54,14 @@ function Dashboard({ currentUser }: { currentUser: CurrentUserType | null}) {
     setInput(e.target.value);
   };
 
-  const handleSearch =() => {
-    getProductsBySearchTrigger(input)
-  }
+  const handleSearch = () => {
+    getProductsBySearchTrigger(input);
+  };
 
-  const debounced = useCallback(debounce(handleSearch, 1000),[input])
+  const debounced = useCallback(debounce(handleSearch, 1000), [input]);
 
   useEffect(() => {
-      debounced();
+    debounced();
     return () => {
       debounced.cancel();
     };
@@ -87,7 +88,6 @@ function Dashboard({ currentUser }: { currentUser: CurrentUserType | null}) {
         onChange={handleInput}
       />
       <div>
-        {(isLoading || isFetching) && <div>Loading ...</div>}
         {input.length > 0 && searchResult?.length === 0 && (
           <div>There is no result, try another keyword.</div>
         )}
@@ -115,6 +115,13 @@ function Dashboard({ currentUser }: { currentUser: CurrentUserType | null}) {
             </Table.HeadCell>
           </Table.Head>
           <Table.Body className="divide-y">
+            {(isLoading || isFetching) && <>
+            <TableItemLoader />
+            <TableItemLoader />
+            <TableItemLoader />
+            <TableItemLoader />
+            <TableItemLoader />
+              </>}
             {searchResult?.map((product) => (
               <Table.Row key={product.id}>
                 <Table.Cell className="hidden md:table-cell">
@@ -158,7 +165,7 @@ function Dashboard({ currentUser }: { currentUser: CurrentUserType | null}) {
       </div>
 
       <Modal
-      dismissible
+        dismissible
         show={InfoFormModalOpen}
         onClose={() => {
           setInfoFormModalOpen(false);

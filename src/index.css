@@ -34,6 +34,10 @@
     @apply w-full grid grid-flow-col justify-stretch space-x-4;
   }
 
+  .placeholder {
+    @apply w-full h-10 bg-gray-200 rounded-md animate-pulse;
+  }
+
   .inputDarkModeOverride:-webkit-autofill,
   .inputDarkModeOverride:-webkit-autofill:hover,
   .inputDarkModeOverride:-webkit-autofill:focus,

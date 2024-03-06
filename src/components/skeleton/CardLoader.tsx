@@ -1,21 +1,17 @@
-import React from "react";
-import ContentLoader from "react-content-loader";
+
 
 function CardLoader() {
   return (
-    <ContentLoader
-      speed={2}
-      width={300}
-      height={420}
-      viewBox="0 0 300 420"
-      backgroundColor="#f3f3f3"
-      foregroundColor="#ecebeb"
-    >
-      <rect x="0" y="0" rx="10" ry="10" width="300" height="300" />
-      <rect x="0" y="310" rx="0" ry="0" width="160" height="20" />
-      <rect x="4" y="340" rx="0" ry="0" width="130" height="20" />
-      <rect x="100" y="370" rx="10" ry="10" width="100" height="30" />
-    </ContentLoader>
+    <div className="bg-white dark:bg-gray-900 px-4 py-8 rounded-xl shadow-md flex flex-col min-w-64">
+      <div className="w-full aspect-square bg-gray-300 rounded-md animate-pulse"></div>
+      <span className="mt-4 h-12 font-bold placeholder"></span>
+      <p className="py-4 *:pr-4">
+        <span className="text-lg font-semibold line-through placeholder"></span>
+        <span className="text-xl font-bold text-red-700 placeholder"></span>
+      </p>
+
+      <div className="placeholder"></div>
+    </div>
   );
 }
 
