@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 
-import { CartItemType} from "../../misc/productTypes";
+import { CartItemType } from "../../misc/productTypes";
 import AmountControl from "./AmountControl";
 import { useAppDispatch } from "../../appHooks/reduxHooks";
 import { removeFromCart, updateQuantity } from "../../redux/slices/cartSlice";
@@ -27,9 +27,24 @@ function ProductListItem({ product }: { product: CartItemType }) {
       <div className="w-full flex flex-col justify-between">
         <h3 className="text-xl font-bold">{product.title}</h3>
         <div className="flex justify-between items-center">
-          <p className="text-md font-semibold">{product.price} €</p>
+          <p className="py-4 *:pr-4">
+            <span className="text-md font-semibold line-through">
+              {product.price}€
+            </span>
+            <span className="text-lg font-bold text-red-700">
+              {Math.round(
+                (product.price * (100 - product.discountPercentage)) / 100
+              )}
+              €
+            </span>
+          </p>
           <AmountControl amount={amount} setAmount={setAmount} />
-          <button className="text-sky-700 hover:underline" onClick={handleDeleteItem}>Delete</button>
+          <button
+            className="text-sky-700 hover:underline"
+            onClick={handleDeleteItem}
+          >
+            Delete
+          </button>
         </div>
       </div>
     </div>

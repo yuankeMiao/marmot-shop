@@ -84,15 +84,28 @@ function Search() {
                 <Link
                   to={`/product/${product.id}`}
                   onClick={handleClickProduct}
-                  className="flex gap-8 items-center py-2 "
+                  className="flex gap-8 justify-between items-center py-2 "
                 >
-                  <img
-                    src={product.thumbnail}
-                    alt={product.title}
-                    className="aspect-square h-16 w-16 rounded-md object-cover"
-                  />
-                  <h3 className="text-xl font-bold">{product.title}</h3>
-                  <p className="text-md font-semibold">{product.price} €</p>
+                  <div>
+                    <img
+                      src={product.thumbnail}
+                      alt={product.title}
+                      className="aspect-square h-16 w-16 rounded-md object-cover inline"
+                    />
+                    <h3 className="text-xl font-bold mx-4 inline">{product.title}</h3>
+                  </div>
+                  <p className="py-4 *:pr-4">
+                    <span className="text-md font-semibold line-through">
+                      {product.price}€
+                    </span>
+                    <span className="text-lg font-bold text-red-700">
+                      {Math.round(
+                        (product.price * (100 - product.discountPercentage)) /
+                          100
+                      )}
+                      €
+                    </span>
+                  </p>
                 </Link>
               </div>
             ))}
