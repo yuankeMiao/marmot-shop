@@ -49,7 +49,7 @@ function ShopButton({
         Add to Bag
       </button>
 
-      <Modal show={openModal} onClose={() => setOpenModal(false)}>
+      <Modal dismissible show={openModal} onClose={() => setOpenModal(false)}>
         <Modal.Header>Added to My Bag!</Modal.Header>
         <Modal.Body>
           <div className="space-y-6 dark:text-gray-100">

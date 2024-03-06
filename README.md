@@ -66,7 +66,7 @@ The toggle button on header will toggle a whole app theme change via useContext 
 The toggle button also change from a sun icon to a moon icon when the theme changes from light to dark.
 
 #### 2.2.4 Cart
-Even non-authorized users can use the cart to store the products they want to add. There is a cart icon with number badge in header to show how many items in the cart.
+Even non-authorized users can use the cart to store the products they want to add. There is a cart icon with number badge in header to show how many items in the cart. If the total item amount is more than 99, it will show "...".
 
 Click that icon will navigate to cart page, users can check the items in cart, change the amount of an item or delete it.
 

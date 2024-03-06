@@ -5,7 +5,7 @@ import ShopButton from "./ShopButton";
 
 function ProductCard({ productItem }: { productItem: ProductType }) {
   return (
-    <div className="bg-white dark:bg-gray-900 text-sky-950 dark:text-gray-100 px-4 py-8 rounded-xl shadow-md flex flex-col min-w-64 transition-all">
+    <div className="bg-gray-100 dark:bg-gray-900 text-sky-950 dark:text-gray-100 px-4 py-8 rounded-xl shadow-md flex flex-col min-w-64 transition-all">
       <Link to={`/product/${productItem.id}`}>
         <img
           src={productItem.thumbnail}

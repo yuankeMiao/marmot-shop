@@ -24,8 +24,10 @@ type FormValuesType = Omit<ProductType, "images, id"> & {
 
 function ProductManageForm({
   initialValue,
+  setInfoFormModalOpen
 }: {
   initialValue: ProductType | null;
+  setInfoFormModalOpen:  React.Dispatch<React.SetStateAction<boolean>>;
 }) {
   const emptyFormValues: FormValuesType = {
     id: 0,
@@ -54,6 +56,7 @@ function ProductManageForm({
       isSuccess: createNewProductSuccess,
       isLoading: createNewProductLoading,
       error: createNewProductError,
+      reset: createNewProductReset,
     },
   ] = useCreateNewProductMutation();
   const [
@@ -69,6 +72,7 @@ function ProductManageForm({
     control,
     handleSubmit,
     formState: { errors },
+    reset,
   } = useForm<FormValuesType>({
     defaultValues: initialFormValues,
   });
@@ -93,6 +97,11 @@ function ProductManageForm({
       await createNewProductTrigger(submitData);
     }
   };
+
+  const handleResetForm = () => {
+    reset(initialFormValues);
+    createNewProductReset();
+  }
 
   return (
     <div>
@@ -369,6 +378,10 @@ function ProductManageForm({
             <Toast.Toggle />
           </Toast>
         )}
+        {createNewProductSuccess ? <div className="flex justify-between gap-4">
+          <button type="reset" className="btn-primary" onClick={handleResetForm}>Create another</button>
+          <button className="btn-primary" onClick={() => setInfoFormModalOpen(false)}>Close</button>
+        </div> :
         <button
           type="submit"
           className="btn-primary"
@@ -377,7 +390,7 @@ function ProductManageForm({
           {updateProductLoading || createNewProductLoading
             ? "Confirming ..."
             : "Confirm"}
-        </button>
+        </button>}
       </form>
     </div>
   );

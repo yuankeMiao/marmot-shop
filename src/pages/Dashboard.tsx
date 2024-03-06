@@ -5,14 +5,16 @@ import {
   useLazyGetProductsBySearchQuery,
   useDeleteProductMutation,
 } from "../redux/slices/apiQuery";
+import { useAppSelector } from "../appHooks/reduxHooks";
 import ProductManageForm from "../components/admin/ProductManageForm";
 import { ProductType } from "../misc/productTypes";
-import { CurrentUserType } from "../misc/userTypes";
 import TableItemLoader from "../components/skeleton/TableItemLoader";
 
 const debounce = require("lodash.debounce");
 
-function Dashboard({ currentUser }: { currentUser: CurrentUserType | null }) {
+function Dashboard() {
+
+  
   const [DeleteModalOpen, setDeleteModalOpen] = useState(false);
   const [InfoFormModalOpen, setInfoFormModalOpen] = useState(false);
   const [selectedProduct, setSelectedProduct] = useState<ProductType | null>(
@@ -66,6 +68,14 @@ function Dashboard({ currentUser }: { currentUser: CurrentUserType | null }) {
       debounced.cancel();
     };
   }, [input, debounced]);
+
+  const { user: currentUser, isLoading: currentUserIsLoading } = useAppSelector((state) => state.currentUser);
+
+  if(currentUserIsLoading) return (
+    <div className="py-20">
+      <p className="text-center text-xl dark:text-gray-100">Loading...</p>
+    </div>
+  )
 
   if (currentUser?.role !== "admin")
     return <div>You are not authorized to access this page</div>;
@@ -176,7 +186,7 @@ function Dashboard({ currentUser }: { currentUser: CurrentUserType | null }) {
           {selectedProduct ? "Edit Product" : "Add New Product"}
         </Modal.Header>
         <Modal.Body>
-          <ProductManageForm initialValue={selectedProduct} />
+          <ProductManageForm initialValue={selectedProduct} setInfoFormModalOpen={setInfoFormModalOpen} />
         </Modal.Body>
       </Modal>
 

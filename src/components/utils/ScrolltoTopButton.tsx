@@ -35,7 +35,7 @@ function ScrolltoTopButton() {
     <button
       className={`${
         isHidden && "hidden"
-      } w-12 h-12 rounded-full bg-gray-200 shadow-xl hover:bg-gray-300 transition duration-250 ease-in-out fixed bottom-16 right-16 z-50`}
+      } w-12 h-12 rounded-full bg-gray-200 text-black shadow-xl hover:bg-gray-300 transition duration-250 ease-in-out fixed bottom-16 right-16 z-50`}
       aria-label="scroll to top"
       onClick={handleScroll}
     >

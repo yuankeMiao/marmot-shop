@@ -1,4 +1,3 @@
-
 import {
   BrowserRouter,
   Routes,
@@ -20,17 +19,8 @@ import Dashboard from "./pages/Dashboard";
 import useGetCurrentUser from "./appHooks/useGetCurrentUser";
 import ScrollToTop from "./components/utils/ScrollToTop";
 
-
 function App() {
   useGetCurrentUser();
-  const currentUser = useAppSelector((state) => state.currentUser.user);
-
-  const ProtectedRoute = ({ isAllowed }: { isAllowed: boolean }) => {
-    if (!isAllowed) {
-      return <Navigate to="/" replace />;
-    }
-    return <Outlet />;
-  };
 
   return (
     <div className="dark:bg-gray-800 dark:text-gray-100 transition-all duration-700 relative">
@@ -43,24 +33,16 @@ function App() {
             <Route path="product/:productId" element={<ProductPage />} />
             <Route
               path="cart"
-              element={<CartPage currentUser={currentUser} />}
+              element={<CartPage />}
             />
-            <Route element={<ProtectedRoute isAllowed={!!currentUser} />}>
-              <Route
-                path="profile"
-                element={<ProfilePage currentUser={currentUser} />}
-              />
-            </Route>
             <Route
-              element={
-                <ProtectedRoute isAllowed={currentUser?.role === "admin"} />
-              }
-            >
-              <Route
-                path="dashboard"
-                element={<Dashboard currentUser={currentUser} />}
-              />
-            </Route>
+              path="profile"
+              element={<ProfilePage />}
+            />
+            <Route
+              path="dashboard"
+              element={<Dashboard />}
+            />
             <Route path="*" element={<ErrorPage />} />
           </Route>
         </Routes>

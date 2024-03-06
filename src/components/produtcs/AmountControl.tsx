@@ -8,7 +8,7 @@ function AmountControl({
   setAmount: React.Dispatch<React.SetStateAction<number>>;
 }) {
   const handleIncrement = () => {
-    setAmount((prev) => prev + 1);
+    if(amount < 99) setAmount((prev) => prev + 1);
   };
 
   const handledecrement = () => {

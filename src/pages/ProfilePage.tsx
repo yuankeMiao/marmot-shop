@@ -1,17 +1,23 @@
 import { Link, useNavigate } from "react-router-dom";
 import { Table } from "flowbite-react";
 
-import { useAppDispatch } from "../appHooks/reduxHooks";
+import { useAppDispatch, useAppSelector } from "../appHooks/reduxHooks";
 import UpdateForm from "../components/user/UpdateForm";
-import { CurrentUserType } from "../misc/userTypes";
 import AddressTable from "../components/user/AddressTable";
 import { logout } from "../redux/slices/currentUserSlice";
 
-function ProfilePage({ currentUser }: { currentUser: CurrentUserType | null}) {
+function ProfilePage() {
   const navigate = useNavigate();
   const dispatch = useAppDispatch();
 
-  // console.log(currentUser);
+  const { user: currentUser, isLoading: currentUserIsLoading } = useAppSelector((state) => state.currentUser);
+
+  if(currentUserIsLoading) return (
+    <div className="py-20">
+      <p className="text-center text-xl dark:text-gray-100">Loading...</p>
+    </div>
+  )
+
   if(!currentUser) return (
     <div className="py-20">
       <p className="text-center text-xl dark:text-gray-100">Please log in to chcek your profile!</p>
