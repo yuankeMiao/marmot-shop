@@ -6,15 +6,19 @@ import ProductListItem from "../components/produtcs/ProductListItem";
 import { CartState } from "../misc/productTypes";
 import { useAppSelector } from "../appHooks/reduxHooks";
 import { CurrentUserType } from "../misc/userTypes";
+import { useLoginContext } from "../appHooks/useLoginContext";
 
 function CartPage({ currentUser }: { currentUser: CurrentUserType | null}) {
+  
   const [openModal, setOpenModal] = useState(false);
+  const { setOpenLoginModal} = useLoginContext();
+
   const handleCheckout = () => {
     if(currentUser){
       setOpenModal(true);
       return;
     } else {
-      alert("Please login first");
+      setOpenLoginModal(true);
     }
   };
 

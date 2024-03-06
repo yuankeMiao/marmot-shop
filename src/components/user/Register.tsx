@@ -4,15 +4,15 @@ import { FloatingLabel, Toast } from "flowbite-react";
 import { RegisterType, UserType } from "../../misc/userTypes";
 import { useRegisterMutation } from "../../redux/slices/userApi";
 import { ErrorType } from "../../misc/errorTypes";
+import { useLoginContext } from "../../appHooks/useLoginContext";
 
 function Register({
   setOpenRegisterModal,
-  setOpenLoginModal,
 }: {
   setOpenRegisterModal: React.Dispatch<React.SetStateAction<boolean>>;
-  setOpenLoginModal: React.Dispatch<React.SetStateAction<boolean>>;
 }) {
   const [registerTrigger, { isSuccess, isLoading, error }] = useRegisterMutation();
+  const { setOpenLoginModal } = useLoginContext();
 
   const initialUserInfo = {
     username: "",

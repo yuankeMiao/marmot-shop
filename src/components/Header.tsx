@@ -18,6 +18,8 @@ import ToggleDarkMode from "./utils/ToggleDarkMode";
 import Register from "./user/Register";
 import { logout } from "../redux/slices/currentUserSlice";
 
+import { useLoginContext } from "../appHooks/useLoginContext";
+
 function Header() {
   useGetCurrentUser();
 
@@ -28,7 +30,7 @@ function Header() {
     (state) => state.currentUser
   );
 
-  const [openLoginModal, setOpenLoginModal] = useState(false);
+  const { openLoginModal, setOpenLoginModal } = useLoginContext();
   const [openRegisterModal, setOpenRegisterModal] = useState(false);
   const [openReLoginModal, setOpenReLoginModal] = useState(false);
 
@@ -143,7 +145,6 @@ function Header() {
         <Modal.Header />
         <Modal.Body>
           <Login
-            setOpenLoginModal={setOpenLoginModal}
             setOpenRegisterModal={setOpenRegisterModal}
           />
         </Modal.Body>
@@ -160,7 +161,6 @@ function Header() {
         <Modal.Body>
           <Register
             setOpenRegisterModal={setOpenRegisterModal}
-            setOpenLoginModal={setOpenLoginModal}
           />
         </Modal.Body>
       </Modal>

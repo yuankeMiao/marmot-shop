@@ -8,6 +8,7 @@ import App from "./App";
 import { Provider } from "react-redux";
 import store from "./redux/store";
 import { ThemeProvider } from "./appHooks/useThemeContext";
+import { LoginProvider } from "./appHooks/useLoginContext";
 
 const clientId = process.env.REACT_APP_GOOGLE_CLIENT_ID as string;
 
@@ -18,9 +19,11 @@ root.render(
   <React.StrictMode>
     <Provider store={store}>
       <ThemeProvider>
+        <LoginProvider>
         <GoogleOAuthProvider clientId={clientId}>
           <App />
         </GoogleOAuthProvider>
+        </LoginProvider>
       </ThemeProvider>
     </Provider>
   </React.StrictMode>

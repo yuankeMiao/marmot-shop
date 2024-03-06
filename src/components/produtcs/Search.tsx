@@ -86,13 +86,13 @@ function Search() {
                   onClick={handleClickProduct}
                   className="flex gap-8 justify-between items-center py-2 "
                 >
-                  <div>
+                  <div className="flex gap-4 items-center">
                     <img
                       src={product.thumbnail}
                       alt={product.title}
-                      className="aspect-square h-16 w-16 rounded-md object-cover inline"
+                      className="aspect-square h-16 w-16 rounded-md object-cover"
                     />
-                    <h3 className="text-xl font-bold mx-4 inline">{product.title}</h3>
+                    <h3 className="text-xl font-bold mx-4">{product.title}</h3>
                   </div>
                   <p className="py-4 *:pr-4">
                     <span className="text-md font-semibold line-through">

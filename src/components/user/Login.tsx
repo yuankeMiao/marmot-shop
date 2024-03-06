@@ -8,12 +8,11 @@ import LoginWithGoogle from "./LoginWithGoogle";
 import { fetchCurrentUser, fetchCurrentUserWithGoogle } from "../../redux/slices/currentUserSlice";
 import { useAppDispatch } from "../../appHooks/reduxHooks";
 import { fetchUserCart } from "../../redux/slices/cartSlice";
+import { useLoginContext } from "../../appHooks/useLoginContext";
 
 function Login({
-  setOpenLoginModal,
   setOpenRegisterModal,
 }: {
-  setOpenLoginModal: React.Dispatch<React.SetStateAction<boolean>>;
   setOpenRegisterModal: React.Dispatch<React.SetStateAction<boolean>>;
 }) {
 
@@ -33,6 +32,8 @@ function Login({
   // i will handle the login status later, maybe using toast
   const [loginTrigger, { error: loginError }] = useLoginMutation();
   const [isSuccessWithGoogle, setIsSuccessWithGoogle] = useState(false);
+
+  const { setOpenLoginModal } = useLoginContext();
 
   const handleRegisterViaLogin = () => {
     setOpenLoginModal(false);
