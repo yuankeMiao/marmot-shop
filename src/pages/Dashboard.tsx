@@ -1,21 +1,16 @@
 import { useState, useEffect, useCallback } from "react";
 import { TextInput, Table, Modal } from "flowbite-react";
 
-import {
-  useLazyGetProductsBySearchQuery,
-  useDeleteProductMutation,
-} from "../redux/slices/apiQuery";
+import { useLazyGetProductsBySearchQuery } from "../redux/slices/apiQuery";
 import { useAppSelector } from "../appHooks/reduxHooks";
 import ProductManageForm from "../components/admin/ProductManageForm";
 import { ProductType } from "../misc/productTypes";
 import TableItemLoader from "../components/skeleton/TableItemLoader";
+import DeleteProduct from "../components/admin/DeleteProduct";
 
 const debounce = require("lodash.debounce");
 
 function Dashboard() {
-
-  
-  const [DeleteModalOpen, setDeleteModalOpen] = useState(false);
   const [InfoFormModalOpen, setInfoFormModalOpen] = useState(false);
   const [selectedProduct, setSelectedProduct] = useState<ProductType | null>(
     null
@@ -25,19 +20,6 @@ function Dashboard() {
     getProductsBySearchTrigger,
     { data: searchResult, isLoading, isFetching },
   ] = useLazyGetProductsBySearchQuery();
-
-  const [
-    deleteProductTrigger,
-    { isSuccess: deleteSuccess, error: deleteError, isLoading: deleteLoading },
-  ] = useDeleteProductMutation();
-
-  const handleDelete = useCallback(
-    (id: number) => {
-      setDeleteModalOpen(true);
-      deleteProductTrigger(id);
-    },
-    [deleteProductTrigger]
-  );
 
   const handleEdit = useCallback((product: ProductType) => {
     setSelectedProduct(product);
@@ -69,13 +51,16 @@ function Dashboard() {
     };
   }, [input, debounced]);
 
-  const { user: currentUser, isLoading: currentUserIsLoading } = useAppSelector((state) => state.currentUser);
+  const { user: currentUser, isLoading: currentUserIsLoading } = useAppSelector(
+    (state) => state.currentUser
+  );
 
-  if(currentUserIsLoading) return (
-    <div className="py-20">
-      <p className="text-center text-xl dark:text-gray-100">Loading...</p>
-    </div>
-  )
+  if (currentUserIsLoading)
+    return (
+      <div className="py-20">
+        <p className="text-center text-xl dark:text-gray-100">Loading...</p>
+      </div>
+    );
 
   if (currentUser?.role !== "admin")
     return <div>You are not authorized to access this page</div>;
@@ -125,13 +110,15 @@ function Dashboard() {
             </Table.HeadCell>
           </Table.Head>
           <Table.Body className="divide-y">
-            {(isLoading || isFetching) && <>
-            <TableItemLoader />
-            <TableItemLoader />
-            <TableItemLoader />
-            <TableItemLoader />
-            <TableItemLoader />
-              </>}
+            {(isLoading || isFetching) && (
+              <>
+                <TableItemLoader />
+                <TableItemLoader />
+                <TableItemLoader />
+                <TableItemLoader />
+                <TableItemLoader />
+              </>
+            )}
             {searchResult?.map((product) => (
               <Table.Row key={product.id}>
                 <Table.Cell className="hidden md:table-cell">
@@ -161,12 +148,11 @@ function Dashboard() {
                   </button>
                 </Table.Cell>
                 <Table.Cell>
-                  <button
-                    className="text-red-700 font-semibold underline"
-                    onClick={() => handleDelete(product.id)}
-                  >
-                    Delete
-                  </button>
+                  <DeleteProduct
+                    product={product}
+                    selectedProduct={selectedProduct}
+                    setSelectedProduct={setSelectedProduct}
+                  />
                 </Table.Cell>
               </Table.Row>
             ))}
@@ -186,22 +172,10 @@ function Dashboard() {
           {selectedProduct ? "Edit Product" : "Add New Product"}
         </Modal.Header>
         <Modal.Body>
-          <ProductManageForm initialValue={selectedProduct} setInfoFormModalOpen={setInfoFormModalOpen} />
-        </Modal.Body>
-      </Modal>
-
-      <Modal
-        dismissible
-        show={DeleteModalOpen}
-        onClose={() => setDeleteModalOpen(false)}
-      >
-        <Modal.Header>Delete Product</Modal.Header>
-        <Modal.Body>
-          <div className="dark:text-gray-100">
-            {deleteLoading && <p>Deleting ...</p>}
-            {deleteSuccess && <p>Product has been deleted</p>}
-            {deleteError && <p>Something wrong with the delete!</p>}
-          </div>
+          <ProductManageForm
+            initialValue={selectedProduct}
+            setInfoFormModalOpen={setInfoFormModalOpen}
+          />
         </Modal.Body>
       </Modal>
     </div>
