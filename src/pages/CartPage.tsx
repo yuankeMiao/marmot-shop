@@ -5,10 +5,18 @@ import { Modal } from "flowbite-react";
 import ProductListItem from "../components/produtcs/ProductListItem";
 import { CartState } from "../misc/productTypes";
 import { useAppSelector } from "../appHooks/reduxHooks";
+import { CurrentUserType } from "../misc/userTypes";
 
-function CartPage() {
+function CartPage({ currentUser }: { currentUser: CurrentUserType | null}) {
   const [openModal, setOpenModal] = useState(false);
-  const handleCheckout = () => {};
+  const handleCheckout = () => {
+    if(currentUser){
+      setOpenModal(true);
+      return;
+    } else {
+      alert("Please login first");
+    }
+  };
 
   const currentCart: CartState = useAppSelector((state) => state.cart);
 
@@ -61,12 +69,12 @@ function CartPage() {
       </div>
 
       <Modal dismissible show={openModal} onClose={() => setOpenModal(false)}>
-        <Modal.Header>Thanks for view!</Modal.Header>
+        <Modal.Header>Thanks for visiting this demo website!</Modal.Header>
         <Modal.Body>
           <p>
-            Hi, thanks for view! This frontend demo ends here. If you want to
+            Hi, This frontend demo ends here. If you want to
               know more about this demo or want to know more about me, please
-              visit my <a href="https://github.com/yuankeMiao">Github</a>, <a href="www.linkedin.com/in/yuankemiao">LinkedIn</a> or <a href="https://yuankedev.fun/">portfolio</a>.
+              visit my <a className="text-blue-500 underline" href="https://github.com/yuankeMiao">Github</a>, <a className="text-blue-500 underline" href="www.linkedin.com/in/yuankemiao">LinkedIn</a> or <a className="text-blue-500 underline" href="https://yuankedev.fun/">portfolio</a>.
           </p>
         </Modal.Body>
       </Modal>

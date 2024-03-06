@@ -39,7 +39,7 @@ function App() {
           <Route index element={<HomePage />} />
           <Route path="all-products" element={<AllProdutcsPage />} />
           <Route path="product/:productId" element={<ProductPage />} />
-          <Route path="cart" element={<CartPage />} />
+          <Route path="cart" element={<CartPage currentUser={currentUser}/>} />
           <Route element={<ProtectedRoute isAllowed={!!currentUser}/>}>
             <Route path="profile" element={<ProfilePage currentUser={currentUser} />} />
           </Route>

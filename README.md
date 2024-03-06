@@ -23,7 +23,7 @@ git clone https://github.com/yuankeMiao/marmot-shop.git
 ```
 Then install the dependencies:
 ```
-cd fs17-fe-project
+cd marmot-shop
 npm install
 ```
 
