@@ -128,6 +128,7 @@ For pruduct management forms, after the client reveived response from server, it
 
 #### 2.5.2 Scroll to Top
 Whenever users navigate to a new page, the screen will automatically scroll to the top with a smooth behaviour.
+There is also a scroll to top button in the right bottom corner, it is invisible when user is already on top, and show up when user scroll down more than 20px.
 
 #### 2.5.3 Error page
 If user get into an invalid route, like "/wrongpage", or"/product/nonexist". There will be a cute jumping marmot to tell users it is the wrong place, and provide a link to go back.

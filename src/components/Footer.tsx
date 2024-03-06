@@ -16,7 +16,7 @@ function Footer() {
       <div>
         <div>
           <Link to="/" aria-label="go to home page">
-            <span className="text-3xl font-bold">MARMOTE SHOP</span>
+            <span className="text-3xl font-bold">MARMOT SHOP</span>
           </Link>
           <p className="text-lg">
             Finland{" "}
