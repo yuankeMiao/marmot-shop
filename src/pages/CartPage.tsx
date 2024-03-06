@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import { Modal } from "flowbite-react";
 
@@ -9,7 +9,7 @@ import { CurrentUserType } from "../misc/userTypes";
 import { useLoginContext } from "../appHooks/useLoginContext";
 
 function CartPage({ currentUser }: { currentUser: CurrentUserType | null}) {
-  
+
   const [openModal, setOpenModal] = useState(false);
   const { setOpenLoginModal} = useLoginContext();
 

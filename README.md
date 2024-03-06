@@ -101,14 +101,19 @@ For login, we can use Google login or the users already in DummyJson databse, fo
 
 Since this api doesn't have refresh token endpoint, so app will pop up a modal to ask user to re-login when it noticed the token is expired. However, the app doesn't check the token constantly, it only check the token when user visit protected routes, or reload the whole app.
 
+This app stores token in localStorage, so after user refresh the page, login status will be still valid.
+
 ### 2.3 For login users
 #### 2.3.1 Cart
-After user log into the app, it will trigger a reducer action immediately to fetch the cart data of this user from server (if capable), then merge the cart data to the local cart state. So the local cart state before user login will not lose. However, again, since we cannot changed the database, so if client side reload the app, local state will be reset to the server data.
+After user log into the app, it will trigger a reducer action immediately to fetch the cart data of this user from server (if capable), then merge the cart data to the local cart state. So the local cart state before user login will not lose. However, when client reload the whole app, cart data will be re-set to empty also.
 
 #### 2.3.2 Profile
 Authorized user will have avatar on the roght corner of header, instead of login/register button. Clicke the avatar will trigger a dropdown menu with current user's name and email, profile link, and logout button.
 
 In profile page, user can check basic info, oerder info (always empty in this demo), adress, update the info, and logout.
+
+#### 2.3.3 Logout
+Logout reducer action will empty the user state to null, and remove the token in localStorage. Then trigger a reload of the page. So after logout, user's cart state will be empty also.
 
 ### 2.4 For admin
 The database for users doesn't have a role property, so for the convenience, this app will recognized the user with id===1 as admin. And all other users including google login users, are all customers.

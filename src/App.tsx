@@ -1,3 +1,4 @@
+
 import {
   BrowserRouter,
   Routes,
@@ -18,6 +19,7 @@ import Dashboard from "./pages/Dashboard";
 
 import useGetCurrentUser from "./appHooks/useGetCurrentUser";
 import ScrollToTop from "./components/utils/ScrollToTop";
+
 
 function App() {
   useGetCurrentUser();
