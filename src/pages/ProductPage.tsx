@@ -74,7 +74,7 @@ function ProductPage() {
                 <p className="my-2 text-green-600 font-medium">Avaliable Now</p>
               </div>
 
-              <AmountControl amount={amount} setAmount={setAmount} />
+              <AmountControl amount={amount} setAmount={setAmount} limit={product.stock} />
 
               <ShopButton newItem={product} quantity={amount} />
             </div>

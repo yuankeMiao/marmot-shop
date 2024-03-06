@@ -77,12 +77,20 @@ function DisplayProducts({ filter }: { filter: FilterType }) {
     <>
       <div className="flex sm:justify-center my-4">
         <Pagination
+          className="hidden sm:flex"
+          currentPage={currentPage}
+          totalPages={totalPages}
+          onPageChange={onPageChange}
+        />
+        <Pagination
+          className="flex sm:hidden"
+          layout="navigation"
           currentPage={currentPage}
           totalPages={totalPages}
           onPageChange={onPageChange}
         />
       </div>
-      <div className="grid grid-cols-2 lg:grid-cols-3 gap-4 min-w-full  max-h-screen overflow-y-scroll">
+      <div className="grid grid-col-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 min-w-full  max-h-screen overflow-y-scroll">
         {(isLoading || isLoadingByCategory) && (
           <>
             <CardLoader />

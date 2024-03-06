@@ -22,7 +22,7 @@ function AllProdutcsPage() {
       <div className="relative min-w-56 ">
         <Filters filter={filter} setFilter={setFilter} />
       </div>
-      <main className="py-8 lg:px-8">
+      <main className="py-8 px-4 lg:px-8">
         <Breadcrumb aria-label="breadcrumb">
           <Breadcrumb.Item><Link to="/">Home</Link></Breadcrumb.Item>
           <Breadcrumb.Item><Link to="/all-products">Products</Link></Breadcrumb.Item>

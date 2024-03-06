@@ -42,6 +42,7 @@ describe("cartSlice", () => {
       total: 60,
       discountPercentage: 8.71,
       discountedPrice: 55,
+      stock: 10,
       thumbnail: "https://cdn.dummyjson.com/product-images/59/thumbnail.jpg",
     },
     {
@@ -52,6 +53,7 @@ describe("cartSlice", () => {
       total: 58,
       discountPercentage: 3.19,
       discountedPrice: 56,
+      stock: 5,
       thumbnail: "https://cdn.dummyjson.com/product-images/88/thumbnail.jpg",
     },
     {
@@ -62,6 +64,7 @@ describe("cartSlice", () => {
       total: 80,
       discountPercentage: 13.1,
       discountedPrice: 70,
+      stock: 10,
       thumbnail: "https://cdn.dummyjson.com/product-images/18/thumbnail.jpg",
     },
   ];

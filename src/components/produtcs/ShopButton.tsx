@@ -29,6 +29,7 @@ function ShopButton({
     total: newItem.price * quantity,
     discountPercentage: newItem.discountPercentage,
     discountedPrice: Math.round((newItem.price * quantity * (100 - newItem.discountPercentage)) / 100),
+    stock: newItem.stock,
     thumbnail: newItem.thumbnail,
   };
 

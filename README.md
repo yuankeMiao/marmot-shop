@@ -1,5 +1,5 @@
 # Frontend project - Marmot Shop
-This is a frontend demo website for e-commerce.
+This is a frontend demo website for e-commerce. It has a minimalist modern design, follwing modern websites's standard.
 
 ## Introduction
 The marmot Shop is built using: 
@@ -11,11 +11,11 @@ The marmot Shop is built using:
 - Dummyjson for demo API.
 
 ## Table of content
-1. [Getting Started](#getting-started)
-2. [Features](#features)
-3. [Architecture & Design](#architecture--design)
-4. [Testing](#testing)
-5. [Deployment](#deployment)
+1. [Getting Started](#1-getting-started)
+2. [Features](#2-features)
+3. [Architecture & Design](#3-architecture--design)
+4. [Testing](#4-testing)
+5. [Deployment](#5-deployment)
 
 ## 1 Getting start
 ```
@@ -75,7 +75,10 @@ But this data is stored in redrx state, so if client reload the app, cart state 
 #### 2.2.5 All products page
 This page has two main components: Filter and DisplayProducts. In Filter, user can select category and sort by price. It is worth to note that, we don't have a backend sorting query, so this sorting feature is a fake one purely done in frontend, so it will only sort the products on the current page.
 
-#### 2.2.6 Login & Register
+#### 2.2.6 Amount control
+In single priduct page and cart page, there is an amount control component, where user can increase, decrease or input the amount of product. If user input amount is more than stock, the amount will be set to the max avaliable number, and disable the buttom. There's also a tooltip to tell user the stock number.
+
+#### 2.2.7 Login & Register
 Since this app uses [DummmyJson](https://dummyjson.com) api for the data, we cannot change anuthong in the database, so the register will send user info to server, and receive a response. It means for this prototype website, we cannot login with the new user we just created.
 
 For login, we can use Google login or the users already in DummyJson databse, for a full list of users, please check [here](https://dummyjson.com/users). Here's some login credentials you can use:
@@ -120,6 +123,17 @@ The database for users doesn't have a role property, so for the convenience, thi
 
 For admin user, the dropdown menu in avatar has another link: Dashboard. In Dashboard page, admin can create a new product, search for a product, update the info, and delete a product. And of course, for this demo, we just send the request to server, and receive a fake response. Then, user can have a feedback to know if the action is succeed or failed.
 
+#### 2.4.1 Add new product
+This feature is in a seperate modal, after added a product successfully, app will allow admin continue adding more products. 
+![add new product](readmeImg/add-new-product.jpg)
+
+#### 2.4.2 Update product info
+This feature is using the same component with add new product, but carrying value.
+
+#### 2.4.3 Delete a product
+This button will trigger a comfirmation modal first to confirm with the admin that if this product will be deleted. After confirmed, it will send delete request to server, and show correct status on the modal.
+![delete a product](readmeImg/delete-modal.jpg)
+
 ### 2.5 User experience
 #### 2.5.1 Forms
 This app has 5 forms, on top of the validation, all the input fields are using floating label, so the form is more campact and elegant. If an inpiut field failed with validation, the while outline will turn to red with help text, so user can easily know what to fill up.
@@ -131,10 +145,14 @@ Whenever users navigate to a new page, the screen will automatically scroll to t
 There is also a scroll to top button in the right bottom corner, it is invisible when user is already on top, and show up when user scroll down more than 20px.
 
 #### 2.5.3 Error page
-If user get into an invalid route, like "/wrongpage", or"/product/nonexist". There will be a cute jumping marmot to tell users it is the wrong place, and provide a link to go back.
+If user get into an invalid route, like "/wrongpage", or"/product/nonexist". There will be a cute jumping marmot to tell users it is the wrong place, and provide a link to go back. Feel free to try it!
 
 #### 2.5.4 Skeletons
 Since the product data is the most important data in this app, so there is a skeleton component for the card. When loading is true, the page will render a nice looking pulsing skeleton in the same shape of real component.
+![skeleton loaders](readmeImg/skeleton.jpg)
+
+#### 2.5.5 Feedbacks
+User will receive feedbacks after an action is succeed or failed, like a toast message or loading button.
 
 ### 2.6 Optimazation
 Lighthouse performance score for pages: 86 ~ 91.
@@ -150,7 +168,7 @@ To improve the loading speed, this app uses lazy loading for images and iframes 
 ### 2.7 Accessibility
 Lighthouse accessibility score for pages: 98 ~ 100.
 
-This app is fully accessible for screen readers. All the buttons. inputs and links have proper descriptive contents or aria-labels. Meaningful HTML5 tag are well used.
+This app is fully accessible for screen readers. All the buttons. inputs and links have proper descriptive contents or aria-labels. Meaningful HTML5 tags like `<header />`, `<footer />`, `<section />`, `<nav />`  are well used.
 
 ## 3 Architecture & Design
 ### 3.1 Folder structure

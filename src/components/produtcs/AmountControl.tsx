@@ -1,14 +1,19 @@
-import { Button } from "flowbite-react";
+import React from "react";
+import { Button, Tooltip } from "flowbite-react";
 
 function AmountControl({
   amount,
   setAmount,
+  limit,
 }: {
   amount: number;
   setAmount: React.Dispatch<React.SetStateAction<number>>;
+  limit: number;
 }) {
   const handleIncrement = () => {
-    if(amount < 99) setAmount((prev) => prev + 1);
+    if (amount < limit) {
+      setAmount((prev) => prev + 1);
+    }
   };
 
   const handledecrement = () => {
@@ -24,28 +29,40 @@ function AmountControl({
       setAmount(1);
     } else if (Number(e.target.value) < 1) {
       setAmount(1);
-    } else if (Number(e.target.value) > 99) {
-      setAmount(99);
+    } else if (Number(e.target.value) > limit) {
+      setAmount(limit);
     } else {
       setAmount(Number(e.target.value));
     }
   };
 
   return (
-    <Button.Group>
-      <Button color="gray" onClick={handledecrement} disabled={amount === 1}>
-        -
-      </Button>
-      <input
-        type="text"
-        className="w-16 bg-gray-50 dark:bg-gray-600 border border-gray-300 dark:border-gray-400 text-gray-900 dark:text-gray-50 text-md text-center"
-        value={amount}
-        onChange={handleInputAmount}
-      />
-      <Button color="gray" onClick={handleIncrement}>
-        +
-      </Button>
-    </Button.Group>
+    <Tooltip content={`Stock: ${limit}`}>
+      <Button.Group>
+        <Button
+          size="sm"
+          color="gray"
+          onClick={handledecrement}
+          disabled={amount === 1}
+        >
+          -
+        </Button>
+        <input
+          type="text"
+          className="w-16 bg-gray-50 dark:bg-gray-600 border border-gray-300 dark:border-gray-400 text-gray-900 dark:text-gray-50 text-md text-center"
+          value={amount}
+          onChange={handleInputAmount}
+        />
+        <Button
+          size="sm"
+          color="gray"
+          onClick={handleIncrement}
+          disabled={amount === limit}
+        >
+          +
+        </Button>
+      </Button.Group>
+    </Tooltip>
   );
 }
 

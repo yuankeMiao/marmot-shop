@@ -17,7 +17,7 @@ function HomePage() {
 
   return (
     <div className="*:mb-12 last:pb-40" >
-      <div className="relative w-full aspect-[3/2] md:aspect-[3/1]">
+      <section className="relative w-full aspect-[3/2] md:aspect-[3/1]">
         <img
           className="w-full h-full object-cover"
           src={HERO_IMAGE}
@@ -37,9 +37,9 @@ function HomePage() {
           </p>
           <footer className="lg:text-lg font-thin">{quote.author}</footer>
         </blockquote>
-      </div>
+      </section>
 
-      <div className="px-4 xl:px-0">
+      <section className="px-4 xl:px-0">
         <h2 className="text-3xl lg:text-4xl font-semibold mb-2">
           Welcome to Marmot Shop
         </h2>
@@ -62,12 +62,12 @@ function HomePage() {
             <ProductCard productItem={product} key={product.id} />
           ))}
         </div>
-      </div>
+      </section>
 
-      <div className="mt-40 px-4 xl:px-8 text-center">
+      <section className="mt-40 px-4 xl:px-8 text-center">
         <h3 className="text-5xl lg:text-7xl font-bold my-8">Join our membership</h3>
         <p>Get 10% off your first order</p>
-      </div>
+      </section>
     </div>
   );
 }
