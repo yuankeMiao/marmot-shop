@@ -36,6 +36,9 @@ To deploy it:
 ```
 npm run build
 ```
+To use google login feature:
+
+For security reason, Google login key is not pushed into Github, to activate this feature, please follow this [instruction](https://developers.google.com/identity/sign-in/web/sign-in) to get your google login credential. Then, create a `.env` file, in the file, create a new enviroment variable ` REACT_APP_GOOGLE_CLIENT_ID` assigned with the credential. 
 
 ## 2 Features
 
@@ -67,18 +70,81 @@ Even non-authorized users can use the cart to store the products they want to ad
 
 Click that icon will navigate to cart page, users can check the items in cart, change the amount of an item or delete it.
 
-#### 2.2.5 Login & Register
+But this data is stored in redrx state, so if client reload the app, cart state will be reset to empty.
+
+#### 2.2.5 All products page
+This page has two main components: Filter and DisplayProducts. In Filter, user can select category and sort by price. It is worth to note that, we don't have a backend sorting query, so this sorting feature is a fake one purely done in frontend, so it will only sort the products on the current page.
+
+#### 2.2.6 Login & Register
+Since this app uses [DummmyJson](https://dummyjson.com) api for the data, we cannot change anuthong in the database, so the register will send user info to server, and receive a response. It means for this prototype website, we cannot login with the new user we just created.
+
+For login, we can use Google login or the users already in DummyJson databse, for a full list of users, please check [here](https://dummyjson.com/users). Here's some login credentials you can use:
+```
+{
+   // admin
+   {
+      "username": "atuny0",
+      "password": "9uQFF1Lh",
+   },
+
+   // user
+   {
+      "username": "hbingley1",
+      "password": "CQutx25i8r",
+   },
+   {
+      "username": "rshawe2",
+      "password": "OWsTbMUgFc",
+   }
+}
+```
+
+Since this api doesn't have refresh token endpoint, so app will pop up a modal to ask user to re-login when it noticed the token is expired. However, the app doesn't check the token constantly, it only check the token when user visit protected routes, or reload the whole app.
 
 ### 2.3 For login users
+#### 2.3.1 Cart
+After user log into the app, it will trigger a reducer action immediately to fetch the cart data of this user from server (if capable), then merge the cart data to the local cart state. So the local cart state before user login will not lose. However, again, since we cannot changed the database, so if client side reload the app, local state will be reset to the server data.
+
+#### 2.3.2 Profile
+Authorized user will have avatar on the roght corner of header, instead of login/register button. Clicke the avatar will trigger a dropdown menu with current user's name and email, profile link, and logout button.
+
+In profile page, user can check basic info, oerder info (always empty in this demo), adress, update the info, and logout.
 
 ### 2.4 For admin
+The database for users doesn't have a role property, so for the convenience, this app will recognized the user with id===1 as admin. And all other users including google login users, are all customers.
+
+For admin user, the dropdown menu in avatar has another link: Dashboard. In Dashboard page, admin can create a new product, search for a product, update the info, and delete a product. And of course, for this demo, we just send the request to server, and receive a fake response. Then, user can have a feedback to know if the action is succeed or failed.
 
 ### 2.5 User experience
+#### 2.5.1 Forms
+This app has 5 forms, on top of the validation, all the input fields are using floating label, so the form is more campact and elegant. If an inpiut field failed with validation, the while outline will turn to red with help text, so user can easily know what to fill up.
 
-### 2.6 Performance
+For pruduct management forms, after the client reveived response from server, it shows a toast feedback next to the submit button. The color of toast indicates the response status.
+
+#### 2.5.2 Scroll to Top
+Whenever users navigate to a new page, the screen will automatically scroll to the top with a smooth behaviour.
+
+#### 2.5.3 Error page
+If user get into an invalid route, like "/wrongpage", or"/product/nonexist". There will be a cute jumping marmot to tell users it is the wrong place, and provide a link to go back.
+
+#### 2.5.4 Skeletons
+Since the product data is the most important data in this app, so there is a skeleton component for the card. When loading is true, the page will render a nice looking pulsing skeleton in the same shape of real component.
+
+### 2.6 Optimazation
+Lighthouse performance score for pages: 86 ~ 91.
+#### 2.6.1 RTKQ
+Redux tookit query provides efficient data fetching and caching to improve the performance. With the usage of provideTags and invalidateTags, the app can refetch data automatically when certain data updated. Lazy fetching provides another way to manually trigger a fetch like in the search feature.
+
+#### 2.6.2 Caching functions and calculations
+For array functions, the component will recreate a new one for every render, so it is better to cache some functions that barely change between re-renders. For this app, bounce function is cached by useCallback(), the calculation result in pagination feature is also cached by useMemo().
+
+#### 2.6.3 Lazy loading
+To improve the loading speed, this app uses lazy loading for images and iframes like the hero image in home page and embedded google map in profile page.
 
 ### 2.7 Accessibility
+Lighthouse accessibility score for pages: 98 ~ 100.
 
+This app is fully accessible for screen readers. All the buttons. inputs and links have proper descriptive contents or aria-labels. Meaningful HTML5 tag are well used.
 
 ## 3 Architecture & Design
 ### 3.1 Folder structure

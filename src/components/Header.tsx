@@ -74,7 +74,7 @@ function Header() {
             <Search />
             <ToggleDarkMode />
             <Badge amount={cartAmount}>
-              <Link to="/cart">
+              <Link to="/cart" aria-label="cart">
                 <FontAwesomeIcon
                   icon={faCartShopping}
                   className="w-5 h-5 text-sky-950 dark:text-white"

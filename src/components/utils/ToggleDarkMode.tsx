@@ -25,12 +25,16 @@ function ToggleDarkMode() {
   }, [isDark]);
 
   return (
-    <label className="inline-flex items-center me-5 cursor-pointer">
+    <label
+      className="inline-flex items-center me-5 cursor-pointer"
+      aria-label="toggle theme change"
+    >
       <input
         type="checkbox"
         className="sr-only peer"
         value=""
         onChange={() => setIsDark(!isDark)}
+        aria-label="toggle theme change"
       />
       <div
         className="relative w-11 h-6 bg-gray-200 rounded-full peer-checked:after:translate-x-full 

@@ -1,6 +1,6 @@
 
 import ProductCard from "../components/produtcs/ProductCard";
-import { HERO_IMAGE } from "../misc/constants";
+import HERO_IMAGE from "../statics/hero-img.webp";
 import useFetchRandomQuote from "../appHooks/useFetchRandomQuote";
 import { useGetAllProductsQuery } from "../redux/slices/apiQuery";
 import CardLoader from "../components/skeleton/CardLoader";

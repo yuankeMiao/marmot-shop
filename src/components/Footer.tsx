@@ -15,12 +15,12 @@ function Footer() {
       <div className="max-w-screen-2xl mx-auto ">
       <div>
         <div>
-          <Link to="/">
-            <span className="text-3xl font-bold">LOGO</span>
+          <Link to="/" aria-label="go to home page">
+            <span className="text-3xl font-bold">MARMOTE SHOP</span>
           </Link>
           <p className="text-lg">
             Finland{" "}
-            <a href="http://www.google.com" target="_blank" rel="noreferrer">
+            <a aria-label="go to google map" href="http://www.google.com/maps" target="_blank" rel="noreferrer">
               <FontAwesomeIcon icon={faLocationDot} />
             </a>
           </p>
@@ -36,7 +36,7 @@ function Footer() {
               placeholder="Type your email address here"
               className="px-4 h-full w-56 text-sm text-black"
             />
-            <button className="inline bg-sky-500 w-8 h-full">
+            <button className="inline bg-sky-500 w-8 h-full" aria-label="submit email">
               <FontAwesomeIcon icon={faArrowRight} className="w-4 h-4" />
             </button>
           </div>
@@ -48,12 +48,13 @@ function Footer() {
                 href="http://www.facebook.com"
                 target="_blank"
                 rel="noreferrer"
+                aria-label="go to facebook"
               >
                 <FontAwesomeIcon icon={faFacebook} />
               </a>
             </li>
             <li>
-              <a href="http://www.youtube.com" target="_blank" rel="noreferrer">
+              <a href="http://www.youtube.com" target="_blank" rel="noreferrer" aria-label="go to youtube">
                 <FontAwesomeIcon icon={faYoutube} />
               </a>
             </li>
@@ -62,12 +63,13 @@ function Footer() {
                 href="http://www.instagram.com"
                 target="_blank"
                 rel="noreferrer"
+                aria-label="go to instagram"
               >
                 <FontAwesomeIcon icon={faInstagram} />
               </a>
             </li>
             <li>
-              <a href="http://www.twitter.com" target="_blank" rel="noreferrer">
+              <a href="http://www.twitter.com" target="_blank" rel="noreferrer" aria-label="go to twitter">
                 <FontAwesomeIcon icon={faTwitter} />
               </a>
             </li>

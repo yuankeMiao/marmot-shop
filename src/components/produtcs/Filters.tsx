@@ -9,10 +9,6 @@ function Filters({
   filter: FilterType;
   setFilter: React.Dispatch<React.SetStateAction<FilterType>>;
 }) {
-  // const handleCatChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-  //   const cat = e.target.value as CategoryType;
-  //   setFilter((prev) => ({ ...prev, category: cat }));
-  // };
 
   const handleCatChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
     const cat = e.target.value as CategoryType;
