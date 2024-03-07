@@ -2,10 +2,7 @@ import {
   BrowserRouter,
   Routes,
   Route,
-  Outlet,
-  Navigate,
 } from "react-router-dom";
-import { useAppSelector } from "./appHooks/reduxHooks";
 
 import Layout from "./pages/Layout";
 import HomePage from "./pages/HomePage";
