@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useState, useRef } from "react";
 import { Pagination } from "flowbite-react";
 
 import {
@@ -15,6 +15,8 @@ function DisplayProducts({ filter }: { filter: FilterType }) {
   const [currentPage, setCurrentPage] = useState(1);
   const [totalItems, setTotalItems] = useState(0);
   const onPageChange = (page: number) => setCurrentPage(page);
+
+  const containerRef = useRef<HTMLDivElement>(null);
 
   const [productList, setProductList] = useState<ProductType[]>([]);
   const { data, error, isLoading, refetch } = useGetSortedProductsQuery(
@@ -73,6 +75,12 @@ function DisplayProducts({ filter }: { filter: FilterType }) {
     [totalItems]
   );
 
+  useEffect(() => {
+    if (containerRef.current) {
+      containerRef.current.scrollTo({top: 0, behavior: "smooth"});
+    }
+  }, [currentPage]);
+
   return (
     <>
       <div className="flex sm:justify-center my-4">
@@ -90,7 +98,7 @@ function DisplayProducts({ filter }: { filter: FilterType }) {
           onPageChange={onPageChange}
         />
       </div>
-      <div className="grid grid-col-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 min-w-full  max-h-screen overflow-y-scroll">
+      <div ref={containerRef} className="grid grid-col-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 min-w-full  max-h-screen overflow-y-scroll">
         {(isLoading || isLoadingByCategory) && (
           <>
             <CardLoader />
