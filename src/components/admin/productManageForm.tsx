@@ -1,3 +1,4 @@
+import { useEffect } from "react";
 import {
   useForm,
   Controller,
@@ -15,7 +16,7 @@ import {
 } from "../../redux/slices/apiQuery";
 import { ProductType } from "../../misc/productTypes";
 import { CATEGORIES } from "../../misc/constants";
-import { useEffect } from "react";
+
 
 /* fieldArray only accept array of object, but the data shape of my product images is array of string
     so I set a local type here, instead of setting it in types.ts
