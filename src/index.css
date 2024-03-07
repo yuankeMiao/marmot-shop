@@ -45,4 +45,12 @@
     box-shadow: 0 0 0 30px #374151 inset;
     -webkit-text-fill-color: white !important;
   }
+
+  .inputOverride:-webkit-autofill,
+  .inputOverride:-webkit-autofill:hover,
+  .inputOverride:-webkit-autofill:focus,
+  .inputOverride:-webkit-autofill:active {
+    box-shadow: 0 0 0 30px #ffffff inset;
+    -webkit-text-fill-color: #374151 !important;
+  }
 }

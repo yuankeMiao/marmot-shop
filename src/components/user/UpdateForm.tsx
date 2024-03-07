@@ -1,11 +1,13 @@
 
 
 import { useForm, Controller, SubmitHandler } from "react-hook-form";
-import { FloatingLabel, Toast } from "flowbite-react";
+import { FloatingLabel } from "flowbite-react";
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 import { CurrentUserType, UserType } from "../../misc/userTypes";
 import { useUpdateUserMutation } from "../../redux/slices/userApi";
-import { ErrorType } from "../../misc/errorTypes";
+import { useEffect } from "react";
 
 function UpdateForm({ userInfo }: { userInfo: Partial<CurrentUserType> }) {
   const [
@@ -24,6 +26,21 @@ function UpdateForm({ userInfo }: { userInfo: Partial<CurrentUserType> }) {
   const onSubmit: SubmitHandler<UserType> = (data) => {
     updateUserTrigger(data as UserType);
   };
+
+  const successNotify = () => toast.success("Update success");
+  const errorNotify = () => toast.error("Something wrong with update, please try again later");
+
+  useEffect(() => {
+    if (updateIsSuccess) {
+      successNotify();
+    }
+  }, [updateIsSuccess]);
+
+  useEffect(() => {
+    if (updateError) {
+      errorNotify();
+    }
+  }, [updateError]);
 
   return (
     <div className="dark:bg-gray-700 py-4 rounded-xl">
@@ -196,19 +213,6 @@ function UpdateForm({ userInfo }: { userInfo: Partial<CurrentUserType> }) {
           Confirm
         </button>
       </form>
-      {updateIsSuccess && (
-        <Toast className="absolute">
-          <p className="text-sm text-teal-500">Info updated!</p>
-          <Toast.Toggle></Toast.Toggle>
-        </Toast>
-      )}
-
-      {updateError && (
-        <Toast className="absolute">
-          {updateError && <p>{(updateError as ErrorType).data.message}</p>}
-          <Toast.Toggle></Toast.Toggle>
-        </Toast>
-      )}
     </div>
   );
 }

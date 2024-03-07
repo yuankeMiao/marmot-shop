@@ -70,7 +70,6 @@ function Header() {
           <Dropdown.Item as={Link} to="/all-products">
             All Products
           </Dropdown.Item>
-          <Dropdown.Item>About Us</Dropdown.Item>
         </Dropdown>
       </div>
 
@@ -82,7 +81,6 @@ function Header() {
           <li>
             <Link to="/all-products" className={`${pathname === '/all-products' && 'font-bold'}`} >All Products</Link>
           </li>
-          <li>About Us</li>
         </ul>
       </nav>
 

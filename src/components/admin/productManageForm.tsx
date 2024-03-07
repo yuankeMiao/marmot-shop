@@ -5,7 +5,9 @@ import {
   useFieldArray,
 } from "react-hook-form";
 
-import { FloatingLabel, Select, Textarea, Toast } from "flowbite-react";
+import { FloatingLabel, Select, Textarea } from "flowbite-react";
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 import {
   useCreateNewProductMutation,
@@ -13,6 +15,7 @@ import {
 } from "../../redux/slices/apiQuery";
 import { ProductType } from "../../misc/productTypes";
 import { CATEGORIES } from "../../misc/constants";
+import { useEffect } from "react";
 
 /* fieldArray only accept array of object, but the data shape of my product images is array of string
     so I set a local type here, instead of setting it in types.ts
@@ -24,10 +27,10 @@ type FormValuesType = Omit<ProductType, "images, id"> & {
 
 function ProductManageForm({
   initialValue,
-  setInfoFormModalOpen
+  setInfoFormModalOpen,
 }: {
   initialValue: ProductType | null;
-  setInfoFormModalOpen:  React.Dispatch<React.SetStateAction<boolean>>;
+  setInfoFormModalOpen: React.Dispatch<React.SetStateAction<boolean>>;
 }) {
   const emptyFormValues: FormValuesType = {
     id: 0,
@@ -101,7 +104,29 @@ function ProductManageForm({
   const handleResetForm = () => {
     reset(initialFormValues);
     createNewProductReset();
-  }
+  };
+
+  const createNotify = () => toast.success("Successfully created product!");
+  const updateNotify = () => toast.success("Successfully updated product!");
+  const errorNotify = () => toast.error("Something went wrong, please try again");
+
+  useEffect(() => {
+    if (createNewProductSuccess) {
+      createNotify();
+    }
+  }, [createNewProductSuccess]);
+
+  useEffect(() => {
+    if (updateProductSuccess) {
+      updateNotify();
+    }
+  }, [updateProductSuccess]);
+
+  useEffect(() => {
+    if (createNewProductError || updateProductError) {
+      errorNotify();
+    }
+  }, [createNewProductError, updateProductError]);
 
   return (
     <div>
@@ -357,41 +382,35 @@ function ProductManageForm({
           Add Image URL
         </button>
 
-        {(createNewProductError || updateProductError) && (
-          <Toast className="bg-red-200">
-            <p className="text-sm text-black">Something wrong!</p>
-            <Toast.Toggle />
-          </Toast>
+        {createNewProductSuccess ? (
+          <div className="flex justify-between gap-4">
+            <button
+              type="reset"
+              className="btn-primary"
+              onClick={handleResetForm}
+            >
+              Create another
+            </button>
+            <button
+              className="btn-primary"
+              onClick={() => setInfoFormModalOpen(false)}
+            >
+              Close
+            </button>
+          </div>
+        ) : (
+          <button
+            type="submit"
+            className="btn-primary"
+            disabled={updateProductLoading || createNewProductLoading}
+          >
+            {updateProductLoading || createNewProductLoading
+              ? "Confirming ..."
+              : "Confirm"}
+          </button>
         )}
-
-        {(createNewProductSuccess || updateProductSuccess) && (
-          <Toast className="bg-green-200 dark:bg-green-700">
-            <div className="text-sm text-sky-950 dark:text-gray-100">
-              <p>
-                {initialValue
-                  ? "Product updated!"
-                  : "Product created!"}
-              </p>
-              <p>You can close this dialogue now</p>
-            </div>
-
-            <Toast.Toggle />
-          </Toast>
-        )}
-        {createNewProductSuccess ? <div className="flex justify-between gap-4">
-          <button type="reset" className="btn-primary" onClick={handleResetForm}>Create another</button>
-          <button className="btn-primary" onClick={() => setInfoFormModalOpen(false)}>Close</button>
-        </div> :
-        <button
-          type="submit"
-          className="btn-primary"
-          disabled={updateProductLoading || createNewProductLoading}
-        >
-          {updateProductLoading || createNewProductLoading
-            ? "Confirming ..."
-            : "Confirm"}
-        </button>}
       </form>
+      <ToastContainer position="top-center" />
     </div>
   );
 }

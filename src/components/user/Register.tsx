@@ -1,10 +1,14 @@
+
+import React from "react";
 import { useForm, Controller, SubmitHandler } from "react-hook-form";
-import { FloatingLabel, Toast } from "flowbite-react";
+import { FloatingLabel } from "flowbite-react";
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 import { RegisterType, UserType } from "../../misc/userTypes";
 import { useRegisterMutation } from "../../redux/slices/userApi";
-import { ErrorType } from "../../misc/errorTypes";
 import { useLoginContext } from "../../appHooks/useLoginContext";
+import { useEffect } from "react";
 
 function Register({
   setOpenRegisterModal,
@@ -40,6 +44,13 @@ function Register({
     setOpenRegisterModal(false);
     setOpenLoginModal(true);
   };
+
+  const errorNotify = () => toast.error("Something wrong with register, please try again later");
+  useEffect(() => {
+    if (error) {
+      errorNotify();
+    }
+  }, [error]);
 
   if (isSuccess) {
     return (
@@ -77,7 +88,7 @@ function Register({
                 type="text"
                 color={errors.username && "error"}
                 helperText={errors.username && errors.username.message}
-                className="dark:bg-gray-700 dark:inputDarkModeOverride"
+                className="inputOverride dark:bg-gray-700 dark:inputDarkModeOverride"
                 {...field}
               />
             )}
@@ -96,7 +107,7 @@ function Register({
                 type="email"
                 color={errors.email && "error"}
                 helperText={errors.email && errors.email.message}
-                className="dark:bg-gray-700 dark:inputDarkModeOverride"
+                className="inputOverride dark:bg-gray-700 dark:inputDarkModeOverride"
                 {...field}
               />
             )}
@@ -125,7 +136,7 @@ function Register({
                 type="text"
                 color={errors.firstName && "error"}
                 helperText={errors.lastName && errors.lastName.message}
-                className="dark:bg-gray-700 dark:inputDarkModeOverride"
+                className="inputOverride dark:bg-gray-700 dark:inputDarkModeOverride"
                 {...field}
               />
             )}
@@ -151,7 +162,7 @@ function Register({
                 type="text"
                 color={errors.lastName && "error"}
                 helperText={errors.lastName && errors.lastName.message}
-                className="dark:bg-gray-700 dark:inputDarkModeOverride"
+                className="inputOverride dark:bg-gray-700 dark:inputDarkModeOverride"
                 {...field}
               />
             )}
@@ -179,7 +190,7 @@ function Register({
                 type="password"
                 color={errors.password && "error"}
                 helperText={errors.password && errors.password.message}
-                className="dark:bg-gray-700 dark:inputDarkModeOverride"
+                className="inputOverride dark:bg-gray-700 dark:inputDarkModeOverride"
                 {...field}
               />
             )}
@@ -202,7 +213,7 @@ function Register({
                 helperText={
                   errors.confirmPassword && errors.confirmPassword.message
                 }
-                className="dark:bg-gray-700 dark:inputDarkModeOverride"
+                className="inputOverride dark:bg-gray-700 dark:inputDarkModeOverride"
                 {...field}
               />
             )}
@@ -218,7 +229,7 @@ function Register({
                 label="Avatar URL"
                 type="text"
                 helperText={errors.image && errors.image.message}
-                className="dark:bg-gray-700 dark:inputDarkModeOverride"
+                className="inputOverride dark:bg-gray-700 dark:inputDarkModeOverride"
                 {...field}
               />
             )}
@@ -242,12 +253,8 @@ function Register({
           Login
         </span>
       </p>
-      {error && (
-        <Toast>
-          'data' in error && <p>{(error as ErrorType).data.message}</p>
-          <Toast.Toggle />
-        </Toast>
-      )}
+
+      <ToastContainer position="top-center" />
     </div>
   );
 }

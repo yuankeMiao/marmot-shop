@@ -118,6 +118,9 @@ function Dashboard() {
                 <TableItemLoader />
                 <TableItemLoader />
                 <TableItemLoader />
+                <TableItemLoader />
+                <TableItemLoader />
+                <TableItemLoader />
               </>
             )}
             {searchResult?.map((product) => (

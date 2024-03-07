@@ -1,7 +1,11 @@
 
 import React, { useEffect, useState } from "react";
 import { useForm, Controller, SubmitHandler } from "react-hook-form";
-import { FloatingLabel, Toast } from "flowbite-react";
+
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
+import { FloatingLabel } from "flowbite-react";
+
 import { LoginType } from "../../misc/userTypes";
 import { useLoginMutation } from "../../redux/slices/userApi";
 import LoginWithGoogle from "./LoginWithGoogle";
@@ -61,6 +65,13 @@ function Login({
       });
   };
 
+  const errorNotify = () => toast.error("Something wrong with login, please try again!");
+  useEffect(() => {
+    if (loginError) {
+      errorNotify()
+    }
+  }, [loginError]);
+
   useEffect(() => {
     if (isSuccessWithGoogle) {
       dispatch(fetchCurrentUserWithGoogle(localStorage.getItem("googleToken") || ""))
@@ -69,6 +80,7 @@ function Login({
         });
     }
   }, [isSuccessWithGoogle, setOpenLoginModal, dispatch]);
+
 
   return (
     <div>
@@ -98,7 +110,7 @@ function Login({
               type="text"
               color={errors.username && "error"}
               helperText={errors.username && errors.username.message}
-              className="dark:bg-gray-700 dark:inputDarkModeOverride"
+              className="inputOverride dark:bg-gray-700 dark:inputDarkModeOverride"
               {...field}
             />
           )}
@@ -124,7 +136,7 @@ function Login({
               type="password"
               color={errors.password && "error"}
               helperText={errors.password && errors.password.message}
-              className="dark:bg-gray-700 dark:inputDarkModeOverride"
+              className="inputOverride dark:bg-gray-700 dark:inputDarkModeOverride"
               {...field}
             />
           )}
@@ -147,11 +159,7 @@ function Login({
         </span>
       </p>
       <LoginWithGoogle setIsSuccessWithGoogle={setIsSuccessWithGoogle} />
-      {loginError && (
-        <Toast className="bg-red-200 dark:bg-red-500">
-          <p className="text-xs text-sky-950 dark:text-gray-100">Something wrong with login, please try again!</p>
-          <Toast.Toggle />
-        </Toast>)}
+      <ToastContainer position="top-center" />
     </div>
   );
 }
