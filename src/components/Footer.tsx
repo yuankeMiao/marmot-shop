@@ -12,8 +12,10 @@ import {
 
 function Footer() {
   const [openModal, setOpenModal] = useState(false);
+  const [email, setEmail] = useState("");
   const handleSubscribe = (e: { preventDefault: () => void }) => {
     e.preventDefault();
+    if (email === "") return;
     setOpenModal(true);
   };
   return (
@@ -37,18 +39,20 @@ function Footer() {
           </div>
 
           <div className="flex flex-col md:flex-row justify-between py-8">
-            <form>
+            <form onSubmit={handleSubscribe}>
               <p>Subscribe our newsletter</p>
               <div className="h-10 my-4 flex items-center rounded-md overflow-hidden">
                 <input
                   type="email"
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
                   placeholder="Type your email address here"
                   className="px-4 h-full w-56 text-sm text-black outline-none border-none"
                 />
                 <button
+                type="submit"
                   className="inline bg-sky-500 w-8 h-full outline-none border-none"
                   aria-label="submit email"
-                  onClick={handleSubscribe}
                 >
                   <FontAwesomeIcon icon={faArrowRight} className="w-4 h-4" />
                 </button>
@@ -123,8 +127,7 @@ function Footer() {
       <Modal dismissible show={openModal} onClose={() => setOpenModal(false)}>
         <Modal.Header>Thank you for subscribing</Modal.Header>
         <Modal.Body>
-          <p className="text-lg dark:text-gray-100">
-            You will receive our newsletter soon
+          <p className="text-sm dark:text-gray-100">{`We received your email (actualy not): ${email}, You will receive our newsletter soon`}
           </p>
         </Modal.Body>
       </Modal>

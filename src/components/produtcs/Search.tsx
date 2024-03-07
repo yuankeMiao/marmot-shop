@@ -90,15 +90,15 @@ function Search() {
                     <img
                       src={product.thumbnail}
                       alt={product.title}
-                      className="aspect-square h-16 w-16 rounded-md object-cover"
+                      className="aspect-square h-12 w-12 md:h-16 md:w-16 rounded-md object-cover"
                     />
-                    <h3 className="text-xl font-bold mx-4">{product.title}</h3>
+                    <h3 className="text-lg md:text-xl font-bold mx-4">{product.title}</h3>
                   </div>
                   <p className="py-4 *:pr-4">
-                    <span className="text-md font-semibold line-through">
+                    <span className="text-sm md:text-md font-semibold line-through">
                       {product.price}€
                     </span>
-                    <span className="text-lg font-bold text-red-700">
+                    <span className="text-md md:text-lg font-bold text-red-700">
                       {Math.round(
                         (product.price * (100 - product.discountPercentage)) /
                           100

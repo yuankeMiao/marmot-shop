@@ -124,8 +124,7 @@ The database for users doesn't have a role property, so for the convenience, thi
 For admin user, the dropdown menu in avatar has another link: Dashboard. In Dashboard page, admin can create a new product, search for a product, update the info, and delete a product. And of course, for this demo, we just send the request to server, and receive a fake response. Then, user can have a feedback to know if the action is succeed or failed.
 
 #### 2.4.1 Add new product
-This feature is in a seperate modal, after added a product successfully, app will allow admin continue adding more products. 
-![add new product](readmeImg/add-new-product.jpg)
+This feature is in a seperate modal, after added a product successfully, app will show a notification and allow admin continue adding more products or close the modal.
 
 #### 2.4.2 Update product info
 This feature is using the same component with add new product, but carrying value.
