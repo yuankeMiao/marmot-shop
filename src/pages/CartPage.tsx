@@ -8,14 +8,13 @@ import { useAppSelector } from "../appHooks/reduxHooks";
 import { useLoginContext } from "../appHooks/useLoginContext";
 
 function CartPage() {
-
-  const {user: currentUser} = useAppSelector((state) => state.currentUser);
+  const { user: currentUser } = useAppSelector((state) => state.currentUser);
 
   const [openModal, setOpenModal] = useState(false);
-  const { setOpenLoginModal} = useLoginContext();
+  const { setOpenLoginModal } = useLoginContext();
 
   const handleCheckout = () => {
-    if(currentUser){
+    if (currentUser) {
       setOpenModal(true);
       return;
     } else {
@@ -33,9 +32,12 @@ function CartPage() {
           {currentCart.totalQuantity === 0 ? (
             <div className="w-full flex flex-col justify-center items-center py-16 gap-8">
               <p>It is empty now ...</p>
-              <button className="btn-primary w-40">
-                <Link to="/all-products">Go Shopping</Link>
-              </button>
+              <Link
+                className="btn-primary w-40 hover:pointer text-center"
+                to="/all-products"
+              >
+                Go Shopping
+              </Link>
             </div>
           ) : (
             currentCart.products.map((product) => (
@@ -77,9 +79,29 @@ function CartPage() {
         <Modal.Header>Thanks for visiting this demo website!</Modal.Header>
         <Modal.Body>
           <p>
-            Hi, This frontend demo ends here. If you want to
-              know more about this demo or want to know more about me, please
-              visit my <a className="text-blue-500 underline" href="https://github.com/yuankeMiao">Github</a>, <a className="text-blue-500 underline" href="www.linkedin.com/in/yuankemiao">LinkedIn</a> or <a className="text-blue-500 underline" href="https://yuankedev.fun/">portfolio</a>.
+            Hi, This frontend demo ends here. If you want to know more about
+            this demo or want to know more about me, please visit my{" "}
+            <a
+              className="text-blue-500 underline"
+              href="https://github.com/yuankeMiao"
+            >
+              Github
+            </a>
+            ,{" "}
+            <a
+              className="text-blue-500 underline"
+              href="www.linkedin.com/in/yuankemiao"
+            >
+              LinkedIn
+            </a>{" "}
+            or{" "}
+            <a
+              className="text-blue-500 underline"
+              href="https://yuankedev.fun/"
+            >
+              portfolio
+            </a>
+            .
           </p>
         </Modal.Body>
       </Modal>
