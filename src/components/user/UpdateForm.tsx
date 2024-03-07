@@ -1,5 +1,3 @@
-
-
 import { useForm, Controller, SubmitHandler } from "react-hook-form";
 import { FloatingLabel } from "flowbite-react";
 import { ToastContainer, toast } from "react-toastify";
@@ -12,12 +10,18 @@ import { useEffect } from "react";
 function UpdateForm({ userInfo }: { userInfo: Partial<CurrentUserType> }) {
   const [
     updateUserTrigger,
-    { isSuccess: updateIsSuccess, error: updateError },
+    {
+      isSuccess: updateIsSuccess,
+      isLoading: updateLoading,
+      error: updateError,
+      reset: updateReset,
+    },
   ] = useUpdateUserMutation();
 
   const {
     control,
     handleSubmit,
+    reset,
     formState: { errors },
   } = useForm<UserType>({
     defaultValues: userInfo as UserType,
@@ -27,8 +31,14 @@ function UpdateForm({ userInfo }: { userInfo: Partial<CurrentUserType> }) {
     updateUserTrigger(data as UserType);
   };
 
+  const handleReset = () => {
+    reset();
+    updateReset();
+  };
+
   const successNotify = () => toast.success("Update success");
-  const errorNotify = () => toast.error("Something wrong with update, please try again later");
+  const errorNotify = () =>
+    toast.error("Something wrong with update, please try again later");
 
   useEffect(() => {
     if (updateIsSuccess) {
@@ -205,14 +215,25 @@ function UpdateForm({ userInfo }: { userInfo: Partial<CurrentUserType> }) {
           />
         </div>
 
-        <button
-          type="submit"
-          aria-label="Login"
-          className="btn-primary self-center w-60"
-        >
-          Confirm
-        </button>
+        <div className="flex flex-col md:flex-row justify-center gap-8">
+          <button
+            type="submit"
+            aria-label="Login"
+            className="btn-primary self-center w-60"
+          >
+            {updateLoading ? "Confirming..." : "Confirm"}
+          </button>
+          <button
+            type="button"
+            aria-label="reset"
+            className="btn-primary self-center w-60"
+            onClick={handleReset}
+          >
+            Reset
+          </button>
+        </div>
       </form>
+      <ToastContainer position="top-center" />
     </div>
   );
 }
