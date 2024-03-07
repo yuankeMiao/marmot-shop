@@ -31,7 +31,7 @@ function ProfilePage() {
 
   return (
     <div className="p-8 flex flex-col md:flex-row gap-8 relative">
-      <div className="md:sticky top-28 min-w-56 flex flex-col bg-gray-100 dark:bg-gray-700 rounded-xl overflow-hidden h-full text-lg *:border-b-2 dark:*:border-gray-500 *:p-4 hover:*:bg-gray-200">
+      <div className="md:sticky top-28 min-w-56 flex flex-col bg-gray-100 dark:bg-gray-700 rounded-xl overflow-hidden h-full text-lg *:border-b-2 dark:*:border-gray-500 *:p-4 hover:*:bg-gray-200 dark:hover:*:bg-gray-600">
         <a href="#overview">Account overview</a>
         <a href="#orders">My orders</a>
         <a href="#address">My address</a>

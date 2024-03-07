@@ -54,7 +54,7 @@ function Register({
 
   if (isSuccess) {
     return (
-      <div>
+      <div className="dark:text-gray-100">
         <p className="my-4 text-center">Now you can login!</p>
         <button className="btn-primary" onClick={handleLoginViaRegister}>
           Login

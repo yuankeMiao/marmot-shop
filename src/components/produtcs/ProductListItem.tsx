@@ -26,7 +26,7 @@ function ProductListItem({ product }: { product: CartItemType }) {
       />
       <div className="w-full flex flex-col justify-between">
         <h3 className="text-md md:text-xl font-bold">{product.title}</h3>
-        <div className="flex flex-col sm:flex-row sm:justify-between sm:tems-center">
+        <div className="flex justify-between items-center">
           <p className="py-0 md:py-4 *:pr-4">
             <span className="text-sm md:text-md font-semibold line-through">
               {product.price}€

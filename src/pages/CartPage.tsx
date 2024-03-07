@@ -78,7 +78,7 @@ function CartPage() {
       <Modal dismissible show={openModal} onClose={() => setOpenModal(false)}>
         <Modal.Header>Thanks for visiting this demo website!</Modal.Header>
         <Modal.Body>
-          <p>
+          <p className="dark:text-gray-100">
             Hi, This frontend demo ends here. If you want to know more about
             this demo or want to know more about me, please visit my{" "}
             <a
