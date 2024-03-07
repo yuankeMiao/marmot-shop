@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useParams, Link } from "react-router-dom";
 import { Breadcrumb, Rating, Carousel } from "flowbite-react";
 
@@ -7,6 +7,7 @@ import { ProductType } from "../misc/productTypes";
 import ShopButton from "../components/produtcs/ShopButton";
 import AmountControl from "../components/produtcs/AmountControl";
 import { ErrorType } from "../misc/errorTypes";
+import { useAppSelector } from "../appHooks/reduxHooks";
 
 function ProductPage() {
   const productId = Number(useParams().productId);

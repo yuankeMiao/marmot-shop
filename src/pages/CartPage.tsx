@@ -5,7 +5,6 @@ import { Modal } from "flowbite-react";
 import ProductListItem from "../components/produtcs/ProductListItem";
 import { CartState } from "../misc/productTypes";
 import { useAppSelector } from "../appHooks/reduxHooks";
-import { CurrentUserType } from "../misc/userTypes";
 import { useLoginContext } from "../appHooks/useLoginContext";
 
 function CartPage() {

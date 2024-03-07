@@ -1,11 +1,13 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Modal } from "flowbite-react";
 import { useNavigate } from "react-router-dom";
 
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faCartShopping } from "@fortawesome/free-solid-svg-icons";
 
-import { useAppDispatch } from "../../appHooks/reduxHooks";
+import { useAppDispatch, useAppSelector } from "../../appHooks/reduxHooks";
 import { addToCart } from "../../redux/slices/cartSlice";
 import { CartItemType, ProductType } from "../../misc/productTypes";
 
@@ -28,14 +30,28 @@ function ShopButton({
     quantity: quantity,
     total: newItem.price * quantity,
     discountPercentage: newItem.discountPercentage,
-    discountedPrice: Math.round((newItem.price * quantity * (100 - newItem.discountPercentage)) / 100),
+    discountedPrice: Math.round(
+      (newItem.price * quantity * (100 - newItem.discountPercentage)) / 100
+    ),
     stock: newItem.stock,
     thumbnail: newItem.thumbnail,
   };
 
+  const productAmountInCart = useAppSelector(
+    (state) =>
+      state.cart.products.find((item) => item.id === newItem.id)?.quantity
+  );
+
+  const notify = () =>
+    toast.warning("You have reached the maximum stock for this product!");
+
   const handleAddToBag = () => {
-    dispatch(addToCart(addToCartItem));
-    setOpenModal(true);
+    if (productAmountInCart && productAmountInCart + quantity > newItem.stock)
+      notify();
+    else {
+      dispatch(addToCart(addToCartItem));
+      setOpenModal(true);
+    }
   };
 
   const handleCheckout = () => {
@@ -77,6 +93,7 @@ function ShopButton({
           </button>
         </Modal.Footer>
       </Modal>
+      <ToastContainer position="top-center" />
     </div>
   );
 }
