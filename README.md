@@ -1,14 +1,15 @@
 # Frontend project - Marmot Shop
-This is a frontend demo website for e-commerce. It has a minimalist modern design, follwing modern websites's standard.
+This is a frontend demo website for e-commerce. It has a minimalist modern design, follwing modern websites's standard. Visit the live demo [here](https://marmotshop.yuankedev.fun).
 
 ## Introduction
-The marmot Shop is built using: 
-- React for framework
-- Typescript for programming language
-- Redux for state management
-- React Router Dom for router management
-- TailwindCSS and flowbite for styling
-- Dummyjson for demo API.
+The Marmot Shop is built using: 
+- [React](https://react.dev/) for framework
+- [Typescript](https://www.typescriptlang.org/) for programming language
+- [Redux](https://redux.js.org/) for state management
+- [React Router Dom](https://reactrouter.com/en/main) for router management
+- [React Hook Form](https://react-hook-form.com/) for form control
+- [TailwindCSS](https://tailwindcss.com/), [Flowbite](https://flowbite.com/), [Flowbite React](https://www.flowbite-react.com/) for styling
+- [Dummyjson](https://dummyjson.com/) for demo API.
 
 ## Table of content
 1. [Getting Started](#1-getting-started)
@@ -38,7 +39,7 @@ npm run build
 ```
 To use google login feature:
 
-For security reason, Google login key is not pushed into Github, to activate this feature, please follow this [instruction](https://developers.google.com/identity/sign-in/web/sign-in) to get your google login credential. Then, create a `.env` file, in the file, create a new enviroment variable ` REACT_APP_GOOGLE_CLIENT_ID` assigned with the credential. 
+For security reason, Google login key is not pushed into Github, if you want to activate this feature in your local host, please follow this [instruction](https://developers.google.com/identity/sign-in/web/sign-in) to get your google login credential. Then, create a `.env` file, in the file, create a new enviroment variable ` REACT_APP_GOOGLE_CLIENT_ID` assigned with the credential. 
 
 ## 2 Features
 
@@ -46,8 +47,6 @@ For security reason, Google login key is not pushed into Github, to activate thi
 This project uses [react-router-dom](https://reactrouter.com/en/main) for the client side router control. 
 
 Component `<Outlet>` is used in this app to provide a universal header and footer. All other pages are wrapped in.
-
-This app also has a customized prtected router to check if the current user is allowed to visit a certain route.
 
 ### 2.2 For all viewers
 Home page ('/'), all product page ('/all-product'), single product page('/product/:id), error page ('/*/**') are avaliable for all visitors. 
@@ -68,7 +67,7 @@ The toggle button also change from a sun icon to a moon icon when the theme chan
 #### 2.2.4 Cart
 Even non-authorized users can use the cart to store the products they want to add. There is a cart icon with number badge in header to show how many items in the cart. If the total item amount is more than 99, it will show "...".
 
-Click that icon will navigate to cart page, users can check the items in cart, change the amount of an item or delete it.
+Click that icon will navigate to cart page, users can check the items in cart, change the amount of an item or delete it. User cannot changed the amount less than 1 or more than stock.
 
 But this data is stored in redrx state, so if client reload the app, cart state will be reset to empty.
 
@@ -81,7 +80,7 @@ In single priduct page and cart page, there is an amount control component, wher
 #### 2.2.7 Login & Register
 Since this app uses [DummmyJson](https://dummyjson.com) api for the data, we cannot change anuthong in the database, so the register will send user info to server, and receive a response. It means for this prototype website, we cannot login with the new user we just created.
 
-For login, we can use Google login or the users already in DummyJson databse, for a full list of users, please check [here](https://dummyjson.com/users). Here's some login credentials you can use:
+For login, we can use Google login or the users already in DummyJson databse. For a full list of users, please check [here](https://dummyjson.com/users). Here's some login credentials you can use:
 ```
 {
    // admin
@@ -113,7 +112,7 @@ After user log into the app, it will trigger a reducer action immediately to fet
 #### 2.3.2 Profile
 Authorized user will have avatar on the roght corner of header, instead of login/register button. Clicke the avatar will trigger a dropdown menu with current user's name and email, profile link, and logout button.
 
-In profile page, user can check basic info, oerder info (always empty in this demo), adress, update the info, and logout.
+In profile page, user can check basic info, oerder info (always empty in this demo), adress, update the info, and logout. If user logout in profile page, it will show helper text to ask user login first.
 
 #### 2.3.3 Logout
 Logout reducer action will empty the user state to null, and remove the token in localStorage. Then trigger a reload of the page. So after logout, user's cart state will be empty also.
@@ -167,7 +166,7 @@ To improve the loading speed, this app uses lazy loading for images and iframes 
 ### 2.7 Accessibility
 Lighthouse accessibility score for pages: 98 ~ 100.
 
-This app is fully accessible for screen readers. All the buttons. inputs and links have proper descriptive contents or aria-labels. Meaningful HTML5 tags like `<header />`, `<footer />`, `<section />`, `<nav />`  are well used.
+This app is fully accessible for screen readers. All the buttons. inputs and links have proper descriptive contents or aria-labels. Meaningful HTML5 tags like `<header />`, `<footer />`, `<section />`, `<nav />`, `<main />`  are well used.
 
 ## 3 Architecture & Design
 ### 3.1 Folder structure
@@ -278,4 +277,6 @@ Test result:
 _Note: This project only tested redux logics, because some of the external libraries in components do not support the testing library._
 
 ## 5 Deployment
-The Marmot Shop is deployed using Hostinger [here](https://marmot-shop-whst4vikj-marmotte-gos-projects.vercel.app).
+The Marmot Shop is deployed using [Hostinger](https://www.hostinger.com/).
+
+You can view the live demo [here](https://marmot-shop-whst4vikj-marmotte-gos-projects.vercel.app).
