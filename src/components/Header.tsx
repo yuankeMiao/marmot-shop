@@ -5,7 +5,6 @@ import { Link, useLocation } from "react-router-dom";
 import { Modal, Dropdown, Avatar } from "flowbite-react";
 import { faBars } from "@fortawesome/free-solid-svg-icons";
 
-import { faCartShopping } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 
 import Badge from "./utils/Bagde";
@@ -88,14 +87,7 @@ function Header() {
 
       <div className="flex gap-4 items-center">
         <ToggleDarkMode />
-        <Badge amount={cartAmount}>
-          <Link to="/cart" aria-label="cart">
-            <FontAwesomeIcon
-              icon={faCartShopping}
-              className="w-5 h-5 text-sky-950 dark:text-white"
-            />
-          </Link>
-        </Badge>
+        <Badge amount={cartAmount} />
 
         {currentUser ? (
           <div className="flex gap-2 items-center">

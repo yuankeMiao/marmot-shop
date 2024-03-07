@@ -261,7 +261,7 @@ _If the text is too small, please check [here](https://app.wisemapping.com/c/map
 
 _if the text is too small, please check [here](https://app.wisemapping.com/c/maps/1682877/public) to zoom in._
 
-![data flow](<readmeImg/marmot shop components.svg>)
+![data flow](<readmeImg/marmot-shop-components.svg>)
 
 ## 4 Testing
 
@@ -278,4 +278,4 @@ Test result:
 _Note: This project only tested redux logics, because some of the external libraries in components do not support the testing library._
 
 ## 5 Deployment
-The Marmot Shop is deployed using Hostinger [here](https://marmotshop.yuankedev.fun/).
+The Marmot Shop is deployed using Hostinger [here](https://marmot-shop-whst4vikj-marmotte-gos-projects.vercel.app).
