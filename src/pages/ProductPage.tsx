@@ -8,6 +8,7 @@ import ShopButton from "../components/produtcs/ShopButton";
 import AmountControl from "../components/produtcs/AmountControl";
 import { ErrorType } from "../misc/errorTypes";
 import { useAppSelector } from "../appHooks/reduxHooks";
+import ErrorPage from "./ErrorPage";
 
 function ProductPage() {
   const productId = Number(useParams().productId);
@@ -19,7 +20,7 @@ function ProductPage() {
   return (
     <div className="py-4 mx-auto md:max-w-2xl lg:max-w-screen-lg xl:max-w-screen-xl 2xl:max-w-screen-2xl">
       {isLoading && <p>Loading...</p>}
-      {error && "data" in error && <p>{(error as ErrorType).data.message}</p>}
+      {error && ( <ErrorPage errorMsg="Hi, we don't have this product!" />)}
       {product && (
         <div className="*:m-4">
           <Breadcrumb aria-label="breadcrumb">
