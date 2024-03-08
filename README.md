@@ -143,6 +143,8 @@ This button will trigger a comfirmation modal first to confirm with the admin th
 #### 2.5.1 Forms
 This app has 5 forms, on top of the validation, all the input fields are using floating label, so the form is more campact and elegant. If an inpiut field failed with validation, the while outline will turn to red with help text, so user can easily know what to fill up.
 
+![form-validation](https://github.com/yuankeMiao/fs17-Frontend-project/assets/109540749/4d3ee677-4e7a-4a80-a8c0-dfb312fe2fd5)
+
 For pruduct management forms, after the client reveived response from server, it shows a toast feedback next to the submit button. The color of toast indicates the response status.
 
 #### 2.5.2 Scroll to Top
@@ -152,9 +154,14 @@ There is also a scroll to top button in the right bottom corner, it is invisible
 #### 2.5.3 Error page
 If user get into an invalid route, like "/wrongpage", or"/product/nonexist". There will be a cute jumping marmot to tell users it is the wrong place, and provide a link to go back. Feel free to try it!
 
+
+https://github.com/yuankeMiao/fs17-Frontend-project/assets/109540749/7ea31eae-53b6-40ab-b92e-77d250d1c734
+
+
 #### 2.5.4 Skeletons
 Since the product data is the most important data in this app, so there is a skeleton component for the card. When loading is true, the page will render a nice looking pulsing skeleton in the same shape of real component.
-![skeleton loaders](readmeImg/skeleton.jpg)
+
+![skeleton](https://github.com/yuankeMiao/fs17-Frontend-project/assets/109540749/8eac5b45-a7cd-460e-af67-ca2bccf952b4)
 
 #### 2.5.5 Feedbacks
 User will receive feedbacks after an action is succeed or failed, like a toast message or loading button.
