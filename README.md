@@ -51,13 +51,14 @@ Component `<Outlet>` is used in this app to provide a universal header and foote
 ### 2.2 For all viewers
 Home page ('/'), all product page ('/all-product'), single product page('/product/:id), error page ('/*/**') are avaliable for all visitors. 
 
+![showcase for all users](readmeImg/unaithorizedMp4.mp4)
+
 #### 2.2.1 Navigation
 The header is sticky to the window, so it will be always on top the the window. Navbar has three items, it will highlight the active one.
 
 #### 2.2.2 Search feature
 This is a button in header, click this button will open a modal with a search input field, type any text in the search field, after 1s stop, it will show the result. Click anywhere  outside the modal to close the modal.
 
-![search modal](readmeImg/search-user.png)
 
 #### 2.2.3 Dark mode
 The toggle button on header will toggle a whole app theme change via useContext and TailwindCSS. However, it is worth to note that, useContext hook is not nessesary in this case, because TaiwindCSS reads localStorage for theme info then toggle different mode. This project is using a simple useContext mainly because the requirements of this assignment.
@@ -106,6 +107,9 @@ Since this api doesn't have refresh token endpoint, so app will pop up a modal t
 This app stores token in localStorage, so after user refresh the page, login status will be still valid.
 
 ### 2.3 For login users
+
+![showcase for login users](readmeImg/customerMp4.mp4)
+
 #### 2.3.1 Cart
 After user log into the app, it will trigger a reducer action immediately to fetch the cart data of this user from server (if capable), then merge the cart data to the local cart state. So the local cart state before user login will not lose. However, when client reload the whole app, cart data will be re-set to empty also.
 
@@ -122,6 +126,7 @@ The database for users doesn't have a role property, so for the convenience, thi
 
 For admin user, the dropdown menu in avatar has another link: Dashboard. In Dashboard page, admin can create a new product, search for a product, update the info, and delete a product. And of course, for this demo, we just send the request to server, and receive a fake response. Then, user can have a feedback to know if the action is succeed or failed.
 
+![showcase for admin](readmeImg/AdminMp4.mp4)
 #### 2.4.1 Add new product
 This feature is in a seperate modal, after added a product successfully, app will show a notification and allow admin continue adding more products or close the modal.
 
@@ -130,7 +135,6 @@ This feature is using the same component with add new product, but carrying valu
 
 #### 2.4.3 Delete a product
 This button will trigger a comfirmation modal first to confirm with the admin that if this product will be deleted. After confirmed, it will send delete request to server, and show correct status on the modal.
-![delete a product](readmeImg/delete-modal.jpg)
 
 ### 2.5 User experience
 #### 2.5.1 Forms
@@ -177,12 +181,14 @@ This app is fully accessible for screen readers. All the buttons. inputs and lin
 │   ├── reduxHooks.ts
 │   ├── useFetchRandomQuote.ts
 │   ├── useGetCurrentUser.ts
+│   ├── useLoginContext.tsx
 │   └── useThemeContext.tsx
 ├── components
 │   ├── Footer.tsx
 │   ├── Header.tsx
 │   ├── MarmoteAnime.tsx
 │   ├── admin
+│   │   ├── DeleteProduct.tsx
 │   │   └── ProductManageForm.tsx
 │   ├── produtcs
 │   │   ├── AmountControl.tsx
@@ -191,9 +197,10 @@ This app is fully accessible for screen readers. All the buttons. inputs and lin
 │   │   ├── ProductCard.tsx
 │   │   ├── ProductListItem.tsx
 │   │   ├── Search.tsx
-│   │   └── ShopAndFav.tsx
+│   │   └── ShopButton.tsx
 │   ├── skeleton
-│   │   └── CardLoader.tsx
+│   │   ├── CardLoader.tsx
+│   │   └── TableItemLoader.tsx
 │   ├── user
 │   │   ├── AddressTable.tsx
 │   │   ├── Login.tsx
@@ -203,6 +210,7 @@ This app is fully accessible for screen readers. All the buttons. inputs and lin
 │   └── utils
 │       ├── Bagde.tsx
 │       ├── ScrollToTop.tsx
+│       ├── ScrolltoTopButton.tsx
 │       └── ToggleDarkMode.tsx
 ├── index.css
 ├── index.tsx
@@ -232,6 +240,7 @@ This app is fully accessible for screen readers. All the buttons. inputs and lin
 ├── reportWebVitals.ts
 ├── setupTests.ts
 ├── statics
+│   ├── hero-img.webp
 │   └── marmot-1.png
 └── test
     ├── reduxTest
