@@ -268,7 +268,8 @@ This app is fully accessible for screen readers. All the buttons. inputs and lin
 ### 3.2 Redux structure
 
 _If the text is too small, please check [here](https://app.wisemapping.com/c/maps/1682840/public) to zoom in._
-![redux structure](<readmeImg/Marmot shop.svg>)
+
+![marmot-shop-redux](https://github.com/yuankeMiao/fs17-Frontend-project/assets/109540749/594c67c8-4287-41d3-9457-296f6b9685c4)
 
 
 ### 3.3 Data flow and main components
@@ -279,23 +280,29 @@ _If the text is too small, please check [here](https://app.wisemapping.com/c/map
 
 _if the text is too small, please check [here](https://app.wisemapping.com/c/maps/1682877/public) to zoom in._
 
-![data flow](<readmeImg/marmot-shop-components.svg>)
+![marmot-shop-components](https://github.com/yuankeMiao/fs17-Frontend-project/assets/109540749/3451eda0-75b3-4cd9-99f4-605ac40b6e65)
+
 
 ## 4 Testing
 
 Tests are written with Jest and React Testing library, using msw for mock server.
 There is three mock servers for products, cart and users.
 
+- For the product reducers, there are tests for fetching all products fulfilled, fetching all products loading, get a product by id, search products by string, get products by category, create a product, update a product, delete a product.
+- For the cart reducers, there are tests for checking the initial state, add a product to add, remove a product to cart, update the quantity of a product in cart, fetch user cart from server and merge it to local state (fulfilled, rejected, pending).
+- For the user reducers, there are tests for login with correct credential, login with incorrect credentials, create a new user, current user is expired, and logout.
+
  To run the tests and check the coverage:
 ```
 npm test
 ```
 Test result:
-![test result](readmeImg/test-result.png)
+![test result](https://github.com/yuankeMiao/fs17-Frontend-project/assets/109540749/6b056388-60cb-40dc-90cf-6692df0f47a4)
+
 
 _Note: This project only tested redux logics, because some of the external libraries in components do not support the testing library._
 
 ## 5 Deployment
 The Marmot Shop is deployed using [Hostinger](https://www.hostinger.com/).
 
-You can view the live demo [here](https://marmot-shop-whst4vikj-marmotte-gos-projects.vercel.app).
+You can view the live demo [here](https://marmotshop.yuankedev.fun/).
