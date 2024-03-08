@@ -51,7 +51,7 @@ Component `<Outlet>` is used in this app to provide a universal header and foote
 ### 2.2 For all viewers
 Home page ('/'), all product page ('/all-product'), single product page('/product/:id), error page ('/*/**') are avaliable for all visitors. 
 
-![showcase for all users](readmeImg/unaithorizedMp4.mp4)
+https://github.com/yuankeMiao/fs17-Frontend-project/assets/109540749/fb4c75fc-ec87-4e9f-bd0a-682ba9c6fbd4
 
 #### 2.2.1 Navigation
 The header is sticky to the window, so it will be always on top the the window. Navbar has three items, it will highlight the active one.
@@ -108,7 +108,7 @@ This app stores token in localStorage, so after user refresh the page, login sta
 
 ### 2.3 For login users
 
-![showcase for login users](readmeImg/customerMp4.mp4)
+https://github.com/yuankeMiao/fs17-Frontend-project/assets/109540749/20e48d8a-b840-47e7-8769-cc4704cab014
 
 #### 2.3.1 Cart
 After user log into the app, it will trigger a reducer action immediately to fetch the cart data of this user from server (if capable), then merge the cart data to the local cart state. So the local cart state before user login will not lose. However, when client reload the whole app, cart data will be re-set to empty also.
@@ -126,7 +126,10 @@ The database for users doesn't have a role property, so for the convenience, thi
 
 For admin user, the dropdown menu in avatar has another link: Dashboard. In Dashboard page, admin can create a new product, search for a product, update the info, and delete a product. And of course, for this demo, we just send the request to server, and receive a fake response. Then, user can have a feedback to know if the action is succeed or failed.
 
-![showcase for admin](readmeImg/AdminMp4.mp4)
+
+https://github.com/yuankeMiao/fs17-Frontend-project/assets/109540749/a585048b-2264-498f-8cde-2426f1df229a
+
+
 #### 2.4.1 Add new product
 This feature is in a seperate modal, after added a product successfully, app will show a notification and allow admin continue adding more products or close the modal.
 
