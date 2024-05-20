@@ -12,7 +12,7 @@ function AllProdutcsPage() {
 
   // I set categories as a list then I can select multiple categories
   const [filter, setFilter] = useState<FilterType>({
-    category: "",
+    category: undefined,
     sortByPrice: "",
   });
   // then I pass the filter to the DisplayProducts component. setter to the Filters component

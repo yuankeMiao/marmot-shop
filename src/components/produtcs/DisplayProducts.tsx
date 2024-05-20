@@ -1,12 +1,9 @@
 import { useEffect, useMemo, useState, useRef } from "react";
 import { Pagination } from "flowbite-react";
 
-import {
-  useGetProductsByCategoryQuery,
-  useGetSortedProductsQuery,
-} from "../../redux/slices/apiQuery";
+import { useGetAllProductsQuery } from "../../redux/slices/apiQuery";
 import ProductCard from "./ProductCard";
-import { FilterType, ProductType } from "../../misc/productTypes";
+import { FilterType, ProductReadDto } from "../../misc/productTypes";
 import CardLoader from "../skeleton/CardLoader";
 
 function DisplayProducts({ filter }: { filter: FilterType }) {
@@ -18,51 +15,18 @@ function DisplayProducts({ filter }: { filter: FilterType }) {
 
   const containerRef = useRef<HTMLDivElement>(null);
 
-  const [productList, setProductList] = useState<ProductType[]>([]);
-  const { data, error, isLoading, refetch } = useGetSortedProductsQuery(
-    {
-      limit: itemsPerPage,
-      skip: (currentPage - 1) * itemsPerPage,
-      sort: filter.sortByPrice,
-    },
-    {
-      skip: filter.category !== "",
-    }
-  );
-  const {
-    data: productsByCategory,
-    error: errorByCategory,
-    isLoading: isLoadingByCategory,
-    refetch: refetchByCategory,
-  } = useGetProductsByCategoryQuery(
-    {
-      category: filter.category,
-      limit: itemsPerPage,
-      skip: (currentPage - 1) * itemsPerPage,
-      sort: filter.sortByPrice,
-    },
-    {
-      skip: filter.category === "",
-    }
-  );
+  const [productList, setProductList] = useState<ProductReadDto[]>([]);
+  const { data, error, isLoading } = useGetAllProductsQuery({
+    limit: itemsPerPage,
+    offset: (currentPage - 1) * itemsPerPage,
+  });
 
   useEffect(() => {
-    if (filter.category !== "") {
-      refetchByCategory();
-    } else {
-      refetch();
-    }
-  }, [filter.category, refetch, refetchByCategory]);
-
-  useEffect(() => {
-    if (filter.category === "" && data) {
+    if (data) {
       setProductList(data.products);
-      setTotalItems(data.total);
-    } else if (filter.category !== "" && productsByCategory) {
-      setProductList(productsByCategory.products);
-      setTotalItems(productsByCategory.total);
+      setTotalItems(data.totalCount);
     }
-  }, [data, productsByCategory, filter.category]);
+  }, [data]);
 
   // otherwise after user on other page, then choose category, it will not work, becasue currentPage is still the same
   useEffect(() => {
@@ -77,7 +41,7 @@ function DisplayProducts({ filter }: { filter: FilterType }) {
 
   useEffect(() => {
     if (containerRef.current) {
-      containerRef.current.scrollTo({top: 0, behavior: "smooth"});
+      containerRef.current.scrollTo({ top: 0, behavior: "smooth" });
     }
   }, [currentPage]);
 
@@ -98,8 +62,11 @@ function DisplayProducts({ filter }: { filter: FilterType }) {
           onPageChange={onPageChange}
         />
       </div>
-      <div ref={containerRef} className="grid grid-col-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 min-w-full  max-h-screen overflow-y-scroll">
-        {(isLoading || isLoadingByCategory) && (
+      <div
+        ref={containerRef}
+        className="grid grid-col-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 min-w-full  max-h-screen overflow-y-scroll"
+      >
+        {isLoading && (
           <>
             <CardLoader />
             <CardLoader />
@@ -109,9 +76,7 @@ function DisplayProducts({ filter }: { filter: FilterType }) {
             <CardLoader />
           </>
         )}
-        {(error || errorByCategory) && (
-          <div>Something went wrong, please try again later</div>
-        )}
+        {error && <div>Something went wrong, please try again later</div>}
         {productList?.map((product) => (
           <ProductCard productItem={product} key={product.id} />
         ))}

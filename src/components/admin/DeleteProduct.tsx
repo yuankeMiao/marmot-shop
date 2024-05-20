@@ -3,6 +3,7 @@ import { useState, useCallback } from "react";
 import { Modal } from "flowbite-react";
 import { useDeleteProductMutation } from "../../redux/slices/apiQuery";
 import { ProductType } from "../../misc/productTypes";
+import { UUID } from "crypto";
 
 
 function DeleteProduct({product, selectedProduct, setSelectedProduct }: { product: ProductType, selectedProduct:ProductType | null, setSelectedProduct: React.Dispatch<React.SetStateAction<ProductType | null>>}) {
@@ -24,7 +25,7 @@ function DeleteProduct({product, selectedProduct, setSelectedProduct }: { produc
       }, [setSelectedProduct]);
     
       const handleDelete = useCallback(
-        (id: number) => {
+        (id: UUID) => {
           deleteProductTrigger(id);
           setSelectedProduct(null);
         },

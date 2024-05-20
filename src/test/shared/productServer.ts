@@ -1,11 +1,12 @@
 import { http, HttpResponse } from "msw";
 import { setupServer } from "msw/node";
 import { ProductType } from "../../misc/productTypes";
+import { randomUUID } from "crypto";
 
 const mockProducts = {
   products: [
     {
-      id: 1,
+      id: randomUUID(),
       title: "iPhone 9",
       description: "An apple mobile which is nothing like apple",
       price: 549,
@@ -24,7 +25,7 @@ const mockProducts = {
       ],
     },
     {
-      id: 2,
+      id: randomUUID(),
       title: "iPhone X",
       description:
         "SIM-Free, Model A19211 6.5-inch Super Retina HD display with OLED technology A12 Bionic chip with ...",
@@ -43,7 +44,7 @@ const mockProducts = {
       ],
     },
     {
-      id: 3,
+      id: randomUUID(),
       title: "Samsung Universe 9",
       description:
         "Samsung's new variant which goes beyond Galaxy to the Universe",
@@ -57,7 +58,7 @@ const mockProducts = {
       images: ["https://cdn.dummyjson.com/product-images/3/1.jpg"],
     },
     {
-      id: 4,
+      id: randomUUID(),
       title: "Plant Hanger For Home",
       description:
         "Boho Decor Plant Hanger For Home Wall Decoration Macrame Wall Hanging Shelf",
@@ -78,7 +79,7 @@ const mockProducts = {
       ],
     },
     {
-      id: 5,
+      id: randomUUID(),
       title: "Hyaluronic Acid Serum",
       description:
         "L'OrÃ©al Paris introduces Hyaluron Expert Replumping Serum formulated with 1.5% Hyaluronic Acid",
@@ -145,7 +146,7 @@ export const productsHandlers = [
   }),
 
   http.get("https://dummyjson.com/products/:id", ({ params }) => {
-    const id = Number(params.id);
+    const id = params.id;
     const product = mockProducts.products.find((p) => p.id === id);
     if (!product) return HttpResponse.json(null, { status: 404 });
     return HttpResponse.json(product);
@@ -156,7 +157,7 @@ export const productsHandlers = [
     const product = (await request.json()) as ProductType;
     const newProduct: ProductType = {
       ...product,
-      id: mockProducts.products.length + 1,
+      id: randomUUID(),
     };
     return HttpResponse.json(newProduct, { status: 201 });
   }),
@@ -165,7 +166,7 @@ export const productsHandlers = [
     "https://dummyjson.com/products/:id",
     async ({ request, params }) => {
       const updateData = (await request.json()) as Partial<ProductType>;
-      const id = Number(params.id);
+      const id = params.id;
       const product = mockProducts.products.find((p) => p.id === id);
       if (!product) return HttpResponse.json(null, { status: 404 });
       const updatedProduct = { ...product, ...updateData };
@@ -174,7 +175,7 @@ export const productsHandlers = [
   ),
 
   http.delete("https://dummyjson.com/products/:id", async ({ params }) => {
-    const id = Number(params.id);
+    const id = params.id;
     const product = mockProducts.products.find((p) => p.id === id);
     if (!product) return HttpResponse.json(null, { status: 404 });
     mockProducts.products = mockProducts.products.filter((p) => p.id !== id);

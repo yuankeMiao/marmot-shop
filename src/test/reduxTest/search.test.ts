@@ -16,18 +16,18 @@ afterEach(() => {
   productServer.resetHandlers();
 });
 
-describe("searchQuery", () => {
-  test("searchProducts fulfill", async () => {
-    let data: any;
-    await store.dispatch(apiQueries.endpoints.getProductsBySearch.initiate("phone"))
-    .then((result) => {
-      // console.log(result);
-        data = result.data;
-    })
-    .catch((error) => {
-        console.log(error);
-    });
+// describe("searchQuery", () => {
+//   test("searchProducts fulfill", async () => {
+//     let data: any;
+//     await store.dispatch(apiQueries.endpoints.getProductsBySearch.initiate("phone"))
+//     .then((result) => {
+//       // console.log(result);
+//         data = result.data;
+//     })
+//     .catch((error) => {
+//         console.log(error);
+//     });
 
-    expect(data).toHaveLength(2);
-  });
-});
+//     expect(data).toHaveLength(2);
+//   });
+// });

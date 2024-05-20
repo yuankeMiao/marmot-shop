@@ -1,72 +1,57 @@
-import { CATEGORIES } from "./constants";
+import { UUID } from "crypto";
+import { BaseDto } from "./generalTypes";
 
-// {
-//   "products": [
-//     {
-//       "id": 1,
-//       "title": "iPhone 9",
-//       "description": "An apple mobile which is nothing like apple",
-//       "price": 549,
-//       "discountPercentage": 12.96,
-//       "rating": 4.69,
-//       "stock": 94,
-//       "brand": "Apple",
-//       "category": "smartphones",
-//       "thumbnail": "...",
-//       "images": ["...", "...", "..."]
-//     },
-//     {...},
-//     {...},
-//     {...}
-//     // 30 items
-//   ],
+export interface ImageReadDto {
+  id: UUID;
+  url: string;
+  productId: UUID;
+}
 
-//   "total": 100,
-//   "skip": 0,
-//   "limit": 30
-// }
-    
-export type CategoryType = typeof CATEGORIES[number] | ""
+export type ImageCreateDto = Omit<ImageReadDto, 'id'>;
+export type ImageUpdateDto = Pick<ImageReadDto, 'url'>;
 
-export interface ProductType {
-  id: number;
+
+export interface ProductBase {
   title: string;
   description: string;
   price: number;
   discountPercentage: number;
-  rating: number;
+  rating?: number;
   stock: number;
-  brand: string;
-  category: CategoryType;
+  brand?: string;
+  category: UUID;
   thumbnail: string;
-  images: string[];
+  images: ImageReadDto[];
 }
 
-export interface ProductQueryType {
-  products: ProductType[];
-  total: number;
-  skip: number;
+export interface ProductReadDto extends ProductBase, BaseDto {};
+export interface ProductCreateDto extends Omit<ProductBase, 'images'> {
+  images: ImageCreateDto;
+};
+export interface ProductUpdateDto extends Partial<Omit<ProductBase, 'images'>> {
+  id:UUID,
+  images: ImageUpdateDto[];
+};
+
+
+export interface ProductQueryOptionsType {
+  title?: string;
+  minPrice?: number;
+  maxPrice?: number;
+  categoryId?: string;
+  inStock?: boolean;
+  sortBy?: "Title" | "Price" | "Created_Date" | "Updated_Date";
+  sortOrder?: "Asc" | "Desc";
   limit: number;
+  offset: number;
 }
 
 export interface ProductsState {
-  products: ProductType[];
+  products: ProductReadDto[];
   loading: boolean;
   error: string | null;
-};
+}
 
-/*
-    {
-      "id": 59,
-      "title": "Spring and summershoes",
-      "price": 20,
-      "quantity": 3,
-      "total": 60,
-      "discountPercentage": 8.71,
-      "discountedPrice": 55,
-      "thumbnail": "https://cdn.dummyjson.com/product-images/59/thumbnail.jpg"
-    },
-*/
 
 export interface CartItemType {
   id: number;
@@ -104,6 +89,6 @@ export interface CartQueryType {
 export type ProductsInfoToCartApi = { productId: number; quantity: number };
 
 export interface FilterType {
-  category: CategoryType;
+  category?: UUID;
   sortByPrice: "asc" | "desc" | "";
 }
