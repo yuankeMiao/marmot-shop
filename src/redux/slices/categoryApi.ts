@@ -5,23 +5,22 @@ import {
   CategoryReadDto,
   CategoryUpdateDto,
 } from "../../misc/categoryTypes";
-import userApi from "./userApi";
 
 const categoryApi = apiQueries.injectEndpoints({
   endpoints: (builder) => ({
     getAllCategories: builder.query<Array<CategoryReadDto>, null>({
-      query: () => `categories`,
+      query: () => `/categories`,
       providesTags: ["Category"],
     }),
 
     getCategoryById: builder.query({
-      query: (id: UUID) => `category/${id}`,
-      providesTags: ["Category"],
+      query: (id: UUID) => `/categories/${id}`,
+      providesTags: (result, error, arg) => [{ type: "Category", id: arg }],
     }),
 
     createCategory: builder.mutation({
       query: (categoryCreateDto: CategoryCreateDto) => ({
-        url: "categories",
+        url: "/categories",
         method: "POST",
         body: { ...categoryCreateDto },
       }),
@@ -29,19 +28,22 @@ const categoryApi = apiQueries.injectEndpoints({
     }),
 
     updateCategory: builder.mutation({
-      query: (categoryUpdateDto: CategoryUpdateDto) => ({
-        url: "categories",
+      query: ({ id, ...updateData }: CategoryUpdateDto) => ({
+        url: `/categories/${id}`,
         method: "PATCH",
-        body: { ...categoryUpdateDto },
+        body: { ...updateData },
       }),
-      invalidatesTags: ["Category"],
+      invalidatesTags: (result, error, arg) => [
+        { type: "Category", id: arg.id },
+      ],
     }),
 
     deleteCategory: builder.mutation({
       query: (id: UUID) => ({
-        url: `category/${id}`,
+        url: `/categories/${id}`,
         method: "DELETE",
       }),
+      invalidatesTags: (result, error, id) => [{ type: "Category", id }],
     }),
   }),
 });

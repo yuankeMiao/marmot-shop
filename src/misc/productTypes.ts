@@ -7,7 +7,7 @@ export interface ImageReadDto {
   productId: UUID;
 }
 
-export type ImageCreateDto = Omit<ImageReadDto, 'id'>;
+export type ImageCreateDto = Pick<ImageReadDto, 'url'>;
 export type ImageUpdateDto = Pick<ImageReadDto, 'url'>;
 
 
@@ -19,18 +19,18 @@ export interface ProductBase {
   rating?: number;
   stock: number;
   brand?: string;
-  category: UUID;
+  categoryId: UUID;
   thumbnail: string;
   images: ImageReadDto[];
 }
 
 export interface ProductReadDto extends ProductBase, BaseDto {};
 export interface ProductCreateDto extends Omit<ProductBase, 'images'> {
-  images: ImageCreateDto;
+  images: ImageCreateDto[];
 };
 export interface ProductUpdateDto extends Partial<Omit<ProductBase, 'images'>> {
   id:UUID,
-  images: ImageUpdateDto[];
+  images?: ImageUpdateDto[];
 };
 
 

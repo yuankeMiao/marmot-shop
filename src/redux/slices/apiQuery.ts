@@ -48,7 +48,7 @@ const apiQueries = createApi({
         if (sortBy) params.append("sortBy", sortBy);
         if (sortOrder) params.append("sortOrder", sortOrder);
 
-        return `products?${params.toString()}`;
+        return `/products?${params.toString()}`;
       },
       providesTags: ["Product"],
       transformResponse: (response: Array<ProductReadDto>, meta) => {
@@ -62,14 +62,14 @@ const apiQueries = createApi({
     }),
 
     getProductById: builder.query({
-      query: (id: UUID) => `products/${id}`,
+      query: (id: UUID) => `/products/${id}`,
       providesTags: (result, error, arg) => [{ type: "Product", id: arg }],
     }),
 
     // mutations
     createNewProduct: builder.mutation({
       query: (newProduct: ProductCreateDto) => ({
-        url: "/products/add",
+        url: "/products",
         method: "POST",
         body: { ...newProduct },
       }),
