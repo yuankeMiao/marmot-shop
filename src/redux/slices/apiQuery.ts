@@ -17,6 +17,13 @@ const apiQueries = createApi({
   reducerPath: "api",
   baseQuery: fetchBaseQuery({
     baseUrl: BACKEND_URL,
+    prepareHeaders: (headers) => {
+      const token = localStorage.getItem('accessToken');
+      if (token) {
+        headers.set('authorization', `Bearer ${token}`);
+      }
+      return headers;
+    },
   }),
   tagTypes: ["Product", "Category", "User", "Cart"],
   endpoints: (builder) => ({
@@ -89,7 +96,7 @@ const apiQueries = createApi({
           Authorization: `Bear ${localStorage.getItem("token")}`
         }
       }),
-      invalidatesTags: (result, error, id) => [{ type: "Product", id }],
+      invalidatesTags: ["Product"],
     }),
   }),
 });

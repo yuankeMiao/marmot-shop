@@ -1,8 +1,6 @@
 import { useState, useEffect, useCallback } from "react";
 import { TextInput, Table, Modal } from "flowbite-react";
 
-import { useAppSelector } from "../appHooks/reduxHooks";
-import ProductManageForm from "../components/admin/UpdateProductForm";
 import { ProductReadDto } from "../misc/productTypes";
 import TableItemLoader from "../components/skeleton/TableItemLoader";
 import DeleteProduct from "../components/admin/DeleteProduct";
@@ -10,6 +8,7 @@ import { useGetAllProductsQuery } from "../redux/slices/apiQuery";
 import { useGetAllCategoriesQuery } from "../redux/slices/categoryApi";
 import UpdateProductForm from "../components/admin/UpdateProductForm";
 import CreateProductForm from "../components/admin/CreateProductForm";
+import useGetCurrentUser from "../appHooks/useGetCurrentUser";
 
 
 function Dashboard() {
@@ -38,7 +37,6 @@ function Dashboard() {
     setInfoFormModalOpen(true);
   }, []);
 
-  // since handlAdd is the same all the time ,no need to create a new one every re-render
   const handleAdd = useCallback(() => {
     setSelectedProduct(null);
     setInfoFormModalOpen(true);
@@ -63,18 +61,20 @@ function Dashboard() {
   //   };
   // }, [input, debounced]);
 
-  const { user: currentUser, isLoading: currentUserIsLoading } = useAppSelector(
-    (state) => state.currentUser
-  );
+  // const { user: currentUser, isLoading: currentUserIsLoading } = useAppSelector(
+  //   (state) => state.currentUser
+  // );
 
-  if (currentUserIsLoading)
-    return (
-      <div className="py-20">
-        <p className="text-center text-xl dark:text-gray-100">Loading...</p>
-      </div>
-    );
+  // if (currentUserIsLoading)
+  //   return (
+  //     <div className="py-20">
+  //       <p className="text-center text-xl dark:text-gray-100">Loading...</p>
+  //     </div>
+  //   );
 
-  if (currentUser?.role !== "admin")
+  const {currentUser} = useGetCurrentUser();
+
+  if (currentUser?.role !== "Admin")
     return <div>You are not authorized to access this page</div>;
 
   return (
@@ -112,6 +112,9 @@ function Dashboard() {
             </Table.HeadCell>
             <Table.HeadCell className="hidden md:table-cell">
               Price
+            </Table.HeadCell>
+            <Table.HeadCell className="hidden md:table-cell">
+              Discount
             </Table.HeadCell>
             <Table.HeadCell>Stock</Table.HeadCell>
             <Table.HeadCell>
@@ -153,6 +156,9 @@ function Dashboard() {
                 </Table.Cell>
                 <Table.Cell className="hidden md:table-cell">
                   {product.price} €
+                </Table.Cell>
+                <Table.Cell className="hidden md:table-cell">
+                  - {product.discountPercentage} %
                 </Table.Cell>
                 <Table.Cell>{product.stock}</Table.Cell>
                 <Table.Cell>

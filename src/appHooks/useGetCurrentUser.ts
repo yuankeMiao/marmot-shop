@@ -1,40 +1,56 @@
-/*
-check if user is login
-if no, return false;
-if yes, return user
-*/
-
-import { useEffect } from "react";
-import { useAppDispatch } from "./reduxHooks";
-import { fetchCurrentUserWithGoogle, fetchCurrentUser } from "../redux/slices/currentUserSlice";
+import { useEffect, useState } from "react";
+import { useLazyGetProfileQuery, useLazyRefreshTokenQuery } from "../redux/slices/authApi";
 
 export default function useGetCurrentUser() {
-  const dispatch = useAppDispatch();
+
+  const [getCurrentUserError, setGetCurrentUserError] = useState(false);
+  
+  const [getProfileTrigger, { data: currentUser, error: userError }] =
+    useLazyGetProfileQuery();
+  const [refreshTokenTrigger] = useLazyRefreshTokenQuery();
+
+  const accessToken = localStorage.getItem("accessToken") || null;
 
   useEffect(() => {
     const handleStorageChange = () => {
-      const token = localStorage.getItem("token") || null;
-      const tokenGoogle = localStorage.getItem("googleToken") || null;
-      if (tokenGoogle) {
-        dispatch(fetchCurrentUserWithGoogle(tokenGoogle));
-      } else if (token) {
-        dispatch(fetchCurrentUser(token));
-      }
+      if (accessToken) getProfileTrigger(null);
     };
 
     // Listen for changes to localStorage
     window.addEventListener("storage", handleStorageChange);
-
-    // Call the function once to fetch the current user when the component mounts
-    // otherwise when user reload the page, the user will be logged out
-    // even though the localstorage still has a valid token
     handleStorageChange();
 
     // Clean up the event listener when the component unmounts
     return () => {
       window.removeEventListener("storage", handleStorageChange);
     };
-  }, [dispatch]);
+  }, [getProfileTrigger, accessToken]);
 
+  useEffect(() => {
+    if (userError) {
+      // console.log(userError);
+      if ("status" in userError && userError.status === 401) {
+        const refreshToken = localStorage.getItem("refreshToken");
+        if (refreshToken) {
+          const refreshAccessToken = async () => {
+            try {
+              const result = await refreshTokenTrigger({ refreshToken }).unwrap();
+              localStorage.setItem("accessToken", result.accessToken);
+              getProfileTrigger(null);
+            } catch (error) {
+              setGetCurrentUserError(true);
+              localStorage.removeItem("refreshToken");
+              localStorage.removeItem("accessToken");
+            }
+          };
+          refreshAccessToken();
+        } else {
+          localStorage.removeItem("refreshToken");
+          localStorage.removeItem("accessToken");
+        }
+      }
+    }
+  }, [userError, getProfileTrigger, refreshTokenTrigger]);
+
+  return { currentUser, getCurrentUserError};
 }
-

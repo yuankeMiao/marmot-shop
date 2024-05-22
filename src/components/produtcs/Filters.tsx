@@ -13,6 +13,7 @@ function Filters({
 
   const [sort, setSort] = useState("");
   const [priceRange, setPriceRange] = useState("");
+  const [inStock, setInStock] = useState(false);
 
   useEffect(() => {
     if (filter.sortBy && filter.sortOrder) {
@@ -58,6 +59,8 @@ function Filters({
     } else {
       setPriceRange("");
     }
+
+    setInStock(!!filter.inStock);
   }, [filter]);
 
   const handleCatChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
@@ -85,7 +88,11 @@ function Filters({
         setFilter((prev) => ({ ...prev, minPrice: 200, maxPrice: undefined }));
         break;
       default:
-        setFilter((prev) => ({ ...prev, minPrice: undefined, maxPrice: undefined }));
+        setFilter((prev) => ({
+          ...prev,
+          minPrice: undefined,
+          maxPrice: undefined,
+        }));
         break;
     }
   };
@@ -107,18 +114,33 @@ function Filters({
         setFilter((prev) => ({ ...prev, sortBy: "Title", sortOrder: "Desc" }));
         break;
       case "5":
-        setFilter((prev) => ({ ...prev, sortBy: "Created_Date", sortOrder: "Desc" }));
+        setFilter((prev) => ({
+          ...prev,
+          sortBy: "Created_Date",
+          sortOrder: "Desc",
+        }));
         break;
       default:
-        setFilter((prev) => ({ ...prev, sortBy: undefined, sortOrder: undefined }));
+        setFilter((prev) => ({
+          ...prev,
+          sortBy: undefined,
+          sortOrder: undefined,
+        }));
         break;
     }
+  };
+
+  const handleInStockChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const checked = e.target.checked;
+    setInStock(checked);
+    setFilter((prev) => ({ ...prev, inStock: checked }));
   };
 
   const handleReset = () => {
     setFilter({});
     setSort("");
     setPriceRange("");
+    setInStock(false);
   };
 
   return (
@@ -186,6 +208,19 @@ function Filters({
               <option value="4">Z - A</option>
               <option value="5">Latest</option>
             </select>
+          </li>
+
+          <li className="flex-1 flex justify-start items-center gap-2">
+            <input
+              type="checkbox"
+              name="inStock"
+              id="inStock"
+              onChange={handleInStockChange}
+              checked={inStock}
+            />
+            <label htmlFor="inStock">
+              Available Now
+            </label>
           </li>
         </ul>
       </div>

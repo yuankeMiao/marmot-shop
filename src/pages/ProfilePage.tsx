@@ -4,19 +4,23 @@ import { Table } from "flowbite-react";
 import { useAppDispatch, useAppSelector } from "../appHooks/reduxHooks";
 import UpdateForm from "../components/user/UpdateForm";
 import AddressTable from "../components/user/AddressTable";
-import { logout } from "../redux/slices/currentUserSlice";
+
+import { useLogoutMutation } from "../redux/slices/authApi";
+import useGetCurrentUser from "../appHooks/useGetCurrentUser";
 
 function ProfilePage() {
   const navigate = useNavigate();
-  const dispatch = useAppDispatch();
 
-  const { user: currentUser, isLoading: currentUserIsLoading } = useAppSelector((state) => state.currentUser);
+  const [logoutTrigger, {error: logoutError}] = useLogoutMutation();
 
-  if(currentUserIsLoading) return (
-    <div className="py-20">
-      <p className="text-center text-xl dark:text-gray-100">Loading...</p>
-    </div>
-  )
+  // const { user: currentUser, isLoading: currentUserIsLoading } = useAppSelector((state) => state.currentUser);
+  const {currentUser} = useGetCurrentUser();
+
+  // if(currentUserIsLoading) return (
+  //   <div className="py-20">
+  //     <p className="text-center text-xl dark:text-gray-100">Loading...</p>
+  //   </div>
+  // )
 
   if(!currentUser) return (
     <div className="py-20">
@@ -26,7 +30,7 @@ function ProfilePage() {
 
   const handleLogout = () => {
     navigate("/");
-    dispatch(logout());
+    logoutTrigger(null);
   };
 
   return (
@@ -44,11 +48,11 @@ function ProfilePage() {
       <div className="w-full *:mb-12">
         <div className="flex h-16 items-center gap-4">
           <img
-            src={currentUser.image}
-            alt={currentUser.username}
+            src={currentUser.avatar}
+            alt={currentUser.firstname}
             className="rounded-xl h-full bg-teal-500"
           />
-          <h1 className="text-3xl font-semibold">{currentUser.username}</h1>
+          <h1 className="text-3xl font-semibold">{currentUser.firstname}</h1>
         </div>
 
         <div id="overview">
@@ -58,7 +62,7 @@ function ProfilePage() {
             <Table.Body className="divide-y dark:bg-gray-800">
               <Table.Row>
                 <Table.Cell className="font-bold">Name</Table.Cell>
-                <Table.Cell>{`${currentUser.firstName} ${currentUser.lastName}`}</Table.Cell>
+                <Table.Cell>{`${currentUser.firstname} ${currentUser.lastname}`}</Table.Cell>
               </Table.Row>
               <Table.Row>
                 <Table.Cell className="font-bold">E-mail</Table.Cell>
@@ -79,7 +83,7 @@ function ProfilePage() {
           </div>
         </div>
 
-        <div id="address">
+        {/* <div id="address">
           <div className="invisible h-20 -mt-20"></div>
           <h2 className="text-xl font-semibold my-8">My address</h2>
           {currentUser.address &&
@@ -91,7 +95,7 @@ function ProfilePage() {
           <div className="invisible h-20 -mt-20"></div>
           <h2 className="text-xl font-semibold my-8">Change my info</h2>
           <UpdateForm userInfo={{ ...currentUser }}/>
-        </div>
+        </div> */}
       </div>
     </div>
   );

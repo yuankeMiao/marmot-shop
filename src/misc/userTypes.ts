@@ -5,6 +5,11 @@ export type UserCredential = {
   password: string;
 };
 
+export type AuthTokens = {
+  accessToken: string;
+  refreshToken: string;
+}
+
 export type AddressType = {
   address: string;
   city: string;
@@ -45,7 +50,7 @@ export type CurrentUserType = {
   address: AddressType | null;
 };
 
-export interface RegisterType extends Omit<UserBase, "UserRole"> {
+export interface RegisterType extends Omit<UserBase, "role"> {
   confirmPassword: string;
 }
 
@@ -54,7 +59,7 @@ export interface UserBase {
   lastname: string;
   email: string;
   avatar?: string;
-  UserRole: "Customer" | "Admin";
+  role: "Customer" | "Admin";
   password: string;
 }
 
@@ -65,7 +70,7 @@ export interface UserCreateDto extends UserBase {}
 export interface UserUpdateDto extends Partial<UserBase> {}
 
 export interface UserQueryOptionType extends BaseQueryOptionType {
-  userRole: "customer" | "admin";
+  role: "customer" | "admin";
   searchName: string;
   sortBy: "Name" | "Created_Date" | "Updated_Date";
 }

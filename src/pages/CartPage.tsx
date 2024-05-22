@@ -6,9 +6,10 @@ import ProductListItem from "../components/produtcs/ProductListItem";
 import { CartState } from "../misc/productTypes";
 import { useAppSelector } from "../appHooks/reduxHooks";
 import { useLoginContext } from "../appHooks/useLoginContext";
+import useGetCurrentUser from "../appHooks/useGetCurrentUser";
 
 function CartPage() {
-  const { user: currentUser } = useAppSelector((state) => state.currentUser);
+  const {currentUser} = useGetCurrentUser();
 
   const [openModal, setOpenModal] = useState(false);
   const { setOpenLoginModal } = useLoginContext();

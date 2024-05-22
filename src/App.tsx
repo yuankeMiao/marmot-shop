@@ -13,11 +13,9 @@ import AllProdutcsPage from "./pages/AllProdutcsPage";
 import ProfilePage from "./pages/ProfilePage";
 import Dashboard from "./pages/Dashboard";
 
-import useGetCurrentUser from "./appHooks/useGetCurrentUser";
 import ScrollToTop from "./components/utils/ScrollToTop";
 
 function App() {
-  useGetCurrentUser();
 
   return (
     <div className="dark:bg-gray-800 dark:text-gray-100 transition-all duration-700 relative">

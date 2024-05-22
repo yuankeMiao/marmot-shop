@@ -10,39 +10,43 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import Badge from "./utils/Bagde";
 import Search from "./produtcs/Search";
 
-import { useAppSelector, useAppDispatch } from "../appHooks/reduxHooks";
+import { useAppSelector } from "../appHooks/reduxHooks";
 
 import Login from "./user/Login";
-import useGetCurrentUser from "../appHooks/useGetCurrentUser";
 import ToggleDarkMode from "./utils/ToggleDarkMode";
 import Register from "./user/Register";
-import { logout } from "../redux/slices/currentUserSlice";
 
 import { useLoginContext } from "../appHooks/useLoginContext";
+import useGetCurrentUser from "../appHooks/useGetCurrentUser";
+import {
+  useLazyGetProfileQuery,
+  useLogoutMutation,
+} from "../redux/slices/authApi";
 
 function Header() {
-  useGetCurrentUser();
-
   const { pathname } = useLocation();
+  // const [getProfileTrigger, { data: currentUser, error: userError }] =
+  useLazyGetProfileQuery();
 
-  const dispatch = useAppDispatch();
-  const { user: currentUser, error: userError } = useAppSelector(
-    (state) => state.currentUser
-  );
+  const [logoutTrigger, { error: logourError }] = useLogoutMutation();
+  const { currentUser, getCurrentUserError } = useGetCurrentUser();
 
   const { openLoginModal, setOpenLoginModal } = useLoginContext();
   const [openRegisterModal, setOpenRegisterModal] = useState(false);
   const [openReLoginModal, setOpenReLoginModal] = useState(false);
 
-  useEffect(() => {
-    if (userError === 401) setOpenReLoginModal(true);
-  }, [userError]);
-
   const cartAmount = useAppSelector((state) => state.cart.totalQuantity);
 
   const handleLogout = () => {
-    dispatch(logout());
+    logoutTrigger(null);
+    localStorage.removeItem("accessToken");
+    localStorage.removeItem("refreshToken");
+    window.location.reload();
   };
+
+  if (getCurrentUserError) {
+    setOpenReLoginModal(true);
+  }
 
   return (
     <header className="fixed z-20 top-0 start-0 w-full h-20 bg-primary flex justify-between items-center px-4 lg:px-12">
@@ -75,10 +79,17 @@ function Header() {
       <nav className="justify-self-start">
         <ul className="hidden lg:flex gap-8 hover:*:underline">
           <li>
-            <Link to="/" className={`${pathname === '/' && 'font-bold'}`}>Home</Link>
+            <Link to="/" className={`${pathname === "/" && "font-bold"}`}>
+              Home
+            </Link>
           </li>
           <li>
-            <Link to="/all-products" className={`${pathname === '/all-products' && 'font-bold'}`} >All Products</Link>
+            <Link
+              to="/all-products"
+              className={`${pathname === "/all-products" && "font-bold"}`}
+            >
+              All Products
+            </Link>
           </li>
         </ul>
       </nav>
@@ -93,7 +104,7 @@ function Header() {
           <div className="flex gap-2 items-center">
             <Dropdown
               label={
-                <Avatar alt="user setting" img={currentUser.image} rounded />
+                <Avatar alt="user setting" img={currentUser.avatar} rounded />
               }
               dismissOnClick={true}
               inline
@@ -101,11 +112,11 @@ function Header() {
             >
               <Dropdown.Header>
                 <span className="block text-sm font-semibold">
-                  {currentUser.username}
+                  {currentUser.firstname}
                 </span>
                 <span className="block text-sm">{currentUser.email}</span>
               </Dropdown.Header>
-              {currentUser.role === "admin" && (
+              {currentUser.role === "Admin" && (
                 <Dropdown.Item as={Link} to="/dashboard">
                   Dashbord
                 </Dropdown.Item>

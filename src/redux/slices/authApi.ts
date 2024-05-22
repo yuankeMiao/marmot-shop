@@ -1,12 +1,18 @@
 import apiQueries from "./apiQuery";
-import { UserCreateDto, UserCredential, UserUpdateDto } from "../../misc/userTypes";
+import {
+  AuthTokens,
+  UserCreateDto,
+  UserCredential,
+  UserReadDto,
+  UserUpdateDto,
+} from "../../misc/userTypes";
 
 const authApi = apiQueries.injectEndpoints({
   endpoints: (builder) => ({
     // user related queries
 
-    login: builder.mutation({
-      query: (loginData:  UserCredential) => ({
+    login: builder.mutation<AuthTokens, UserCredential>({
+      query: (loginData: UserCredential) => ({
         url: "/auth/login",
         method: "POST",
         body: { ...loginData },
@@ -19,23 +25,54 @@ const authApi = apiQueries.injectEndpoints({
         url: "/auth/register",
         method: "POST",
         body: { ...registerData },
-        Authorization: `Bear ${localStorage.getItem("token")}`
       }),
       invalidatesTags: ["User"],
     }),
 
+    refreshToken: builder.query({
+      query: () => ({
+        url: `/auth/refresh`,
+        method: "GET",
+        body: {
+          refreshToken: localStorage.getItem("refreshToken"),
+        },
+      }),
+    }),
+
     updateUser: builder.mutation({
       query: (updateData: UserUpdateDto) => ({
-        url: `/user/profile`,
+        url: `/users/profile`,
         method: "PATCH",
         body: { ...updateData },
-        Authorization: `Bear ${localStorage.getItem("token")}`
+      }),
+      invalidatesTags: ["User"],
+    }),
+
+    getProfile: builder.query<UserReadDto, null>({
+      query: () => ({
+        url: `/users/profile`,
+        method: "GET",
+      }),
+      providesTags: ["User"],
+    }),
+
+    logout: builder.mutation({
+      query: () => ({
+        url: `/auth/logout`,
+        method: "POST",
       }),
       invalidatesTags: ["User"],
     }),
   }),
 });
 
-export const { useLoginMutation, useRegisterMutation, useUpdateUserMutation } = authApi;
+export const {
+  useLoginMutation,
+  useRegisterMutation,
+  useLazyRefreshTokenQuery,
+  useUpdateUserMutation,
+  useLazyGetProfileQuery,
+  useLogoutMutation,
+} = authApi;
 
 export default authApi;

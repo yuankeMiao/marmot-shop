@@ -42,7 +42,7 @@ function Register({
       email: data.email,
       password: data.password,
       avatar: data.avatar,
-      UserRole: "Customer",
+      role: "Customer",
     });
   };
 

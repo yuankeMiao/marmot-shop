@@ -7,9 +7,7 @@ import "react-toastify/dist/ReactToastify.css";
 import { FloatingLabel } from "flowbite-react";
 
 import { UserCredential } from "../../misc/userTypes";
-import { useLoginMutation } from "../../redux/slices/authApi";
-import LoginWithGoogle from "./LoginWithGoogle";
-import { fetchCurrentUser, fetchCurrentUserWithGoogle } from "../../redux/slices/currentUserSlice";
+import { useLazyGetProfileQuery, useLoginMutation } from "../../redux/slices/authApi";
 import { useAppDispatch } from "../../appHooks/reduxHooks";
 import { useLoginContext } from "../../appHooks/useLoginContext";
 
@@ -19,7 +17,6 @@ function Login({
   setOpenRegisterModal: React.Dispatch<React.SetStateAction<boolean>>;
 }) {
 
-  const dispatch = useAppDispatch();
   const {
     control,
     handleSubmit,
@@ -34,7 +31,8 @@ function Login({
 
   // i will handle the login status later, maybe using toast
   const [loginTrigger, { error: loginError }] = useLoginMutation();
-  const [isSuccessWithGoogle, setIsSuccessWithGoogle] = useState(false);
+  const [getProfileTrigger, {error: getProfileError}] = useLazyGetProfileQuery();
+  // const [isSuccessWithGoogle, setIsSuccessWithGoogle] = useState(false);
 
   const { setOpenLoginModal } = useLoginContext();
 
@@ -48,7 +46,11 @@ function Login({
     await loginTrigger(data)
       .unwrap()
       .then((result) => {
-        window.localStorage.setItem("token", result.token);
+        window.localStorage.setItem("accessToken", result.accessToken);
+        window.localStorage.setItem("refreshToken", result.refreshToken);
+      })
+      .then(()=>{
+        getProfileTrigger(null);
         setOpenLoginModal(false);
       })
       .catch((error) => {
@@ -65,15 +67,6 @@ function Login({
       errorNotify()
     }
   }, [loginError]);
-
-  useEffect(() => {
-    if (isSuccessWithGoogle) {
-      dispatch(fetchCurrentUserWithGoogle(localStorage.getItem("googleToken") || ""))
-        .then(() => {
-          setOpenLoginModal(false);
-        });
-    }
-  }, [isSuccessWithGoogle, setOpenLoginModal, dispatch]);
 
 
   return (
@@ -152,7 +145,7 @@ function Login({
           Register
         </span>
       </p>
-      <LoginWithGoogle setIsSuccessWithGoogle={setIsSuccessWithGoogle} />
+      {/* <LoginWithGoogle setIsSuccessWithGoogle={setIsSuccessWithGoogle} /> */}
       <ToastContainer position="top-center" />
     </div>
   );
