@@ -1,6 +1,7 @@
 
 import { BaseDto, BaseQueryOptionType } from "./generalTypes";
 
+// image
 export interface ImageReadDto {
   id: string;
   url: string;
@@ -10,7 +11,7 @@ export interface ImageReadDto {
 export type ImageCreateDto = Pick<ImageReadDto, 'url'>;
 export type ImageUpdateDto = Pick<ImageReadDto, 'url'>;
 
-
+// product
 export interface ProductBase {
   title: string;
   description: string;
@@ -42,13 +43,14 @@ export interface ProductQueryOptionsType extends BaseQueryOptionType {
   sortBy?: "Title" | "Price" | "Created_Date" | "Updated_Date";
 }
 
+
 export interface ProductsState {
   products: ProductReadDto[];
   loading: boolean;
   error: string | null;
 }
 
-// note for later: cart type can be the same with orderProduct type, i will change it later
+// note for later: cart type can be the same with orderProduct type, i might change it later
 
 export interface CartItemType {
   id: string;
@@ -74,13 +76,3 @@ export interface CartState {
 }
 
 export type UserCartType = Pick<CartState, "products" | "total" | "userId" | "discountedTotal" | "totalProducts" | "totalQuantity"> & { id?: number };
-
-
-export interface CartQueryType {
-  carts: UserCartType[];
-  total: number;
-  skip: number;
-  limit: number;
-}
-
-export type ProductsInfoToCartApi = { productId: number; quantity: number };

@@ -1,11 +1,5 @@
 import { useEffect } from "react";
-import {
-  useForm,
-  Controller,
-  SubmitHandler,
-  useFieldArray,
-} from "react-hook-form";
-
+import { useForm, Controller, SubmitHandler, useFieldArray } from "react-hook-form";
 import { FloatingLabel, Select, Textarea } from "flowbite-react";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
@@ -15,12 +9,11 @@ import { ProductCreateDto } from "../../misc/productTypes";
 import { useGetAllCategoriesQuery } from "../../redux/slices/categoryApi";
 import { CategoryReadDto } from "../../misc/categoryTypes";
 
-function CreateProductForm({
-  setInfoFormModalOpen,
-}: {
+function CreateProductForm({ setInfoFormModalOpen }: {
   setInfoFormModalOpen: React.Dispatch<React.SetStateAction<boolean>>;
 }) {
   const { data: categories } = useGetAllCategoriesQuery(null);
+
   const emptyFormValues: ProductCreateDto = {
     title: "",
     description: "",
@@ -60,9 +53,8 @@ function CreateProductForm({
   });
 
   const onSubmit: SubmitHandler<ProductCreateDto> = async (data) => {
-    const submitData = {
-      ...data,
-    };
+    const submitData = data;
+    console.log(submitData);
     await createNewProductTrigger(submitData);
   };
 
@@ -72,15 +64,13 @@ function CreateProductForm({
   };
 
   const createNotify = () => toast.success("Successfully created product!");
-  const errorNotify = () =>
-    toast.error("Something went wrong, please try again");
+  const errorNotify = () => toast.error("Something went wrong, please try again");
 
   useEffect(() => {
     if (createNewProductSuccess) {
       createNotify();
     }
   }, [createNewProductSuccess]);
-
 
   useEffect(() => {
     if (createNewProductError) {
@@ -122,7 +112,7 @@ function CreateProductForm({
             name="categoryId"
             control={control}
             rules={{
-              required: "category is required",
+              required: "Category is required",
               validate: (value) => value !== "" || "Category is required",
             }}
             render={({ field }) => (
@@ -132,9 +122,9 @@ function CreateProductForm({
                 helperText={errors.categoryId && errors.categoryId.message}
                 {...field}
               >
-                <option value="">-- Select category-- </option>
+                <option value="">-- Select category --</option>
                 {categories?.map((category: CategoryReadDto) => (
-                  <option key={category.id} value={category.name}>
+                  <option key={category.id} value={category.id}>
                     {category.name.replace(category.name[0], category.name[0].toUpperCase())}
                   </option>
                 ))}
@@ -175,11 +165,11 @@ function CreateProductForm({
             rules={{
               max: {
                 value: 99,
-                message: "DiscountPercentage should not be more than 99",
+                message: "Discount Percentage should not be more than 99",
               },
               min: {
                 value: 0,
-                message: "DiscountPercentage should not be less than 0",
+                message: "Discount Percentage should not be less than 0",
               },
             }}
             render={({ field }) => (
@@ -188,9 +178,7 @@ function CreateProductForm({
                 label="Discount Percentage"
                 type="number"
                 color={errors.discountPercentage && "error"}
-                helperText={
-                  errors.discountPercentage && errors.discountPercentage.message
-                }
+                helperText={errors.discountPercentage && errors.discountPercentage.message}
                 className="dark:bg-gray-700"
                 {...field}
               />
@@ -210,7 +198,7 @@ function CreateProductForm({
               },
               min: {
                 value: 0,
-                message: "Price should not be less than 0",
+                message: "Stock should not be less than 0",
               },
             }}
             render={({ field }) => (
@@ -338,7 +326,7 @@ function CreateProductForm({
         ))}
         <button
           type="button"
-          onClick={() => append({url: "" })}
+          onClick={() => append({ url: "" })}
           className="btn-secondary"
         >
           Add Image URL
@@ -366,9 +354,7 @@ function CreateProductForm({
             className="btn-primary"
             disabled={createNewProductLoading}
           >
-            {createNewProductLoading
-              ? "Confirming ..."
-              : "Confirm"}
+            {createNewProductLoading ? "Confirming ..." : "Confirm"}
           </button>
         )}
       </form>

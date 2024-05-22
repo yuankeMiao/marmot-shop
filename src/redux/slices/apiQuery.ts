@@ -25,7 +25,7 @@ const apiQueries = createApi({
       return headers;
     },
   }),
-  tagTypes: ["Product", "Category", "User", "Cart"],
+  tagTypes: ["Product", "Category", "User", "Cart", "Review"],
   endpoints: (builder) => ({
     // get product related queries
     getAllProducts: builder.query<QueryResponse<ProductReadDto>, ProductQueryOptionsType>({
@@ -59,9 +59,13 @@ const apiQueries = createApi({
       providesTags: ["Product"],
     }),
 
+    getProductsBySearch: builder.query<QueryResponse<ProductReadDto>, string>({
+      query: (searchValue: string) => `/products?title=${searchValue}`,
+    }),
+
     getProductById: builder.query({
       query: (id: string) => `/products/${id}`,
-      providesTags: (result, error, arg) => [{ type: "Product", id: arg }],
+      providesTags:["Product"],
     }),
 
     // mutations
@@ -75,26 +79,18 @@ const apiQueries = createApi({
     }),
 
     updateProduct: builder.mutation({
-      query: ({ id, ...updateData }: {id: string, updateData: ProductUpdateDto}) => ({
+      query: ({ id, updateData }: {id: string, updateData: ProductUpdateDto}) => ({
         url: `/products/${id}`,
-        method: "PATCH",
-        body: { ...updateData },
-        headers:{
-          Authorization: `Bear ${localStorage.getItem("token")}`
-        }
+        method: "PUT",
+        body: updateData ,
       }),
-      invalidatesTags: (result, error, arg) => [
-        { type: "Product", id: arg.id },
-      ],
+      invalidatesTags:["Product"],
     }),
 
     deleteProduct: builder.mutation({
       query: (id: string) => ({
         url: `/products/${id}`,
         method: "DELETE",
-        headers:{
-          Authorization: `Bear ${localStorage.getItem("token")}`
-        }
       }),
       invalidatesTags: ["Product"],
     }),
@@ -103,6 +99,7 @@ const apiQueries = createApi({
 
 export const {
   useGetAllProductsQuery,
+  useLazyGetProductsBySearchQuery,
   useGetProductByIdQuery,
   useCreateNewProductMutation,
   useUpdateProductMutation,

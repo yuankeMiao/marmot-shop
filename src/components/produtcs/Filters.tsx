@@ -43,15 +43,15 @@ function Filters({
     }
 
     if (filter.minPrice !== undefined || filter.maxPrice !== undefined) {
-      if (filter.minPrice === undefined && filter.maxPrice === 20) {
+      if (filter.minPrice === undefined && filter.maxPrice === 100) {
         setPriceRange("1");
-      } else if (filter.minPrice === 20 && filter.maxPrice === 50) {
-        setPriceRange("2");
-      } else if (filter.minPrice === 50 && filter.maxPrice === 100) {
-        setPriceRange("3");
       } else if (filter.minPrice === 100 && filter.maxPrice === 200) {
+        setPriceRange("2");
+      } else if (filter.minPrice === 200 && filter.maxPrice === 400) {
+        setPriceRange("3");
+      } else if (filter.minPrice === 400 && filter.maxPrice === 600) {
         setPriceRange("4");
-      } else if (filter.minPrice === 200 && filter.maxPrice === undefined) {
+      } else if (filter.minPrice === 600 && filter.maxPrice === undefined) {
         setPriceRange("5");
       } else {
         setPriceRange("");
@@ -73,19 +73,19 @@ function Filters({
     setPriceRange(value);
     switch (value) {
       case "1":
-        setFilter((prev) => ({ ...prev, minPrice: undefined, maxPrice: 20 }));
+        setFilter((prev) => ({ ...prev, minPrice: undefined, maxPrice: 100 }));
         break;
       case "2":
-        setFilter((prev) => ({ ...prev, minPrice: 20, maxPrice: 50 }));
-        break;
-      case "3":
-        setFilter((prev) => ({ ...prev, minPrice: 50, maxPrice: 100 }));
-        break;
-      case "4":
         setFilter((prev) => ({ ...prev, minPrice: 100, maxPrice: 200 }));
         break;
+      case "3":
+        setFilter((prev) => ({ ...prev, minPrice: 200, maxPrice: 400 }));
+        break;
+      case "4":
+        setFilter((prev) => ({ ...prev, minPrice: 400, maxPrice: 600 }));
+        break;
       case "5":
-        setFilter((prev) => ({ ...prev, minPrice: 200, maxPrice: undefined }));
+        setFilter((prev) => ({ ...prev, minPrice: 600, maxPrice: undefined }));
         break;
       default:
         setFilter((prev) => ({
@@ -182,11 +182,11 @@ function Filters({
               value={priceRange}
             >
               <option value="">--default--</option>
-              <option value="1">0 € - 20 € </option>
-              <option value="2">20 € - 50 € </option>
-              <option value="3">50 € - 100 € </option>
-              <option value="4">100 € - 200 € </option>
-              <option value="5">over 200 € </option>
+              <option value="1">0 € - 100 € </option>
+              <option value="2">100 € - 200 € </option>
+              <option value="3">200 € - 400 € </option>
+              <option value="4">400 € - 600 € </option>
+              <option value="5">over 600 € </option>
             </select>
           </li>
 

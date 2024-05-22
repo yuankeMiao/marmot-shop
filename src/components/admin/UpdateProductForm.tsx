@@ -5,13 +5,11 @@ import {
   SubmitHandler,
   useFieldArray,
 } from "react-hook-form";
-
 import { FloatingLabel, Select, Textarea } from "flowbite-react";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
-
 import { useUpdateProductMutation } from "../../redux/slices/apiQuery";
-import { ProductUpdateDto } from "../../misc/productTypes";
+import { ProductReadDto, ProductUpdateDto } from "../../misc/productTypes";
 import { useGetAllCategoriesQuery } from "../../redux/slices/categoryApi";
 
 type FormValuesType = ProductUpdateDto;
@@ -20,11 +18,22 @@ function UpdateProductForm({
   initialValue,
   setInfoFormModalOpen,
 }: {
-  initialValue: { productUpdateDto: ProductUpdateDto; productId: string };
+  initialValue: ProductReadDto;
   setInfoFormModalOpen: React.Dispatch<React.SetStateAction<boolean>>;
 }) {
   const { data: categories } = useGetAllCategoriesQuery(null);
-  const initialFormValues = initialValue.productUpdateDto;
+  const initialFormValues: ProductUpdateDto = {
+    title: initialValue.title,
+    description: initialValue.description,
+    price: initialValue.price,
+    discountPercentage: initialValue.discountPercentage,
+    stock: initialValue.stock,
+    brand: initialValue.brand,
+    categoryId: initialValue.categoryId,
+    thumbnail: initialValue.thumbnail,
+    images: initialValue.images.map((image) => ({ url: image.url })),
+  };
+
   const [
     updateProductTrigger,
     {
@@ -48,12 +57,13 @@ function UpdateProductForm({
   });
 
   const onSubmit: SubmitHandler<FormValuesType> = async (data) => {
-    const submitData = {
-      ...data,
-    };
+    const submitData = { ...data };
+    console.log("Submitting data:", submitData);
     await updateProductTrigger({
-      id: initialValue.productId,
+      id: initialValue.id,
       updateData: submitData,
+    }).then((result) => {
+      setInfoFormModalOpen(false);
     });
   };
 
@@ -64,6 +74,7 @@ function UpdateProductForm({
   useEffect(() => {
     if (updateProductSuccess) {
       updateNotify();
+      setInfoFormModalOpen(false);
     }
   }, [updateProductSuccess]);
 
@@ -110,11 +121,11 @@ function UpdateProductForm({
                 id="categoryOptions"
                 color={errors.categoryId && "failure"}
                 helperText={errors.categoryId && errors.categoryId.message}
-                {...field}
+                {...field} // Ensures value and onChange are correctly handled
               >
-                <option value="">-- Select category-- </option>
+                <option value="">-- Select category --</option>
                 {categories?.map((category) => (
-                  <option key={category.id} value={category.name}>
+                  <option key={category.id} value={category.id}>
                     {category.name.replace(
                       category.name[0],
                       category.name[0].toUpperCase()
@@ -157,11 +168,11 @@ function UpdateProductForm({
             rules={{
               max: {
                 value: 99,
-                message: "DiscountPercentage should not be more than 99",
+                message: "Discount Percentage should not be more than 99",
               },
               min: {
                 value: 0,
-                message: "DiscountPercentage should not be less than 0",
+                message: "Discount Percentage should not be less than 0",
               },
             }}
             render={({ field }) => (
@@ -179,7 +190,6 @@ function UpdateProductForm({
             )}
           />
         </div>
-
         <div className="form-row">
           <Controller
             name="stock"
@@ -191,7 +201,7 @@ function UpdateProductForm({
               },
               min: {
                 value: 0,
-                message: "Price should not be less than 0",
+                message: "Stock should not be less than 0",
               },
             }}
             render={({ field }) => (
@@ -263,12 +273,6 @@ function UpdateProductForm({
           <Controller
             name="thumbnail"
             control={control}
-            rules={{
-              pattern: {
-                value: /\.(gif|jpe?g|tiff|png|webp|bmp)$/i,
-                message: "Invalid image url",
-              },
-            }}
             render={({ field }) => (
               <FloatingLabel
                 variant="outlined"
@@ -286,12 +290,6 @@ function UpdateProductForm({
           <div key={field.id} className="form-row">
             <Controller
               control={control}
-              rules={{
-                pattern: {
-                  value: /\.(gif|jpe?g|tiff|png|webp|bmp)$/i,
-                  message: "Invalid image url",
-                },
-              }}
               name={`images.${index}.url`}
               defaultValue={field.url}
               render={({ field }) => (

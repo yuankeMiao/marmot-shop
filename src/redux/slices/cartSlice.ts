@@ -11,6 +11,10 @@ const initialState: CartState = {
   loading: false,
 };
 
+const roundToTwoDecimals = (value: number): number => {
+  return parseFloat(value.toFixed(2));
+};
+
 const cartSlice = createSlice({
   name: "cart",
   initialState,
@@ -23,29 +27,31 @@ const cartSlice = createSlice({
       );
       if (existItem) {
         existItem.quantity += addToCartItem.quantity;
-        existItem.total += addToCartItem.total;
-        existItem.discountedPrice += addToCartItem.discountedPrice;
+        existItem.total = roundToTwoDecimals(existItem.total + addToCartItem.total);
+        existItem.discountedPrice = roundToTwoDecimals(existItem.discountedPrice + addToCartItem.discountedPrice);
       } else {
         state.products.push(addToCartItem);
         state.totalProducts += 1;
       }
-      state.total += addToCartItem.total;
-      state.discountedTotal += addToCartItem.discountedPrice;
+      state.total = roundToTwoDecimals(state.total + addToCartItem.total);
+      state.discountedTotal = roundToTwoDecimals(state.discountedTotal + addToCartItem.discountedPrice);
       state.totalQuantity += addToCartItem.quantity;
     },
 
-    // recieve the id, then filter it out
+    // receive the id, then filter it out
     removeFromCart: (state, action: PayloadAction<string>) => {
       const itemToDelete = state.products.find(
         (item) => item.id === action.payload
       );
-      state.products = state.products.filter(
-        (item) => item.id !== action.payload
-      );
-      state.totalProducts -= 1;
-      state.total -= itemToDelete?.total || 0;
-      state.discountedTotal -= itemToDelete?.discountedPrice || 0;
-      state.totalQuantity -= itemToDelete?.quantity || 0;
+      if (itemToDelete) {
+        state.products = state.products.filter(
+          (item) => item.id !== action.payload
+        );
+        state.totalProducts -= 1;
+        state.total = roundToTwoDecimals(state.total - itemToDelete.total);
+        state.discountedTotal = roundToTwoDecimals(state.discountedTotal - itemToDelete.discountedPrice);
+        state.totalQuantity -= itemToDelete.quantity;
+      }
     },
 
     // update the quantity of the item
@@ -56,14 +62,14 @@ const cartSlice = createSlice({
       const { id, quantity } = action.payload;
       const item = state.products.find((item) => item.id === id);
       if (item) {
-        const itemDiscountedPrice = Math.round(
-          (item.price * quantity * (100 - item.discountPercentage))
-        )/100;
+        const itemDiscountedPrice = roundToTwoDecimals(
+          item.price * quantity * (100 - item.discountPercentage) / 100
+        );
         state.totalQuantity += quantity - item.quantity;
-        state.total += (quantity - item.quantity) * item.price;
-        state.discountedTotal += itemDiscountedPrice - item.discountedPrice;
+        state.total = roundToTwoDecimals(state.total + (quantity - item.quantity) * item.price);
+        state.discountedTotal = roundToTwoDecimals(state.discountedTotal + itemDiscountedPrice - item.discountedPrice);
         item.quantity = quantity;
-        item.total = quantity * item.price;
+        item.total = roundToTwoDecimals(quantity * item.price);
         item.discountedPrice = itemDiscountedPrice;
       }
     },

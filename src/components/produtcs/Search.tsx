@@ -5,7 +5,7 @@ import { Modal, TextInput } from "flowbite-react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faMagnifyingGlass } from "@fortawesome/free-solid-svg-icons";
 
-import { useGetAllProductsQuery } from "../../redux/slices/apiQuery";
+import { useLazyGetProductsBySearchQuery } from "../../redux/slices/apiQuery";
 import { ErrorType } from "../../misc/errorTypes";
 import { ProductReadDto } from "../../misc/productTypes";
 
@@ -15,31 +15,33 @@ function Search() {
   const [openModal, setOpenModal] = useState(false);
   const [input, setInput] = useState<string>("");
 
+  const [triggerSearch, {data: searchResult, error: searchError, isLoading:searchIsLoading}] = useLazyGetProductsBySearchQuery()
+
   const [productList, setProductList] = useState<ProductReadDto[]>([]);
-  const {
-    data,
-    isLoading: productsIsLoading,
-    error: productsError,
-  } = useGetAllProductsQuery({ title: input });
 
   useEffect(() => {
-    if (data) {
-      setProductList(data.data);
+    if (searchResult) {
+      setProductList(searchResult.data);
     }
-  }, [data]);
+  }, [searchResult]);
+
+  const debouncedSearch = useCallback(
+    debounce((value: string) => {
+      triggerSearch(value)
+    }, 1000),
+    []
+  );
+
+  useEffect(() => {
+    debouncedSearch(input);
+    return () => {
+      debouncedSearch.cancel();
+    };
+  }, [input, debouncedSearch]);
 
   const handleInput = (e: React.ChangeEvent<HTMLInputElement>) => {
     setInput(e.target.value);
   };
-
-  const debouncedHandleInput = useCallback(debounce(handleInput, 1000), []);
-
-  useEffect(() => {
-    debouncedHandleInput({ target: { value: input } });
-    return () => {
-      debouncedHandleInput.cancel();
-    };
-  }, [input, debouncedHandleInput]);
 
   const handleClickProduct = () => {
     setOpenModal(false);
@@ -74,7 +76,7 @@ function Search() {
             value={input}
             onChange={handleInput}
           />
-          {productsIsLoading && (
+          {searchIsLoading && (
             <div className="dark:text-gray-100">Loading ...</div>
           )}
           {input.length > 0 && productList?.length === 0 && (
@@ -122,9 +124,9 @@ function Search() {
                 </Link>
               </div>
             ))}
-          {productsError && "data" in productsError && (
+          {searchError && "data" in searchError && (
             <div className="dark:text-gray-100">
-              <p>{(productsError as ErrorType).data.message}</p>
+              <p>{(searchError as ErrorType).data.message}</p>
             </div>
           )}
         </Modal.Body>

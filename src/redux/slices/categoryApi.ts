@@ -30,7 +30,7 @@ const categoryApi = apiQueries.injectEndpoints({
     updateCategory: builder.mutation({
       query: ({ id, ...updateData }: {id: string, updateData: CategoryUpdateDto}) => ({
         url: `/categories/${id}`,
-        method: "PATCH",
+        method: "PUT",
         body: { ...updateData },
       }),
       invalidatesTags: (result, error, arg) => [

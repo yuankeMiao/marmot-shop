@@ -195,7 +195,7 @@ function Dashboard() {
         </Modal.Header>
         <Modal.Body>
          {selectedProduct ? 
-         <UpdateProductForm initialValue={{productUpdateDto: {...selectedProduct}, productId: selectedProduct.id }} setInfoFormModalOpen={setInfoFormModalOpen} /> :
+         <UpdateProductForm initialValue={selectedProduct} setInfoFormModalOpen={setInfoFormModalOpen} /> :
          <CreateProductForm setInfoFormModalOpen={setInfoFormModalOpen}/>}
         </Modal.Body>
       </Modal>
