@@ -1,27 +1,39 @@
 import { useState, useEffect, useCallback } from "react";
 import { TextInput, Table, Modal } from "flowbite-react";
 
-import { useLazyGetProductsBySearchQuery } from "../redux/slices/apiQuery";
 import { useAppSelector } from "../appHooks/reduxHooks";
-import ProductManageForm from "../components/admin/ProductManageForm";
-import { ProductType } from "../misc/productTypes";
+import ProductManageForm from "../components/admin/UpdateProductForm";
+import { ProductReadDto } from "../misc/productTypes";
 import TableItemLoader from "../components/skeleton/TableItemLoader";
 import DeleteProduct from "../components/admin/DeleteProduct";
+import { useGetAllProductsQuery } from "../redux/slices/apiQuery";
+import { useGetAllCategoriesQuery } from "../redux/slices/categoryApi";
+import UpdateProductForm from "../components/admin/UpdateProductForm";
+import CreateProductForm from "../components/admin/CreateProductForm";
 
-const debounce = require("lodash.debounce");
 
 function Dashboard() {
   const [InfoFormModalOpen, setInfoFormModalOpen] = useState(false);
-  const [selectedProduct, setSelectedProduct] = useState<ProductType | null>(
+  const [selectedProduct, setSelectedProduct] = useState<ProductReadDto | null>(
     null
   );
 
-  const [
-    getProductsBySearchTrigger,
-    { data: searchResult, isLoading, isFetching },
-  ] = useLazyGetProductsBySearchQuery();
+  const { data: categories, error: categoryError, isLoading: categoryIsLoading } = useGetAllCategoriesQuery(null);
 
-  const handleEdit = useCallback((product: ProductType) => {
+  const {data: productsQueryResult, error, isLoading, isFetching} = useGetAllProductsQuery({
+    offset: 0,
+    limit: 50
+  })
+  
+  const products = productsQueryResult?.data;
+  const totalProduct = productsQueryResult?.totalCount;
+
+  // const [
+  //   getProductsBySearchTrigger,
+  //   { data: searchResult, isLoading, isFetching },
+  // ] = useLazyGetProductsBySearchQuery();
+
+  const handleEdit = useCallback((product: ProductReadDto) => {
     setSelectedProduct(product);
     setInfoFormModalOpen(true);
   }, []);
@@ -32,24 +44,24 @@ function Dashboard() {
     setInfoFormModalOpen(true);
   }, []);
 
-  const [input, setInput] = useState<string>("");
+  // const [input, setInput] = useState<string>("");
 
-  const handleInput = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setInput(e.target.value);
-  };
+  // const handleInput = (e: React.ChangeEvent<HTMLInputElement>) => {
+  //   setInput(e.target.value);
+  // };
 
-  const handleSearch = () => {
-    getProductsBySearchTrigger(input);
-  };
+  // const handleSearch = () => {
+  //   getProductsBySearchTrigger(input);
+  // };
 
-  const debounced = useCallback(debounce(handleSearch, 1000), [input]);
+  // const debounced = useCallback(debounce(handleSearch, 1000), [input]);
 
-  useEffect(() => {
-    debounced();
-    return () => {
-      debounced.cancel();
-    };
-  }, [input, debounced]);
+  // useEffect(() => {
+  //   debounced();
+  //   return () => {
+  //     debounced.cancel();
+  //   };
+  // }, [input, debounced]);
 
   const { user: currentUser, isLoading: currentUserIsLoading } = useAppSelector(
     (state) => state.currentUser
@@ -70,7 +82,7 @@ function Dashboard() {
       <button className="btn-primary max-w-min" onClick={() => handleAdd()}>
         Add New Product
       </button>
-      <label htmlFor="search-admin" className="sr-only">
+      {/* <label htmlFor="search-admin" className="sr-only">
         Search
       </label>
       <TextInput
@@ -81,11 +93,11 @@ function Dashboard() {
         placeholder="Search products"
         value={input}
         onChange={handleInput}
-      />
+      /> */}
       <div>
-        {input.length > 0 && searchResult?.length === 0 && (
+        {/* {input.length > 0 && searchResult?.length === 0 && (
           <div>There is no result, try another keyword.</div>
-        )}
+        )} */}
         <Table hoverable>
           <Table.Head>
             <Table.HeadCell className="hidden md:table-cell">
@@ -123,7 +135,7 @@ function Dashboard() {
                 <TableItemLoader />
               </>
             )}
-            {searchResult?.map((product) => (
+            {products?.map((product) => (
               <Table.Row key={product.id}>
                 <Table.Cell className="hidden md:table-cell">
                   <img
@@ -134,7 +146,7 @@ function Dashboard() {
                 </Table.Cell>
                 <Table.Cell>{product.title}</Table.Cell>
                 <Table.Cell className="hidden lg:table-cell">
-                  {product.category}
+                  {categories?.filter(c => c.id === product.categoryId)[0].name}
                 </Table.Cell>
                 <Table.Cell className="hidden lg:table-cell">
                   {product.brand}
@@ -176,10 +188,9 @@ function Dashboard() {
           {selectedProduct ? "Edit Product" : "Add New Product"}
         </Modal.Header>
         <Modal.Body>
-          <ProductManageForm
-            initialValue={selectedProduct}
-            setInfoFormModalOpen={setInfoFormModalOpen}
-          />
+         {selectedProduct ? 
+         <UpdateProductForm initialValue={{productUpdateDto: {...selectedProduct}, productId: selectedProduct.id }} setInfoFormModalOpen={setInfoFormModalOpen} /> :
+         <CreateProductForm setInfoFormModalOpen={setInfoFormModalOpen}/>}
         </Modal.Body>
       </Modal>
     </div>

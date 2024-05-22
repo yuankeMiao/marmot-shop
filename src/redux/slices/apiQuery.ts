@@ -11,7 +11,6 @@ import type {
   ProductUpdateDto,
 } from "../../misc/productTypes";
 import { BACKEND_URL } from "../../misc/constants";
-import { UUID } from "crypto";
 import { QueryResponse } from "../../misc/generalTypes";
 
 const apiQueries = createApi({
@@ -37,10 +36,10 @@ const apiQueries = createApi({
         const params = new URLSearchParams();
         if (title) params.append("title", title);
         if (minPrice !== undefined)
-          params.append("min_price", minPrice.toString());
+          params.append("minPrice", minPrice.toString());
         if (maxPrice !== undefined)
-          params.append("max_price", maxPrice.toString());
-        if (categoryId) params.append("category_id", categoryId);
+          params.append("maxPrice", maxPrice.toString());
+        if (categoryId) params.append("categoryId", categoryId);
         if (inStock !== undefined)
           params.append("in_stock", inStock.toString());
         if (limit) params.append("limit", limit.toString());
@@ -51,18 +50,10 @@ const apiQueries = createApi({
         return `/products?${params.toString()}`;
       },
       providesTags: ["Product"],
-      transformResponse: (response: Array<ProductReadDto>, meta) => {
-        const totalCount = meta?.response?.headers.get('X-Total-Count');
-        
-        return {
-          products: response,
-          totalCount: totalCount ? parseInt(totalCount) : 0
-        };
-      },
     }),
 
     getProductById: builder.query({
-      query: (id: UUID) => `/products/${id}`,
+      query: (id: string) => `/products/${id}`,
       providesTags: (result, error, arg) => [{ type: "Product", id: arg }],
     }),
 
@@ -77,10 +68,13 @@ const apiQueries = createApi({
     }),
 
     updateProduct: builder.mutation({
-      query: ({ id, ...updateData }: ProductUpdateDto) => ({
+      query: ({ id, ...updateData }: {id: string, updateData: ProductUpdateDto}) => ({
         url: `/products/${id}`,
         method: "PATCH",
         body: { ...updateData },
+        headers:{
+          Authorization: `Bear ${localStorage.getItem("token")}`
+        }
       }),
       invalidatesTags: (result, error, arg) => [
         { type: "Product", id: arg.id },
@@ -88,9 +82,12 @@ const apiQueries = createApi({
     }),
 
     deleteProduct: builder.mutation({
-      query: (id: UUID) => ({
+      query: (id: string) => ({
         url: `/products/${id}`,
         method: "DELETE",
+        headers:{
+          Authorization: `Bear ${localStorage.getItem("token")}`
+        }
       }),
       invalidatesTags: (result, error, id) => [{ type: "Product", id }],
     }),

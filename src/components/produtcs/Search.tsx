@@ -5,8 +5,9 @@ import { Modal, TextInput } from "flowbite-react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faMagnifyingGlass } from "@fortawesome/free-solid-svg-icons";
 
-import { useLazyGetProductsBySearchQuery } from "../../redux/slices/apiQuery";
+import { useGetAllProductsQuery } from "../../redux/slices/apiQuery";
 import { ErrorType } from "../../misc/errorTypes";
+import { ProductReadDto } from "../../misc/productTypes";
 
 const debounce = require("lodash.debounce");
 
@@ -14,23 +15,29 @@ function Search() {
   const [openModal, setOpenModal] = useState(false);
   const [input, setInput] = useState<string>("");
 
-  const [triggerSearch, { data: searchResult, isLoading, isFetching, error }] =
-    useLazyGetProductsBySearchQuery();
+  const [productList, setProductList] = useState<ProductReadDto[]>([]);
+  const {data, isLoading: productsIsLoading, error: productsError} = useGetAllProductsQuery({title: input});
+
+ 
+  useEffect(() => {
+    if (data) {
+      setProductList(data.data);
+    }
+  }, [data]);
+
+
 
   const handleInput = (e: React.ChangeEvent<HTMLInputElement>) => {
     setInput(e.target.value);
   };
 
-  const handleSearch = () => {
-    triggerSearch(input);
-  };
 
   const handleClickProduct = () => {
     setOpenModal(false);
     setInput("");
   };
 
-  const debounced = useCallback(debounce(handleSearch, 1000), [input]);
+  const debounced = useCallback(debounce(handleInput, 1000), [input]);
 
   useEffect(() => {
     if (input.length > 0) debounced();
@@ -67,16 +74,16 @@ function Search() {
             value={input}
             onChange={handleInput}
           />
-          {(isLoading || isFetching) && (
+          {(productsIsLoading ) && (
             <div className="dark:text-gray-100">Loading ...</div>
           )}
-          {input.length > 0 && searchResult?.length === 0 && (
+          {input.length > 0 && productList?.length === 0 && (
             <div className="dark:text-gray-100">
               <p>There is no result, try another keyword.</p>
             </div>
           )}
           {input.length > 0 &&
-            searchResult?.map((product) => (
+            productList?.map((product) => (
               <div
                 key={product.id}
                 className="border-b-2 dark:border-gray-400 last:border-none dark:text-gray-100"
@@ -109,9 +116,9 @@ function Search() {
                 </Link>
               </div>
             ))}
-          {error && "data" in error && (
+          {productsError && "data" in productsError && (
             <div className="dark:text-gray-100">
-              <p>{(error as ErrorType).data.message}</p>
+              <p>{(productsError as ErrorType).data.message}</p>
             </div>
           )}
         </Modal.Body>

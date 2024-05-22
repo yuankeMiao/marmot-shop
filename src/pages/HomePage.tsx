@@ -5,7 +5,6 @@ import useFetchRandomQuote from "../appHooks/useFetchRandomQuote";
 import { useGetAllProductsQuery } from "../redux/slices/apiQuery";
 import CardLoader from "../components/skeleton/CardLoader";
 
-
 function HomePage() {
   const {
     quote,
@@ -13,7 +12,12 @@ function HomePage() {
     error: errorQuote,
   } = useFetchRandomQuote();
 
-  const { data, error, isLoading } = useGetAllProductsQuery(10);
+  const { data, error, isLoading } = useGetAllProductsQuery({
+    offset: 0,
+    limit: 20,
+  });
+
+
 
   return (
     <div className="*:mb-12 last:pb-40" >
@@ -58,7 +62,7 @@ function HomePage() {
               <CardLoader />
             </>
           )}
-          {data?.map((product) => (
+          {data?.data.map((product) => (
             <ProductCard productItem={product} key={product.id} />
           ))}
         </div>

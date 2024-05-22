@@ -4,7 +4,7 @@ import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 
 import { CurrentUserType, UserType } from "../../misc/userTypes";
-import { useUpdateUserMutation } from "../../redux/slices/userApi";
+import { useUpdateUserMutation } from "../../redux/slices/authApi";
 import { useEffect } from "react";
 
 function UpdateForm({ userInfo }: { userInfo: Partial<CurrentUserType> }) {

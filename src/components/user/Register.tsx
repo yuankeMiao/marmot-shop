@@ -1,12 +1,11 @@
-
 import React from "react";
 import { useForm, Controller, SubmitHandler } from "react-hook-form";
 import { FloatingLabel } from "flowbite-react";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 
-import { RegisterType, UserType } from "../../misc/userTypes";
-import { useRegisterMutation } from "../../redux/slices/userApi";
+import { RegisterType } from "../../misc/userTypes";
+import { useRegisterMutation } from "../../redux/slices/authApi";
 import { useLoginContext } from "../../appHooks/useLoginContext";
 import { useEffect } from "react";
 
@@ -15,29 +14,36 @@ function Register({
 }: {
   setOpenRegisterModal: React.Dispatch<React.SetStateAction<boolean>>;
 }) {
-  const [registerTrigger, { isSuccess, isLoading, error }] = useRegisterMutation();
+  const [registerTrigger, { isSuccess, isLoading, error }] =
+    useRegisterMutation();
   const { setOpenLoginModal } = useLoginContext();
 
   const initialUserInfo = {
-    username: "",
-    email: "",
     firstName: "",
     lastName: "",
+    email: "",
     password: "",
     confirmPassword: "",
-    image: "",
+    avatar: "",
   };
   const {
     control,
     getValues,
     handleSubmit,
     formState: { errors },
-  } = useForm<UserType>({
+  } = useForm<RegisterType>({
     defaultValues: initialUserInfo,
   });
 
-  const onSubmit: SubmitHandler<UserType> = (data) => {
-    registerTrigger(data as RegisterType);
+  const onSubmit: SubmitHandler<RegisterType> = (data) => {
+    registerTrigger({
+      firstname: data.firstname,
+      lastname: data.lastname,
+      email: data.email,
+      password: data.password,
+      avatar: data.avatar,
+      UserRole: "Customer",
+    });
   };
 
   const handleLoginViaRegister = () => {
@@ -45,7 +51,8 @@ function Register({
     setOpenLoginModal(true);
   };
 
-  const errorNotify = () => toast.error("Something wrong with register, please try again later");
+  const errorNotify = () =>
+    toast.error("Something wrong with register, please try again later");
   useEffect(() => {
     if (error) {
       errorNotify();
@@ -68,31 +75,60 @@ function Register({
       <form onSubmit={handleSubmit(onSubmit)} className="form-control">
         <div className="form-row">
           <Controller
-            name="username"
+            name="firstname"
             control={control}
             rules={{
-              required: "Username is required",
+              required: "First anme is required",
               maxLength: {
                 value: 20,
-                message: "Username should not be more than 20 characters",
+                message: "First anme should not be more than 20 characters",
               },
               minLength: {
-                value: 3,
-                message: "User name should not be less than 3 characters",
+                value: 2,
+                message: "First anme should not be less than 2 characters",
               },
             }}
             render={({ field }) => (
               <FloatingLabel
                 variant="outlined"
-                label="Username"
+                label="Firstname"
                 type="text"
-                color={errors.username && "error"}
-                helperText={errors.username && errors.username.message}
+                color={errors.firstname && "error"}
+                helperText={errors.lastname && errors.lastname.message}
                 className="inputOverride dark:bg-gray-700 dark:inputDarkModeOverride"
                 {...field}
               />
             )}
           />
+          <Controller
+            name="lastname"
+            control={control}
+            rules={{
+              required: "Last name is required",
+              maxLength: {
+                value: 20,
+                message: "Last name should not be more than 20 characters",
+              },
+              minLength: {
+                value: 3,
+                message: "Last name should not be less than 3 characters",
+              },
+            }}
+            render={({ field }) => (
+              <FloatingLabel
+                variant="outlined"
+                label="Lastname"
+                type="text"
+                color={errors.lastname && "error"}
+                helperText={errors.lastname && errors.lastname.message}
+                className="inputOverride dark:bg-gray-700 dark:inputDarkModeOverride"
+                {...field}
+              />
+            )}
+          />
+        </div>
+
+        <div className="form-row">
           <Controller
             name="email"
             control={control}
@@ -114,60 +150,6 @@ function Register({
           />
         </div>
 
-        <div className="form-row">
-          <Controller
-            name="firstName"
-            control={control}
-            rules={{
-              required: "First anme is required",
-              maxLength: {
-                value: 20,
-                message: "First anme should not be more than 20 characters",
-              },
-              minLength: {
-                value: 2,
-                message: "First anme should not be less than 2 characters",
-              },
-            }}
-            render={({ field }) => (
-              <FloatingLabel
-                variant="outlined"
-                label="Firstname"
-                type="text"
-                color={errors.firstName && "error"}
-                helperText={errors.lastName && errors.lastName.message}
-                className="inputOverride dark:bg-gray-700 dark:inputDarkModeOverride"
-                {...field}
-              />
-            )}
-          />
-          <Controller
-            name="lastName"
-            control={control}
-            rules={{
-              required: "Last name is required",
-              maxLength: {
-                value: 20,
-                message: "Last name should not be more than 20 characters",
-              },
-              minLength: {
-                value: 3,
-                message: "Last name should not be less than 3 characters",
-              },
-            }}
-            render={({ field }) => (
-              <FloatingLabel
-                variant="outlined"
-                label="Lastname"
-                type="text"
-                color={errors.lastName && "error"}
-                helperText={errors.lastName && errors.lastName.message}
-                className="inputOverride dark:bg-gray-700 dark:inputDarkModeOverride"
-                {...field}
-              />
-            )}
-          />
-        </div>
         <div className="form-row">
           <Controller
             name="password"
@@ -221,14 +203,14 @@ function Register({
         </div>
         <div className="form-row">
           <Controller
-            name="image"
+            name="avatar"
             control={control}
             render={({ field }) => (
               <FloatingLabel
                 variant="outlined"
                 label="Avatar URL"
                 type="text"
-                helperText={errors.image && errors.image.message}
+                helperText={errors.avatar && errors.avatar.message}
                 className="inputOverride dark:bg-gray-700 dark:inputDarkModeOverride"
                 {...field}
               />

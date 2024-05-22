@@ -35,7 +35,7 @@ describe("productQuery", () => {
       apiQueries.endpoints.getAllProducts.initiate({ limit: 2, offset: 0 })
     );
 
-    expect(data?.products).toHaveLength(5);
+    expect(data?.data).toHaveLength(5);
     expect(data?.totalCount).toBe(15);
   });
 
@@ -95,13 +95,16 @@ describe("productQuery", () => {
 
   //test 5: updateProduct
   test("updateProduct", async () => {
+    const id = "0b85429d-e09e-44ed-ba86-0872999f6d0b";
     const updatedProduct: ProductUpdateDto = {
-      id: "0b85429d-e09e-44ed-ba86-0872999f6d0b",
       title: "Updated Product",
     };
 
     let returnedData = await store
-      .dispatch(apiQueries.endpoints.updateProduct.initiate(updatedProduct))
+      .dispatch(apiQueries.endpoints.updateProduct.initiate({
+        id: id,
+        updateData: updatedProduct,
+      }))
       .then((data) => {
         if ("data" in data) {
           return data.data as ProductReadDto;

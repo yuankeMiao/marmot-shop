@@ -57,7 +57,7 @@ describe("categoryApi", () => {
       )
     );
 
-    expect(data.name).toBe("Sport"); 
+    expect(data?.name).toBe("Sport");
   });
 
   // test 4: createCategory
@@ -82,13 +82,18 @@ describe("categoryApi", () => {
 
   // test 5: updateCategory
   test("updateCategory", async () => {
+    const id = "c9ca9167-f233-41c5-a7cf-310668112cdb";
     const updatedCategory: CategoryUpdateDto = {
-      id: "c9ca9167-f233-41c5-a7cf-310668112cdb",
       name: "Updated Category",
     };
 
     let returnedData = await store
-      .dispatch(categoryApi.endpoints.updateCategory.initiate(updatedCategory))
+      .dispatch(
+        categoryApi.endpoints.updateCategory.initiate({
+          id: id,
+          updateData: updatedCategory,
+        })
+      )
       .then((data) => {
         if ("data" in data) {
           return data.data as CategoryReadDto;
@@ -105,7 +110,7 @@ describe("categoryApi", () => {
     let returnedData = await store
       .dispatch(
         categoryApi.endpoints.deleteCategory.initiate(
-            "c9ca9167-f233-41c5-a7cf-310668112cdb"
+          "c9ca9167-f233-41c5-a7cf-310668112cdb"
         )
       )
       .then((data) => {

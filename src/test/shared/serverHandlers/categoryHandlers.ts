@@ -1,12 +1,13 @@
 import { HttpResponse, http } from "msw";
+import { v4 as uuidv4 } from 'uuid';
 import { BACKEND_URL } from "../../../misc/constants";
-import { randomUUID } from "crypto";
 import mockCategories from "../mockData/mockCategories";
 import {
   CategoryCreateDto,
   CategoryReadDto,
   CategoryUpdateDto,
 } from "../../../misc/categoryTypes";
+
 
 export const categoryHandlers = [
   http.get(`${BACKEND_URL}/categories`, async () => {
@@ -24,7 +25,7 @@ export const categoryHandlers = [
     const category = (await request.json()) as CategoryCreateDto;
     const newCategory: CategoryReadDto = {
       ...category,
-      id: randomUUID(),
+      id: uuidv4(),
       createdDate: new Date(),
       updatedDate: new Date(),
     };

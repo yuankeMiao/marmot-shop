@@ -3,10 +3,10 @@ import { Pagination } from "flowbite-react";
 
 import { useGetAllProductsQuery } from "../../redux/slices/apiQuery";
 import ProductCard from "./ProductCard";
-import { FilterType, ProductReadDto } from "../../misc/productTypes";
+import { ProductQueryOptionsType, ProductReadDto } from "../../misc/productTypes";
 import CardLoader from "../skeleton/CardLoader";
 
-function DisplayProducts({ filter }: { filter: FilterType }) {
+function DisplayProducts({ filter }: { filter: ProductQueryOptionsType }) {
   // pagination
   const itemsPerPage = 12;
   const [currentPage, setCurrentPage] = useState(1);
@@ -17,13 +17,14 @@ function DisplayProducts({ filter }: { filter: FilterType }) {
 
   const [productList, setProductList] = useState<ProductReadDto[]>([]);
   const { data, error, isLoading } = useGetAllProductsQuery({
+    ...filter,
     limit: itemsPerPage,
     offset: (currentPage - 1) * itemsPerPage,
   });
 
   useEffect(() => {
     if (data) {
-      setProductList(data.products);
+      setProductList(data.data);
       setTotalItems(data.totalCount);
     }
   }, [data]);
@@ -31,7 +32,7 @@ function DisplayProducts({ filter }: { filter: FilterType }) {
   // otherwise after user on other page, then choose category, it will not work, becasue currentPage is still the same
   useEffect(() => {
     setCurrentPage(1);
-  }, [filter.category]);
+  }, [filter.categoryId]);
 
   // no need to calculate total pages if totalItems didn't change, ie. on all products
   const totalPages = useMemo(

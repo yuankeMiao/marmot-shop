@@ -2,7 +2,7 @@ import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import axios, { AxiosError } from "axios";
 
 import { CurrentUserStateType } from "../../misc/userTypes";
-import { DUMMYJSON_URL } from "../../misc/constants";
+import { BACKEND_URL } from "../../misc/constants";
 
 const initialState: CurrentUserStateType = {
   user: null,
@@ -14,7 +14,7 @@ export const fetchCurrentUser = createAsyncThunk(
   "fetchCurrentUser",
   async (accessToken: string, { rejectWithValue }) => {
     try {
-      const response = await axios.get(DUMMYJSON_URL + `/auth/me`, {
+      const response = await axios.get(BACKEND_URL + `/auth/me`, {
         headers: {
           Authorization: `Bearer ${accessToken}`,
         },
@@ -59,9 +59,6 @@ const currentUserSlice = createSlice({
     builder.addCase(fetchCurrentUser.fulfilled, (state, action) => {
       state.user = {
         ...action.payload,
-        role: action.payload.id === 1 ? "admin" : "user",
-        // because my api doesn't have role field
-        // so I added this by myself by setting the No.1 user as admin
       };
       state.isLoading = false;
     });

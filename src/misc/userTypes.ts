@@ -1,5 +1,7 @@
-export type LoginType = {
-  username: string;
+import { BaseDto, BaseQueryOptionType } from "./generalTypes";
+
+export type UserCredential = {
+  email: string;
   password: string;
 };
 
@@ -26,31 +28,44 @@ export type UserType = {
   confirmPassword?: string;
 };
 
-
-
-export type CurrentUserStateType= {
+export type CurrentUserStateType = {
   user: CurrentUserType | null;
   isLoading: boolean;
   error: number | null | string;
 };
 
 export type CurrentUserType = {
-    id: number;
-    username: string;
-    email: string;
-    firstName: string;
-    lastName: string;
-    image: string;
-    role: "user" | "admin";
-    address: AddressType | null;
-    };
-
-export type RegisterType = {
+  id: number;
   username: string;
   email: string;
-  password: string;
-  confirmPassword: string;
   firstName: string;
   lastName: string;
   image: string;
+  role: "user" | "admin";
+  address: AddressType | null;
 };
+
+export interface RegisterType extends Omit<UserBase, "UserRole"> {
+  confirmPassword: string;
+}
+
+export interface UserBase {
+  firstname: string;
+  lastname: string;
+  email: string;
+  avatar?: string;
+  UserRole: "Customer" | "Admin";
+  password: string;
+}
+
+export interface UserReadDto extends Omit<UserBase, "password">, BaseDto {}
+
+export interface UserCreateDto extends UserBase {}
+
+export interface UserUpdateDto extends Partial<UserBase> {}
+
+export interface UserQueryOptionType extends BaseQueryOptionType {
+  userRole: "customer" | "admin";
+  searchName: string;
+  sortBy: "Name" | "Created_Date" | "Updated_Date";
+}

@@ -1,13 +1,20 @@
-
 import { useState, useCallback } from "react";
 import { Modal } from "flowbite-react";
 import { useDeleteProductMutation } from "../../redux/slices/apiQuery";
-import { ProductType } from "../../misc/productTypes";
-import { UUID } from "crypto";
+import { ProductReadDto } from "../../misc/productTypes";
 
-
-function DeleteProduct({product, selectedProduct, setSelectedProduct }: { product: ProductType, selectedProduct:ProductType | null, setSelectedProduct: React.Dispatch<React.SetStateAction<ProductType | null>>}) {
-    const [DeleteModalOpen, setDeleteModalOpen] = useState(false);
+function DeleteProduct({
+  product,
+  selectedProduct,
+  setSelectedProduct,
+}: {
+  product: ProductReadDto;
+  selectedProduct: ProductReadDto | null;
+  setSelectedProduct: React.Dispatch<
+    React.SetStateAction<ProductReadDto | null>
+  >;
+}) {
+  const [DeleteModalOpen, setDeleteModalOpen] = useState(false);
 
   const [
     deleteProductTrigger,
@@ -19,24 +26,26 @@ function DeleteProduct({product, selectedProduct, setSelectedProduct }: { produc
     },
   ] = useDeleteProductMutation();
 
-    const handleDeleteComfirm = useCallback((product: ProductType) => {
-        setDeleteModalOpen(true);
-        setSelectedProduct(product);
-      }, [setSelectedProduct]);
-    
-      const handleDelete = useCallback(
-        (id: UUID) => {
-          deleteProductTrigger(id);
-          setSelectedProduct(null);
-        },
-        [deleteProductTrigger, setSelectedProduct]
-      );
-    
-      const handleCloseDeleteModal = useCallback(() => {
-        setDeleteModalOpen(false);
-        deleteReset();
-      }, [deleteReset]);
+  const handleDeleteComfirm = useCallback(
+    (product: ProductReadDto) => {
+      setDeleteModalOpen(true);
+      setSelectedProduct(product);
+    },
+    [setSelectedProduct]
+  );
 
+  const handleDelete = useCallback(
+    (id: string) => {
+      deleteProductTrigger(id);
+      setSelectedProduct(null);
+    },
+    [deleteProductTrigger, setSelectedProduct]
+  );
+
+  const handleCloseDeleteModal = useCallback(() => {
+    setDeleteModalOpen(false);
+    deleteReset();
+  }, [deleteReset]);
 
   return (
     <>

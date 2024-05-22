@@ -1,7 +1,8 @@
 import { HttpResponse, http } from "msw";
 import { BACKEND_URL } from "../../../misc/constants";
 import mockProducts from "../mockData/mockPruducts";
-import { randomUUID } from "crypto";
+import { v4 as uuidv4 } from 'uuid';
+
 import {
   ImageReadDto,
   ProductCreateDto,
@@ -29,9 +30,9 @@ export const productsHandlers = [
   // for mutatiosn, the mock server did not really change anything, because I only need the response data to test
   http.post(`${BACKEND_URL}/products`, async ({ request }) => {
     const product = (await request.json()) as ProductCreateDto;
-    let productId = randomUUID();
+    let productId = uuidv4();
     let newImages: ImageReadDto[] = product.images.map((image) => ({
-      id: randomUUID(),
+      id: uuidv4(),
       productId: productId,
       ...image,
     }));

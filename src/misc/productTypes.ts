@@ -1,10 +1,10 @@
-import { UUID } from "crypto";
-import { BaseDto } from "./generalTypes";
+
+import { BaseDto, BaseQueryOptionType } from "./generalTypes";
 
 export interface ImageReadDto {
-  id: UUID;
+  id: string;
   url: string;
-  productId: UUID;
+  productId: string;
 }
 
 export type ImageCreateDto = Pick<ImageReadDto, 'url'>;
@@ -19,7 +19,7 @@ export interface ProductBase {
   rating?: number;
   stock: number;
   brand?: string;
-  categoryId: UUID;
+  categoryId: string;
   thumbnail: string;
   images: ImageReadDto[];
 }
@@ -28,22 +28,18 @@ export interface ProductReadDto extends ProductBase, BaseDto {};
 export interface ProductCreateDto extends Omit<ProductBase, 'images'> {
   images: ImageCreateDto[];
 };
-export interface ProductUpdateDto extends Partial<Omit<ProductBase, 'images'>> {
-  id:UUID,
+export interface ProductUpdateDto extends Partial<Omit<ProductBase, 'images'|'rating'>> {
   images?: ImageUpdateDto[];
 };
 
 
-export interface ProductQueryOptionsType {
+export interface ProductQueryOptionsType extends BaseQueryOptionType {
   title?: string;
   minPrice?: number;
   maxPrice?: number;
   categoryId?: string;
   inStock?: boolean;
   sortBy?: "Title" | "Price" | "Created_Date" | "Updated_Date";
-  sortOrder?: "Asc" | "Desc";
-  limit: number;
-  offset: number;
 }
 
 export interface ProductsState {
@@ -52,9 +48,10 @@ export interface ProductsState {
   error: string | null;
 }
 
+// note for later: cart type can be the same with orderProduct type, i will change it later
 
 export interface CartItemType {
-  id: number;
+  id: string;
   title: string;
   price: number;
   quantity: number;
@@ -87,8 +84,3 @@ export interface CartQueryType {
 }
 
 export type ProductsInfoToCartApi = { productId: number; quantity: number };
-
-export interface FilterType {
-  category?: UUID;
-  sortByPrice: "asc" | "desc" | "";
-}

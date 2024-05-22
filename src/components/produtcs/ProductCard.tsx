@@ -1,9 +1,9 @@
 import { Link } from "react-router-dom";
 
-import { ProductType } from "../../misc/productTypes";
+import { ProductReadDto } from "../../misc/productTypes";
 import ShopButton from "./ShopButton";
 
-function ProductCard({ productItem }: { productItem: ProductType }) {
+function ProductCard({ productItem }: { productItem: ProductReadDto }) {
   return (
     <div className="bg-gray-100 dark:bg-gray-900 text-sky-950 dark:text-gray-100 px-4 py-8 rounded-xl shadow-md flex flex-col min-w-64 transition-all">
       <Link to={`/product/${productItem.id}`}>
@@ -15,14 +15,15 @@ function ProductCard({ productItem }: { productItem: ProductType }) {
       </Link>
       <span className="mt-4 h-12 font-bold">{productItem.title}</span>
       <p className="py-4 *:pr-4">
-        <span className="text-lg font-semibold line-through">
+        <span className="text-lg font-semibold">
           {productItem.price}€
         </span>
-        <span className="text-xl font-bold text-red-700">
-          {Math.round(
-            (productItem.price * (100 - productItem.discountPercentage)) / 100
-          )}€
-        </span>
+        {
+          productItem.discountPercentage > 0 ?
+          <span className="text-xl font-bold text-red-500">
+          - {productItem.discountPercentage}%
+        </span> : (<></>)
+        }
       </p>
 
       <ShopButton newItem={productItem} quantity={1} />

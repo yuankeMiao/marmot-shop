@@ -6,12 +6,11 @@ import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { FloatingLabel } from "flowbite-react";
 
-import { LoginType } from "../../misc/userTypes";
-import { useLoginMutation } from "../../redux/slices/userApi";
+import { UserCredential } from "../../misc/userTypes";
+import { useLoginMutation } from "../../redux/slices/authApi";
 import LoginWithGoogle from "./LoginWithGoogle";
 import { fetchCurrentUser, fetchCurrentUserWithGoogle } from "../../redux/slices/currentUserSlice";
 import { useAppDispatch } from "../../appHooks/reduxHooks";
-import { fetchUserCart } from "../../redux/slices/cartSlice";
 import { useLoginContext } from "../../appHooks/useLoginContext";
 
 function Login({
@@ -26,9 +25,9 @@ function Login({
     handleSubmit,
     formState: { errors },
     setError,
-  } = useForm<LoginType>({
+  } = useForm<UserCredential>({
     defaultValues: {
-      username: "",
+      email: "",
       password: "",
     },
   });
@@ -45,16 +44,11 @@ function Login({
   };
 
    // when submit is clicked, trigger the login mutation
-   const onSubmit: SubmitHandler<LoginType> = async (data) => {
+   const onSubmit: SubmitHandler<UserCredential> = async (data) => {
     await loginTrigger(data)
       .unwrap()
       .then((result) => {
         window.localStorage.setItem("token", result.token);
-        //after login, trigger fetchCurrentUser immediately
-        dispatch(fetchCurrentUser(result.token)).then((user) => {
-          dispatch(fetchUserCart(user.payload.id));
-        });
-
         setOpenLoginModal(false);
       })
       .catch((error) => {
@@ -90,26 +84,26 @@ function Login({
       >
         <h3 className="text-3xl -mt-12 dark:text-gray-100">Login form</h3>
         <Controller
-          name="username"
+          name="email"
           control={control}
           rules={{
-            required: "Username is required",
+            required: "Email is required",
             maxLength: {
-              value: 20,
-              message: "Username should not be more than 20 characters",
+              value: 50,
+              message: "Email should not be more than 20 characters",
             },
             minLength: {
-              value: 3,
-              message: "User name should not be less than 3 characters",
+              value: 5,
+              message: "Email should not be less than 5 characters",
             },
           }}
           render={({ field }) => (
             <FloatingLabel
               variant="outlined"
-              label="Username"
-              type="text"
-              color={errors.username && "error"}
-              helperText={errors.username && errors.username.message}
+              label="Email"
+              type="email"
+              color={errors.email && "error"}
+              helperText={errors.email && errors.email.message}
               className="inputOverride dark:bg-gray-700 dark:inputDarkModeOverride"
               {...field}
             />

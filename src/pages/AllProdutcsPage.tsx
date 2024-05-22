@@ -4,18 +4,13 @@ import { Breadcrumb } from "flowbite-react";
 import DisplayProducts from "../components/produtcs/DisplayProducts";
 import Filters from "../components/produtcs/Filters";
 
-import type { FilterType } from "../misc/productTypes";
 import { Link } from "react-router-dom";
+import { ProductQueryOptionsType } from "../misc/productTypes";
 
 
 function AllProdutcsPage() {
 
-  // I set categories as a list then I can select multiple categories
-  const [filter, setFilter] = useState<FilterType>({
-    category: undefined,
-    sortByPrice: "",
-  });
-  // then I pass the filter to the DisplayProducts component. setter to the Filters component
+  const [filter, setFilter] = useState<ProductQueryOptionsType>({});
 
   return (
     <div className="flex flex-col lg:flex-row">

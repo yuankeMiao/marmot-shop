@@ -1,4 +1,4 @@
-import { UUID } from "crypto";
+
 import apiQueries from "./apiQuery";
 import {
   CategoryCreateDto,
@@ -8,13 +8,13 @@ import {
 
 const categoryApi = apiQueries.injectEndpoints({
   endpoints: (builder) => ({
-    getAllCategories: builder.query<Array<CategoryReadDto>, null>({
+    getAllCategories: builder.query<CategoryReadDto[], null>({
       query: () => `/categories`,
       providesTags: ["Category"],
     }),
 
-    getCategoryById: builder.query({
-      query: (id: UUID) => `/categories/${id}`,
+    getCategoryById: builder.query<CategoryReadDto, string> ({
+      query: (id: string) => `/categories/${id}`,
       providesTags: (result, error, arg) => [{ type: "Category", id: arg }],
     }),
 
@@ -28,7 +28,7 @@ const categoryApi = apiQueries.injectEndpoints({
     }),
 
     updateCategory: builder.mutation({
-      query: ({ id, ...updateData }: CategoryUpdateDto) => ({
+      query: ({ id, ...updateData }: {id: string, updateData: CategoryUpdateDto}) => ({
         url: `/categories/${id}`,
         method: "PATCH",
         body: { ...updateData },
@@ -39,7 +39,7 @@ const categoryApi = apiQueries.injectEndpoints({
     }),
 
     deleteCategory: builder.mutation({
-      query: (id: UUID) => ({
+      query: (id: string) => ({
         url: `/categories/${id}`,
         method: "DELETE",
       }),

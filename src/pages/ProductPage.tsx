@@ -3,22 +3,25 @@ import { useParams, Link } from "react-router-dom";
 import { Breadcrumb, Rating, Carousel } from "flowbite-react";
 
 import { useGetProductByIdQuery } from "../redux/slices/apiQuery";
-import { ProductType } from "../misc/productTypes";
+import { ImageReadDto, ProductReadDto } from "../misc/productTypes";
 import ShopButton from "../components/produtcs/ShopButton";
 import AmountControl from "../components/produtcs/AmountControl";
 import ErrorPage from "./ErrorPage";
+import { useGetCategoryByIdQuery } from "../redux/slices/categoryApi";
+
 
 function ProductPage() {
-  const productId = Number(useParams().productId);
-  const { data, error, isLoading } = useGetProductByIdQuery(productId);
-  const product: ProductType = data;
+  const productId = useParams().productId as string;
+
+  const { data: product, error: productError, isLoading: productIsLoading } = useGetProductByIdQuery(productId);
+  const { data: category, error: categoryError, isLoading: categoryIsLoading } = useGetCategoryByIdQuery(product?.categoryId);
 
   const [amount, setAmount] = useState(1);
 
   return (
     <div className="py-4 mx-auto md:max-w-2xl lg:max-w-screen-lg xl:max-w-screen-xl 2xl:max-w-screen-2xl">
-      {isLoading && <p>Loading...</p>}
-      {error && ( <ErrorPage errorMsg="Hi, we don't have this product!" />)}
+      {productIsLoading && <p>Loading...</p>}
+      {productError && ( <ErrorPage errorMsg="Hi, we don't have this product!" />)}
       {product && (
         <div className="*:m-4">
           <Breadcrumb aria-label="breadcrumb">
@@ -29,9 +32,9 @@ function ProductPage() {
               <Link to="/all-products">Products</Link>
             </Breadcrumb.Item>
             <Breadcrumb.Item>
-              {product.category.replace(
-                product.category[0],
-                product.category[0].toUpperCase()
+              {category?.name.replace(
+                category.name[0],
+                category.name[0].toUpperCase()
               )}
             </Breadcrumb.Item>
           </Breadcrumb>
@@ -39,10 +42,10 @@ function ProductPage() {
           <div className="flex flex-col md:grid grid-cols-3 gap-8">
             <div className="col-span-2 h-[28rem] bg-gray-200 flex justify-center rounded-xl shadow-md">
               <Carousel pauseOnHover>
-                {product.images.map((image, index) => (
+                {product.images.map((image: ImageReadDto) => (
                   <img
-                    key={index}
-                    src={image}
+                    key={image.id}
+                    src={image.url}
                     alt={product.title}
                     className="w-full h-full object-contain"
                   />
@@ -63,7 +66,7 @@ function ProductPage() {
                   <span className="text-2xl font-semibold line-through">
                     {product.price}€
                   </span>
-                  <span className="text-3xl font-bold text-red-700">
+                  <span className="text-3xl font-bold text-red-500">
                     {Math.round(
                       (product.price * (100 - product.discountPercentage)) / 100
                     )}

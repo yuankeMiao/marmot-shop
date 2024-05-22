@@ -9,13 +9,13 @@ import { faCartShopping } from "@fortawesome/free-solid-svg-icons";
 
 import { useAppDispatch, useAppSelector } from "../../appHooks/reduxHooks";
 import { addToCart } from "../../redux/slices/cartSlice";
-import { CartItemType, ProductType } from "../../misc/productTypes";
+import { CartItemType, ProductReadDto } from "../../misc/productTypes";
 
 function ShopButton({
   newItem,
   quantity,
 }: {
-  newItem: ProductType;
+  newItem: ProductReadDto;
   quantity: number;
 }) {
   const dispatch = useAppDispatch();

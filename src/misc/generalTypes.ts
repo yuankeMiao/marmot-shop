@@ -1,12 +1,18 @@
-import { UUID } from "crypto";
+
 
 export interface QueryResponse<T> {
-    products: Array<T>;
+    data: Array<T>;
     totalCount: number;
   }
 
 export interface BaseDto {
-    id: UUID;
+    id: string;
     createdDate: Date;
     updatedDate: Date;
+}
+
+export interface BaseQueryOptionType {
+  sortOrder?: "Asc" | "Desc";
+  offset?: number;
+  limit? : number;
 }

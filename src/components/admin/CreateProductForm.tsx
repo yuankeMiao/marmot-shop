@@ -10,49 +10,30 @@ import { FloatingLabel, Select, Textarea } from "flowbite-react";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 
-import {
-  useCreateNewProductMutation,
-  useUpdateProductMutation,
-} from "../../redux/slices/apiQuery";
-import { ProductType } from "../../misc/productTypes";
-import { CATEGORIES } from "../../misc/constants";
+import { useCreateNewProductMutation } from "../../redux/slices/apiQuery";
+import { ProductCreateDto } from "../../misc/productTypes";
+import { useGetAllCategoriesQuery } from "../../redux/slices/categoryApi";
+import { CategoryReadDto } from "../../misc/categoryTypes";
 
-
-/* fieldArray only accept array of object, but the data shape of my product images is array of string
-    so I set a local type here, instead of setting it in types.ts
-    since it is only used here */
-type FormValuesType = Omit<ProductType, "images, id"> & {
-  id?: number;
-  images?: { value: string }[];
-};
-
-function ProductManageForm({
-  initialValue,
+function CreateProductForm({
   setInfoFormModalOpen,
 }: {
-  initialValue: ProductType | null;
   setInfoFormModalOpen: React.Dispatch<React.SetStateAction<boolean>>;
 }) {
-  const emptyFormValues: FormValuesType = {
-    id: 0,
+  const { data: categories } = useGetAllCategoriesQuery(null);
+  const emptyFormValues: ProductCreateDto = {
     title: "",
     description: "",
     price: 0,
     discountPercentage: 0,
-    rating: 0,
     stock: 0,
     brand: "",
-    category: "",
+    categoryId: categories?.[0]?.id || "",
     thumbnail: "",
     images: [],
   };
 
-  const initialFormValues = initialValue
-    ? {
-        ...initialValue,
-        images: initialValue.images.map((imageURL) => ({ value: imageURL })),
-      }
-    : (emptyFormValues as FormValuesType);
+  const initialFormValues = emptyFormValues as ProductCreateDto;
 
   const [
     createNewProductTrigger,
@@ -63,21 +44,13 @@ function ProductManageForm({
       reset: createNewProductReset,
     },
   ] = useCreateNewProductMutation();
-  const [
-    updateProductTrigger,
-    {
-      isSuccess: updateProductSuccess,
-      isLoading: updateProductLoading,
-      error: updateProductError,
-    },
-  ] = useUpdateProductMutation();
 
   const {
     control,
     handleSubmit,
     formState: { errors },
     reset,
-  } = useForm<FormValuesType>({
+  } = useForm<ProductCreateDto>({
     defaultValues: initialFormValues,
   });
 
@@ -86,20 +59,11 @@ function ProductManageForm({
     control,
   });
 
-  const onSubmit: SubmitHandler<FormValuesType> = async (data) => {
+  const onSubmit: SubmitHandler<ProductCreateDto> = async (data) => {
     const submitData = {
       ...data,
-      images: (data.images as { value: string }[]).map(
-        (imageOBJ) => imageOBJ.value
-      ),
     };
-
-    // console.log(submitData);
-    if (initialValue) {
-      await updateProductTrigger(submitData);
-    } else {
-      await createNewProductTrigger(submitData);
-    }
+    await createNewProductTrigger(submitData);
   };
 
   const handleResetForm = () => {
@@ -108,8 +72,8 @@ function ProductManageForm({
   };
 
   const createNotify = () => toast.success("Successfully created product!");
-  const updateNotify = () => toast.success("Successfully updated product!");
-  const errorNotify = () => toast.error("Something went wrong, please try again");
+  const errorNotify = () =>
+    toast.error("Something went wrong, please try again");
 
   useEffect(() => {
     if (createNewProductSuccess) {
@@ -117,17 +81,12 @@ function ProductManageForm({
     }
   }, [createNewProductSuccess]);
 
-  useEffect(() => {
-    if (updateProductSuccess) {
-      updateNotify();
-    }
-  }, [updateProductSuccess]);
 
   useEffect(() => {
-    if (createNewProductError || updateProductError) {
+    if (createNewProductError) {
       errorNotify();
     }
-  }, [createNewProductError, updateProductError]);
+  }, [createNewProductError]);
 
   return (
     <div>
@@ -160,7 +119,7 @@ function ProductManageForm({
             )}
           />
           <Controller
-            name="category"
+            name="categoryId"
             control={control}
             rules={{
               required: "category is required",
@@ -169,14 +128,14 @@ function ProductManageForm({
             render={({ field }) => (
               <Select
                 id="categoryOptions"
-                color={errors.category && "failure"}
-                helperText={errors.category && errors.category.message}
+                color={errors.categoryId && "failure"}
+                helperText={errors.categoryId && errors.categoryId.message}
                 {...field}
               >
                 <option value="">-- Select category-- </option>
-                {CATEGORIES.map((category) => (
-                  <option key={category} value={category}>
-                    {category.replace(category[0], category[0].toUpperCase())}
+                {categories?.map((category: CategoryReadDto) => (
+                  <option key={category.id} value={category.name}>
+                    {category.name.replace(category.name[0], category.name[0].toUpperCase())}
                   </option>
                 ))}
               </Select>
@@ -354,13 +313,15 @@ function ProductManageForm({
                   message: "Invalid image url",
                 },
               }}
-              name={`images.${index}.value`}
-              defaultValue={field.value || ""}
+              name={`images.${index}.url`}
+              defaultValue={field.url}
               render={({ field }) => (
                 <FloatingLabel
                   variant="outlined"
                   label={`Image URL ${index + 1}`}
                   type="text"
+                  color={errors.images?.[index]?.url && "error"}
+                  helperText={errors.images?.[index]?.url?.message}
                   className="dark:bg-gray-700"
                   {...field}
                 />
@@ -377,7 +338,7 @@ function ProductManageForm({
         ))}
         <button
           type="button"
-          onClick={() => append({ value: "" })}
+          onClick={() => append({url: "" })}
           className="btn-secondary"
         >
           Add Image URL
@@ -403,9 +364,9 @@ function ProductManageForm({
           <button
             type="submit"
             className="btn-primary"
-            disabled={updateProductLoading || createNewProductLoading}
+            disabled={createNewProductLoading}
           >
-            {updateProductLoading || createNewProductLoading
+            {createNewProductLoading
               ? "Confirming ..."
               : "Confirm"}
           </button>
@@ -416,4 +377,4 @@ function ProductManageForm({
   );
 }
 
-export default ProductManageForm;
+export default CreateProductForm;
