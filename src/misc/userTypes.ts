@@ -27,7 +27,7 @@ export interface UserReadDto extends Omit<UserBase, "password">, BaseDto {}
 
 export interface UserCreateDto extends UserBase {}
 
-export interface UserUpdateDto extends Partial<UserBase> {}
+export interface UserUpdateDto extends Partial<Omit<UserBase, 'role'>> {}
 
 export interface UserQueryOptionType extends BaseQueryOptionType {
   role: "Customer" | "Admin";

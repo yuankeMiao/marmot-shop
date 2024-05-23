@@ -112,7 +112,7 @@ function Header() {
                 <span className="block text-sm">{currentUser.email}</span>
               </Dropdown.Header>
               {currentUser.role === "Admin" && (
-                <Dropdown.Item as={Link} to="/dashboard">
+                <Dropdown.Item as={Link} to="/dashboard/products">
                   Dashbord
                 </Dropdown.Item>
               )}
