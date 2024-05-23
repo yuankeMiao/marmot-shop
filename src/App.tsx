@@ -14,6 +14,7 @@ import ProfilePage from "./pages/ProfilePage";
 import Dashboard from "./pages/Dashboard";
 
 import ScrollToTop from "./components/utils/ScrollToTop";
+import ProductManager from "./components/admin/productManager";
 
 function App() {
 
@@ -37,7 +38,9 @@ function App() {
             <Route
               path="dashboard"
               element={<Dashboard />}
-            />
+            >
+              <Route path="products" element={<ProductManager />} />
+            </Route>
             <Route path="*" element={<ErrorPage />} />
           </Route>
         </Routes>
