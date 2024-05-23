@@ -25,7 +25,7 @@ const apiQueries = createApi({
       return headers;
     },
   }),
-  tagTypes: ["Product", "Category", "User", "Cart", "Review"],
+  tagTypes: ["Product", "Category", "User", "Cart", "Review", "Order", "Address"],
   endpoints: (builder) => ({
     // get product related queries
     getAllProducts: builder.query<QueryResponse<ProductReadDto>, ProductQueryOptionsType>({
@@ -73,7 +73,7 @@ const apiQueries = createApi({
       query: (newProduct: ProductCreateDto) => ({
         url: "/products",
         method: "POST",
-        body: { ...newProduct },
+        body: newProduct,
       }),
       invalidatesTags: ["Product"],
     }),

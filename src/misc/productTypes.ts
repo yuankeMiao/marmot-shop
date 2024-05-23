@@ -40,7 +40,7 @@ export interface ProductQueryOptionsType extends BaseQueryOptionType {
   maxPrice?: number;
   categoryId?: string;
   inStock?: boolean;
-  sortBy?: "Title" | "Price" | "Created_Date" | "Updated_Date";
+  sortBy?: "Title" | "Price" | "CreatedDate" | "UpdatedDate";
 }
 
 

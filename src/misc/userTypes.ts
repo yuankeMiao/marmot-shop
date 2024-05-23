@@ -10,46 +10,6 @@ export type AuthTokens = {
   refreshToken: string;
 }
 
-export type AddressType = {
-  address: string;
-  city: string;
-  coordinates: {
-    lat: number;
-    lng: number;
-  };
-  postalCode: string;
-  state: string;
-};
-
-export type UserType = {
-  id: number;
-  username: string;
-  email: string;
-  firstName: string;
-  lastName: string;
-  image: string;
-  address?: AddressType;
-  password?: string;
-  confirmPassword?: string;
-};
-
-export type CurrentUserStateType = {
-  user: CurrentUserType | null;
-  isLoading: boolean;
-  error: number | null | string;
-};
-
-export type CurrentUserType = {
-  id: number;
-  username: string;
-  email: string;
-  firstName: string;
-  lastName: string;
-  image: string;
-  role: "user" | "admin";
-  address: AddressType | null;
-};
-
 export interface RegisterType extends Omit<UserBase, "role"> {
   confirmPassword: string;
 }
@@ -70,7 +30,27 @@ export interface UserCreateDto extends UserBase {}
 export interface UserUpdateDto extends Partial<UserBase> {}
 
 export interface UserQueryOptionType extends BaseQueryOptionType {
-  role: "customer" | "admin";
+  role: "Customer" | "Admin";
   searchName: string;
-  sortBy: "Name" | "Created_Date" | "Updated_Date";
+  sortBy: "Name" | "CreatedDate" | "UpdatedDate";
 }
+
+
+
+// address
+export interface AddressBase {
+  recipient: string;
+  phone: string;
+  line1: string;
+  line2?: string;
+  postalCode: string;
+  city: string;
+  userId: string;
+}
+
+export interface AddressReadDto extends AddressBase, BaseDto {}
+
+export interface AddressCreateDto extends Omit<AddressBase, 'userId'> {}
+
+export interface AddressUpdateDto extends Partial<AddressCreateDto> {}
+

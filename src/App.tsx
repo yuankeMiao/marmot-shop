@@ -14,7 +14,8 @@ import ProfilePage from "./pages/ProfilePage";
 import Dashboard from "./pages/Dashboard";
 
 import ScrollToTop from "./components/utils/ScrollToTop";
-import ProductManager from "./components/admin/productManager";
+import ProductManager from "./components/admin/ProductManager";
+import OrderManager from "./components/admin/OrderManager";
 
 function App() {
 
@@ -40,6 +41,7 @@ function App() {
               element={<Dashboard />}
             >
               <Route path="products" element={<ProductManager />} />
+              <Route path="orders" element={<OrderManager />} />
             </Route>
             <Route path="*" element={<ErrorPage />} />
           </Route>

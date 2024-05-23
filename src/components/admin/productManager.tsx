@@ -5,13 +5,13 @@ import {
   ProductQueryOptionsType,
   ProductReadDto,
 } from "../../misc/productTypes";
-import TableItemLoader from "../../components/skeleton/TableItemLoader";
-import DeleteProduct from "../../components/admin/DeleteProduct";
+import TableItemLoader from "../skeleton/TableItemLoader";
+import DeleteProduct from "./DeleteProduct";
 import { useGetAllProductsQuery } from "../../redux/slices/apiQuery";
 import { useGetAllCategoriesQuery } from "../../redux/slices/categoryApi";
-import UpdateProductForm from "../../components/admin/UpdateProductForm";
-import CreateProductForm from "../../components/admin/CreateProductForm";
-import Filters from "../../components/produtcs/Filters";
+import UpdateProductForm from "./UpdateProductForm";
+import CreateProductForm from "./CreateProductForm";
+import Filters from "../produtcs/Filters";
 
 const debounce = require("lodash.debounce");
 

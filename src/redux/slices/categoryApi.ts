@@ -22,16 +22,16 @@ const categoryApi = apiQueries.injectEndpoints({
       query: (categoryCreateDto: CategoryCreateDto) => ({
         url: "/categories",
         method: "POST",
-        body: { ...categoryCreateDto },
+        body: categoryCreateDto,
       }),
       invalidatesTags: ["Category"],
     }),
 
     updateCategory: builder.mutation({
-      query: ({ id, ...updateData }: {id: string, updateData: CategoryUpdateDto}) => ({
+      query: ({ id, updateData }: {id: string, updateData: CategoryUpdateDto}) => ({
         url: `/categories/${id}`,
         method: "PUT",
-        body: { ...updateData },
+        body: updateData,
       }),
       invalidatesTags: (result, error, arg) => [
         { type: "Category", id: arg.id },

@@ -118,7 +118,7 @@ function Filters({
       case "5":
         setFilter((prev) => ({
           ...prev,
-          sortBy: "Created_Date",
+          sortBy: "CreatedDate",
           sortOrder: "Desc",
         }));
         break;

@@ -1,6 +1,6 @@
-import { useState } from "react";
+import { useState, useEffect, useCallback, useMemo } from "react";
 import { useParams, Link } from "react-router-dom";
-import { Breadcrumb, Rating, Carousel } from "flowbite-react";
+import { Breadcrumb, Rating, Carousel, Pagination } from "flowbite-react";
 
 import { useGetProductByIdQuery } from "../redux/slices/apiQuery";
 import { ImageReadDto, ProductReadDto } from "../misc/productTypes";
@@ -9,8 +9,10 @@ import AmountControl from "../components/produtcs/AmountControl";
 import ErrorPage from "./ErrorPage";
 import { useGetCategoryByIdQuery } from "../redux/slices/categoryApi";
 import ReviewCard from "../components/produtcs/ReviewCard";
+import { useGetReviewsByProductIdQuery } from "../redux/slices/reviewApi";
+import { ReviewQueryOptionsType, ReviewReadDto } from "../misc/reviewTypes";
 
-function ProductPage() {
+const ProductPage = () => {
   const productId = useParams().productId as string;
 
   const {
@@ -18,11 +20,72 @@ function ProductPage() {
     error: productError,
     isLoading: productIsLoading,
   } = useGetProductByIdQuery(productId);
+
   const {
     data: category,
     error: categoryError,
     isLoading: categoryIsLoading,
   } = useGetCategoryByIdQuery(product?.categoryId);
+
+  const [currentPage, setCurrentPage] = useState(1);
+  const itemsPerPage = 8;
+  const [sortOrder, setSortOrder] = useState<'Asc' | 'Desc'>('Desc');
+  const [reviews, setReviews] = useState<ReviewReadDto[]>([]);
+  const [totalItems, setTotalItems] = useState(0);
+
+  const {
+    data: reviewsResponse,
+    error: reviewsError,
+    isLoading: reviewsIsLoading,
+    isFetching: reviewsIsFetching,
+  } = useGetReviewsByProductIdQuery({
+    productId,
+    options: {
+      limit: itemsPerPage,
+      offset: (currentPage - 1) * itemsPerPage,
+      sortOrder: sortOrder,
+      sortBy: 'Rating'
+    },
+  });
+
+  useEffect(() => {
+    if (reviewsResponse) {
+      setReviews(reviewsResponse.data);
+      setTotalItems(reviewsResponse.totalCount);
+    }
+  }, [reviewsResponse]);
+
+  useEffect(() => {
+    setCurrentPage(1);
+  }, [sortOrder]);
+
+  const totalPages = useMemo(() => Math.ceil(totalItems / itemsPerPage), [totalItems]);
+
+  const handlePageChange = (page: number) => {
+    setCurrentPage(page);
+  };
+
+  const handleSortChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
+    setSortOrder(e.target.value as 'Asc' | 'Desc');
+  };
+
+  const renderStars = (rating: number) => {
+    const fullStars = Math.floor(rating);
+    const hasHalfStar = rating % 1 !== 0;
+    const emptyStars = 5 - fullStars - (hasHalfStar ? 1 : 0);
+
+    return (
+      <>
+        {Array.from({ length: fullStars }).map((_, index) => (
+          <Rating.Star key={`full-${index}`} filled={true} />
+        ))}
+        {hasHalfStar && <Rating.Star key="half" filled={true} className="half-filled-star" />}
+        {Array.from({ length: emptyStars }).map((_, index) => (
+          <Rating.Star key={`empty-${index}`} filled={false} />
+        ))}
+      </>
+    );
+  };
 
   const [amount, setAmount] = useState(1);
 
@@ -63,9 +126,9 @@ function ProductPage() {
 
             <div className="*:mb-4">
               <Rating>
-                <Rating.Star />
+                {renderStars(product.rating)}
                 <p className="ml-2 text-sm font-bold text-gray-900 dark:text-white">
-                  {product.rating}
+                  {product.rating.toFixed(1)}
                 </p>
               </Rating>
               <h2 className="text-2xl font-semibold h-28">{product.title}</h2>
@@ -110,12 +173,45 @@ function ProductPage() {
 
           <div>
             <h3 className="text-2xl font-semibold py-8">Reviews</h3>
-            <ReviewCard />
+            <div className="flex justify-end mb-4">
+              <select
+                className="p-2 border rounded"
+                value={sortOrder}
+                onChange={handleSortChange}
+              >
+                <option value="Asc">Sort by Rating: Low to High</option>
+                <option value="Desc">Sort by Rating: High to Low</option>
+              </select>
+            </div>
+            {reviewsIsLoading || reviewsIsFetching ? (
+              <p>Loading reviews...</p>
+            ) : (
+              <>
+                {reviews.length === 0 ? (
+                  <p>No reviews found.</p>
+                ) : (
+                  reviews.map((review, index) => (
+                    <ReviewCard
+                      key={review.id}
+                      review={review}
+                    />
+                  ))
+                )}
+                {totalPages > 1 && (
+                  <Pagination
+                    currentPage={currentPage}
+                    totalPages={totalPages}
+                    onPageChange={handlePageChange}
+                  />
+                )}
+              </>
+            )}
+            {reviewsError && <p>Error loading reviews.</p>}
           </div>
         </div>
       )}
     </div>
   );
-}
+};
 
 export default ProductPage;

@@ -7,26 +7,22 @@ import AddressTable from "../components/user/AddressTable";
 
 import { useLogoutMutation } from "../redux/slices/authApi";
 import useGetCurrentUser from "../appHooks/useGetCurrentUser";
+import MyOrders from "../components/user/MyOrders";
 
 function ProfilePage() {
   const navigate = useNavigate();
 
-  const [logoutTrigger, {error: logoutError}] = useLogoutMutation();
+  const [logoutTrigger, { error: logoutError }] = useLogoutMutation();
+  const { currentUser } = useGetCurrentUser();
 
-  // const { user: currentUser, isLoading: currentUserIsLoading } = useAppSelector((state) => state.currentUser);
-  const {currentUser} = useGetCurrentUser();
-
-  // if(currentUserIsLoading) return (
-  //   <div className="py-20">
-  //     <p className="text-center text-xl dark:text-gray-100">Loading...</p>
-  //   </div>
-  // )
-
-  if(!currentUser) return (
-    <div className="py-20">
-      <p className="text-center text-xl dark:text-gray-100">Please log in to chcek your profile!</p>
-    </div>
-  )
+  if (!currentUser)
+    return (
+      <div className="py-20">
+        <p className="text-center text-xl dark:text-gray-100">
+          Please log in to chcek your profile!
+        </p>
+      </div>
+    );
 
   const handleLogout = () => {
     navigate("/");
@@ -74,13 +70,7 @@ function ProfilePage() {
 
         <div id="orders">
           <div className="invisible h-20 -mt-20"></div>
-          <h2 className="text-xl font-semibold my-8">My orders</h2>
-          <div className="bg-gray-100 dark:bg-gray-800 p-8 rounded-xl flex flex-col items-center gap-8">
-            <p>You don't have any order yet, checkout your items now!</p>
-            <button className="btn-primary w-40">
-              <Link to="/cart">Go to cart</Link>
-            </button>
-          </div>
+          <MyOrders user={currentUser} />
         </div>
 
         {/* <div id="address">

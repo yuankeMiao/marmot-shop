@@ -1,4 +1,3 @@
-
 import React, { useEffect, useState } from "react";
 import { useForm, Controller, SubmitHandler } from "react-hook-form";
 
@@ -7,8 +6,10 @@ import "react-toastify/dist/ReactToastify.css";
 import { FloatingLabel } from "flowbite-react";
 
 import { UserCredential } from "../../misc/userTypes";
-import { useLazyGetProfileQuery, useLoginMutation } from "../../redux/slices/authApi";
-import { useAppDispatch } from "../../appHooks/reduxHooks";
+import {
+  useLazyGetProfileQuery,
+  useLoginMutation,
+} from "../../redux/slices/authApi";
 import { useLoginContext } from "../../appHooks/useLoginContext";
 
 function Login({
@@ -16,7 +17,7 @@ function Login({
 }: {
   setOpenRegisterModal: React.Dispatch<React.SetStateAction<boolean>>;
 }) {
-
+  const [isLogging, setIsLogging] = useState(false);
   const {
     control,
     handleSubmit,
@@ -29,10 +30,8 @@ function Login({
     },
   });
 
-  // i will handle the login status later, maybe using toast
   const [loginTrigger, { error: loginError }] = useLoginMutation();
-  const [getProfileTrigger, {error: getProfileError}] = useLazyGetProfileQuery();
-  // const [isSuccessWithGoogle, setIsSuccessWithGoogle] = useState(false);
+  const [getProfileTrigger, { error: getProfileError }] = useLazyGetProfileQuery();
 
   const { setOpenLoginModal } = useLoginContext();
 
@@ -41,33 +40,27 @@ function Login({
     setOpenRegisterModal(true);
   };
 
-   // when submit is clicked, trigger the login mutation
-   const onSubmit: SubmitHandler<UserCredential> = async (data) => {
-    await loginTrigger(data)
-      .unwrap()
-      .then((result) => {
-        window.localStorage.setItem("accessToken", result.accessToken);
-        window.localStorage.setItem("refreshToken", result.refreshToken);
-      })
-      .then(()=>{
-        getProfileTrigger(null);
+  const onSubmit: SubmitHandler<UserCredential> = async (data) => {
+    setIsLogging(true);
+    try {
+      const loginResult = await loginTrigger(data).unwrap();
+      window.localStorage.setItem("accessToken", loginResult.accessToken);
+      window.localStorage.setItem("refreshToken", loginResult.refreshToken);
+      const profileResult = await getProfileTrigger(null).unwrap();
+      if (profileResult) {
         setOpenLoginModal(false);
-      })
-      .catch((error) => {
-        setError("password", {
-          type: "manual",
-          message: error.data.message,
-        });
+        window.location.reload();
+      }
+    } catch (err: any) {
+      setError("password", {
+        type: "manual",
+        message: err?.data?.message || "Login failed",
       });
-  };
-
-  const errorNotify = () => toast.error("Something wrong with login, please try again!");
-  useEffect(() => {
-    if (loginError) {
-      errorNotify()
+      toast.error("Something wrong with login, please try again!");
+    } finally {
+      setIsLogging(false);
     }
-  }, [loginError]);
-
+  };
 
   return (
     <div>
@@ -83,11 +76,15 @@ function Login({
             required: "Email is required",
             maxLength: {
               value: 50,
-              message: "Email should not be more than 20 characters",
+              message: "Email should not be more than 50 characters",
             },
             minLength: {
               value: 5,
               message: "Email should not be less than 5 characters",
+            },
+            pattern: {
+              value: /^[^\s@]+@[^\s@]+\.[^\s@]+$/,
+              message: "Invalid email format",
             },
           }}
           render={({ field }) => (
@@ -132,12 +129,13 @@ function Login({
           type="submit"
           aria-label="Login"
           className="btn-primary self-center"
+          disabled={isLogging}
         >
-          Login
+          {isLogging ? "Logging in..." : "Login"}
         </button>
       </form>
       <p className="text-sm text-center my-2 text-gray-600 dark:text-gray-200">
-        Don't have account yet?{" "}
+        Don't have an account yet?{" "}
         <span
           className="underline cursor-pointer text-blue-700 dark:text-blue-400"
           onClick={handleRegisterViaLogin}
@@ -145,7 +143,7 @@ function Login({
           Register
         </span>
       </p>
-      {/* <LoginWithGoogle setIsSuccessWithGoogle={setIsSuccessWithGoogle} /> */}
+
       <ToastContainer position="top-center" />
     </div>
   );
