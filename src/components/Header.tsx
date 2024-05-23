@@ -1,10 +1,7 @@
-//https://www.flowbite-react.com/docs/components/navbar
-
 import { useEffect, useState } from "react";
 import { Link, useLocation } from "react-router-dom";
 import { Modal, Dropdown, Avatar } from "flowbite-react";
 import { faBars } from "@fortawesome/free-solid-svg-icons";
-
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 
 import Badge from "./utils/Bagde";
@@ -25,9 +22,6 @@ import {
 
 function Header() {
   const { pathname } = useLocation();
-  // const [getProfileTrigger, { data: currentUser, error: userError }] =
-  useLazyGetProfileQuery();
-
   const [logoutTrigger, { error: logourError }] = useLogoutMutation();
   const { currentUser, getCurrentUserError } = useGetCurrentUser();
 
@@ -44,9 +38,11 @@ function Header() {
     window.location.reload();
   };
 
-  if (getCurrentUserError) {
-    setOpenReLoginModal(true);
-  }
+  useEffect(() => {
+    if (getCurrentUserError) {
+      setOpenReLoginModal(true);
+    }
+  }, [getCurrentUserError]);
 
   return (
     <header className="fixed z-20 top-0 start-0 w-full h-20 bg-primary flex justify-between items-center px-4 lg:px-12">

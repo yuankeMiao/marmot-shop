@@ -5,9 +5,11 @@ import { useGetAllCategoriesQuery } from "../../redux/slices/categoryApi";
 function Filters({
   filter,
   setFilter,
+  className
 }: {
   filter: ProductQueryOptionsType;
   setFilter: React.Dispatch<React.SetStateAction<ProductQueryOptionsType>>;
+  className: string;
 }) {
   const { data: categories } = useGetAllCategoriesQuery(null);
 
@@ -144,12 +146,12 @@ function Filters({
   };
 
   return (
-    <div className="sidebar">
+    <div className={className}>
       <div className="h-full mx-auto px-4 py-4 overflow-y-auto ">
         <button className="btn-primary mb-4 max-w-36" onClick={handleReset}>
           Reset All
         </button>
-        <ul className="*:py-4 flex gap-8 around lg:block">
+        <ul className={`*:py-4 flex gap-8 around ${className === 'sidebar' ? "lg:block" : "flex-wrap"} `}>
           <li className="flex-1">
             <label htmlFor="category-select" className="font-bold">
               Choose Category

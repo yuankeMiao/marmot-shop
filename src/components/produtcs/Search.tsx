@@ -124,9 +124,9 @@ function Search() {
                 </Link>
               </div>
             ))}
-          {searchError && "data" in searchError && (
+          {searchError && (searchError as ErrorType & { data: string }).data && (
             <div className="dark:text-gray-100">
-              <p>{(searchError as ErrorType).data.message}</p>
+              <p>{(searchError as ErrorType & { data: string }).data}</p>
             </div>
           )}
         </Modal.Body>

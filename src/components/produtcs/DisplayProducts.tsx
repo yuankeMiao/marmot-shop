@@ -32,7 +32,7 @@ function DisplayProducts({ filter }: { filter: ProductQueryOptionsType }) {
   // otherwise after user on other page, then choose category, it will not work, becasue currentPage is still the same
   useEffect(() => {
     setCurrentPage(1);
-  }, [filter.categoryId]);
+  }, [filter]);
 
   // no need to calculate total pages if totalItems didn't change, ie. on all products
   const totalPages = useMemo(

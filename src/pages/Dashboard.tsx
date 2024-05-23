@@ -1,7 +1,7 @@
-import { useState, useEffect, useCallback } from "react";
-import { TextInput, Table, Modal } from "flowbite-react";
+import { useState, useEffect, useCallback, useMemo } from "react";
+import { TextInput, Table, Modal, Pagination } from "flowbite-react";
 
-import { ProductReadDto } from "../misc/productTypes";
+import { ProductQueryOptionsType, ProductReadDto } from "../misc/productTypes";
 import TableItemLoader from "../components/skeleton/TableItemLoader";
 import DeleteProduct from "../components/admin/DeleteProduct";
 import { useGetAllProductsQuery } from "../redux/slices/apiQuery";
@@ -9,6 +9,7 @@ import { useGetAllCategoriesQuery } from "../redux/slices/categoryApi";
 import UpdateProductForm from "../components/admin/UpdateProductForm";
 import CreateProductForm from "../components/admin/CreateProductForm";
 import useGetCurrentUser from "../appHooks/useGetCurrentUser";
+import Filters from "../components/produtcs/Filters";
 
 
 function Dashboard() {
@@ -17,15 +18,40 @@ function Dashboard() {
     null
   );
 
+    // pagination
+    const itemsPerPage = 12;
+    const [currentPage, setCurrentPage] = useState(1);
+    const [totalItems, setTotalItems] = useState(0);
+    const onPageChange = (page: number) => setCurrentPage(page);
+
+  const [filter, setFilter] = useState<ProductQueryOptionsType>({});
+  const [products, setProducts] =useState<ProductReadDto[]>();
+
   const { data: categories, error: categoryError, isLoading: categoryIsLoading } = useGetAllCategoriesQuery(null);
 
+
   const {data: productsQueryResult, error, isLoading, isFetching} = useGetAllProductsQuery({
-    offset: 0,
-    limit: 50
-  })
-  
-  const products = productsQueryResult?.data;
-  const totalProduct = productsQueryResult?.totalCount;
+    ...filter,
+    limit: itemsPerPage,
+    offset: (currentPage - 1) * itemsPerPage,
+  });
+
+  useEffect(() => {
+    if (productsQueryResult) {
+      setProducts(productsQueryResult.data);
+      setTotalItems(productsQueryResult.totalCount);
+    }
+  }, [productsQueryResult]);
+
+  useEffect(() => {
+    setCurrentPage(1);
+  }, [filter]);
+
+    // no need to calculate total pages if totalItems didn't change, ie. on all products
+    const totalPages = useMemo(
+      () => Math.ceil(totalItems / itemsPerPage),
+      [totalItems]
+    );
 
   // const [
   //   getProductsBySearchTrigger,
@@ -82,6 +108,25 @@ function Dashboard() {
       <button className="btn-primary max-w-min" onClick={() => handleAdd()}>
         Add New Product
       </button>
+
+      <div className="relative min-w-56 ">
+        <Filters filter={filter} setFilter={setFilter} className="topbar"/>
+      </div>
+      <div className="flex sm:justify-center my-4">
+        <Pagination
+          className="hidden sm:flex"
+          currentPage={currentPage}
+          totalPages={totalPages}
+          onPageChange={onPageChange}
+        />
+        <Pagination
+          className="flex sm:hidden"
+          layout="navigation"
+          currentPage={currentPage}
+          totalPages={totalPages}
+          onPageChange={onPageChange}
+        />
+      </div>
       {/* <label htmlFor="search-admin" className="sr-only">
         Search
       </label>

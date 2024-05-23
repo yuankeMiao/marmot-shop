@@ -15,7 +15,7 @@ function AllProdutcsPage() {
   return (
     <div className="flex flex-col lg:flex-row">
       <div className="relative min-w-56 ">
-        <Filters filter={filter} setFilter={setFilter} />
+        <Filters filter={filter} setFilter={setFilter} className="sidebar" />
       </div>
       <main className="py-8 px-4 lg:px-8">
         <Breadcrumb aria-label="breadcrumb">
