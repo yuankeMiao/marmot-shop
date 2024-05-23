@@ -8,7 +8,7 @@ import {
 
 const categoryApi = apiQueries.injectEndpoints({
   endpoints: (builder) => ({
-    getAllCategories: builder.query<CategoryReadDto[], null>({
+    getAllCategories: builder.query<CategoryReadDto[], void>({
       query: () => `/categories`,
       providesTags: ["Category"],
     }),

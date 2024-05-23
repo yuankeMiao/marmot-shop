@@ -11,7 +11,7 @@ function Filters({
   setFilter: React.Dispatch<React.SetStateAction<ProductQueryOptionsType>>;
   className: string;
 }) {
-  const { data: categories } = useGetAllCategoriesQuery(null);
+  const { data: categories } = useGetAllCategoriesQuery();
 
   const [sort, setSort] = useState("");
   const [priceRange, setPriceRange] = useState("");

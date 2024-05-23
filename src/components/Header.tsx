@@ -16,14 +16,13 @@ import Register from "./user/Register";
 import { useLoginContext } from "../appHooks/useLoginContext";
 import useGetCurrentUser from "../appHooks/useGetCurrentUser";
 import {
-  useLazyGetProfileQuery,
   useLogoutMutation,
 } from "../redux/slices/authApi";
 
 function Header() {
   const { pathname } = useLocation();
   const [logoutTrigger, { error: logourError }] = useLogoutMutation();
-  const { currentUser, getCurrentUserError } = useGetCurrentUser();
+  const { currentUser, getCurrentUserError} = useGetCurrentUser();
 
   const { openLoginModal, setOpenLoginModal } = useLoginContext();
   const [openRegisterModal, setOpenRegisterModal] = useState(false);

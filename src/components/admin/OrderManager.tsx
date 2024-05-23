@@ -34,20 +34,12 @@ const OrderManager = () => {
 
   useEffect(() => {
     if (ordersQueryResult && Array.isArray(ordersQueryResult.data)) {
-      //   console.log("Orders Data:", ordersQueryResult.data);
       setOrders(ordersQueryResult.data);
       setTotalItems(ordersQueryResult.totalCount || 0);
     }
   }, [ordersQueryResult]);
 
   useEffect(() => {
-    console.log("Filter changed:", {
-      sortBy: sortOption.includes("CreatedDate")
-        ? "CreatedDate"
-        : "UpdatedDate",
-      sortOrder: sortOption.includes("Asc") ? "Asc" : "Desc",
-      status: orderStatus,
-    });
     setFilter((prev) => ({
       ...prev,
       sortBy: sortOption.includes("CreatedDate")
@@ -84,7 +76,7 @@ const OrderManager = () => {
 
   return (
     <div className="p-8 flex flex-col gap-8">
-      <div className="flex justify-end gap-4 mb-4">
+      <div className="flex justify-start gap-4 mb-4">
         <select
           className="my-2 text-sm rounded-lg border border-gray-300 dark:bg-gray-700"
           value={sortOption}
@@ -112,25 +104,29 @@ const OrderManager = () => {
         </select>
       </div>
 
-      {isLoading || isFetching ? (
-        <p>Loading orders...</p>
-      ) : (
-        <>
-          {orders.length === 0 ? (
-            <p>No orders found.</p>
-          ) : (
-            orders.map((order) => <OrderCard key={order.id} order={order} role="admin" />)
-          )}
-          {totalPages > 1 && (
-            <Pagination
-              currentPage={currentPage}
-              totalPages={totalPages}
-              onPageChange={handlePageChange}
-            />
-          )}
-        </>
-      )}
-      {error && <p>Error loading orders</p>}
+      <div className="flex flex-col min-h-[300px]">
+        {isLoading || isFetching ? (
+          <p>Loading orders...</p>
+        ) : (
+          <>
+            {orders.length === 0 ? (
+              <p>No orders found.</p>
+            ) : (
+              orders.map((order) => (
+                <OrderCard key={order.id} order={order} role="admin" />
+              ))
+            )}
+            {totalPages > 1 && (
+              <Pagination
+                currentPage={currentPage}
+                totalPages={totalPages}
+                onPageChange={handlePageChange}
+              />
+            )}
+          </>
+        )}
+        {error && <p>Error loading orders</p>}
+      </div>
     </div>
   );
 };

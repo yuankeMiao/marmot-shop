@@ -46,7 +46,7 @@ function Login({
       const loginResult = await loginTrigger(data).unwrap();
       window.localStorage.setItem("accessToken", loginResult.accessToken);
       window.localStorage.setItem("refreshToken", loginResult.refreshToken);
-      const profileResult = await getProfileTrigger(null).unwrap();
+      const profileResult = await getProfileTrigger().unwrap();
       if (profileResult) {
         setOpenLoginModal(false);
         window.location.reload();

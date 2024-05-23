@@ -5,7 +5,7 @@ export default function useGetCurrentUser() {
 
   const [getCurrentUserError, setGetCurrentUserError] = useState(false);
   
-  const [getProfileTrigger, { data: currentUser, error: userError }] =
+  const [getProfileTrigger, { data: currentUser, error: userError, isLoading: userIsLoading }] =
     useLazyGetProfileQuery();
   const [refreshTokenTrigger] = useLazyRefreshTokenQuery();
 
@@ -13,7 +13,7 @@ export default function useGetCurrentUser() {
 
   useEffect(() => {
     const handleStorageChange = () => {
-      if (accessToken) getProfileTrigger(null);
+      if (accessToken) getProfileTrigger();
     };
 
     // Listen for changes to localStorage
@@ -36,7 +36,7 @@ export default function useGetCurrentUser() {
             try {
               const result = await refreshTokenTrigger({ refreshToken }).unwrap();
               localStorage.setItem("accessToken", result.accessToken);
-              getProfileTrigger(null);
+              getProfileTrigger();
             } catch (error) {
               setGetCurrentUserError(true);
               localStorage.removeItem("refreshToken");
@@ -52,5 +52,5 @@ export default function useGetCurrentUser() {
     }
   }, [userError, getProfileTrigger, refreshTokenTrigger]);
 
-  return { currentUser, getCurrentUserError};
+  return { currentUser, getCurrentUserError, userIsLoading};
 }

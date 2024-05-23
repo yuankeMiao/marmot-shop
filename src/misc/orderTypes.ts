@@ -9,7 +9,9 @@ export interface OrderProductBase {
   quantity: number;
   totalPrice: number;
 }
-export interface OrderProductReadDto extends OrderProductBase, BaseDto {}
+export interface OrderProductReadDto
+  extends OrderProductBase,
+    Partial<BaseDto> {}
 export interface OrderProductCreateDto
   extends Pick<OrderProductBase, "productId" | "quantity"> {}
 
@@ -32,7 +34,8 @@ export interface OrderBase {
 export interface OrderReadDto extends Omit<OrderBase, "products">, BaseDto {
   products: OrderProductReadDto[];
 }
-export interface OrderCreateDto extends Omit<OrderBase, "products"> {
+export interface OrderCreateDto  {
+  shippingAddress: string;
   products: OrderProductCreateDto[];
 }
 export interface OrderUpdateDto extends Pick<OrderBase, "status"> {}

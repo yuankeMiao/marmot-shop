@@ -58,7 +58,7 @@ const OrderApi = apiQueries.injectEndpoints({
         method: "PUT",
         body: updateData,
       }),
-      invalidatesTags: (result, error, arg) => [{ type: "Order", id: arg.id }],
+      invalidatesTags: ["Order"],
     }),
 
     deleteOrder: builder.mutation<void, string>({

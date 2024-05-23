@@ -30,7 +30,7 @@ function ProductManager() {
   const [filter, setFilter] = useState<ProductQueryOptionsType>({});
   const [products, setProducts] = useState<ProductReadDto[]>([]);
 
-  const { data: categories, error: categoryError, isLoading: categoryIsLoading } = useGetAllCategoriesQuery(null);
+  const { data: categories, error: categoryError, isLoading: categoryIsLoading } = useGetAllCategoriesQuery();
 
   const { data: productsQueryResult, error, isLoading, isFetching } = useGetAllProductsQuery({
     ...filter,

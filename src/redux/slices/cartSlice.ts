@@ -53,6 +53,10 @@ const cartSlice = createSlice({
         state.totalQuantity -= itemToDelete.quantity;
       }
     },
+    
+    clearCart: (state) => {
+      Object.assign(state, initialState);
+    },
 
     // update the quantity of the item
     updateQuantity: (
@@ -79,4 +83,4 @@ const cartSlice = createSlice({
 const cartReducer = cartSlice.reducer;
 
 export default cartReducer;
-export const { addToCart, removeFromCart, updateQuantity } = cartSlice.actions;
+export const { addToCart, removeFromCart, clearCart, updateQuantity } = cartSlice.actions;

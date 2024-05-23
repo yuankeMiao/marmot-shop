@@ -12,7 +12,7 @@ import { CategoryReadDto } from "../../misc/categoryTypes";
 function CreateProductForm({ setInfoFormModalOpen }: {
   setInfoFormModalOpen: React.Dispatch<React.SetStateAction<boolean>>;
 }) {
-  const { data: categories } = useGetAllCategoriesQuery(null);
+  const { data: categories } = useGetAllCategoriesQuery();
 
   const emptyFormValues: ProductCreateDto = {
     title: "",

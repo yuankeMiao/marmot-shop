@@ -48,7 +48,7 @@ const authApi = apiQueries.injectEndpoints({
       invalidatesTags: ["User"],
     }),
 
-    getProfile: builder.query<UserReadDto, null>({
+    getProfile: builder.query<UserReadDto, void>({
       query: () => ({
         url: `/users/profile`,
         method: "GET",

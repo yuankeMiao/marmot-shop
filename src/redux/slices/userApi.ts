@@ -78,14 +78,14 @@ const UserApi = apiQueries.injectEndpoints({
       invalidatesTags: ["User"],
     }),
 
-    getAddressBookByUserId: builder.query<QueryResponse<AddressReadDto>, void>({
+    getAddressBookByUserId: builder.query<AddressReadDto[], void>({
       query: () => `/users/profile/addresses`,
       providesTags: ["Address"],
     }),
 
     getAddressById: builder.query<AddressReadDto, string>({
       query: (id) => `/users/profile/addresses/${id}`,
-      providesTags: (result, error, arg) => [{ type: "Address", id: arg }],
+      providesTags: ["Address"],
     }),
 
     addAddress: builder.mutation<AddressReadDto, AddressCreateDto>({
@@ -103,7 +103,7 @@ const UserApi = apiQueries.injectEndpoints({
         method: "PUT",
         body: updateData,
       }),
-      invalidatesTags: (result, error, arg) => [{ type: "Address", id: arg.id }],
+      invalidatesTags: ["Address"],
     }),
 
     deleteAddressById: builder.mutation<void, string>({
@@ -111,7 +111,7 @@ const UserApi = apiQueries.injectEndpoints({
         url: `/users/profile/addresses/${id}`,
         method: "DELETE",
       }),
-      invalidatesTags: (result, error, id) => [{ type: "Address", id }],
+      invalidatesTags: ["Address"],
     }),
   }),
 });

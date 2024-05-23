@@ -32,7 +32,7 @@ describe("categoryApi", () => {
   // test 1: getAllCategories - fulfill
   test("getAllCategories fulfill", async () => {
     const { data } = await store.dispatch(
-      categoryApi.endpoints.getAllCategories.initiate(null)
+      categoryApi.endpoints.getAllCategories.initiate()
     );
 
     expect(data).toHaveLength(5);
@@ -40,7 +40,7 @@ describe("categoryApi", () => {
 
   // test 2: loading status
   test("getAllCategories pending", async () => {
-    store.dispatch(categoryApi.endpoints.getAllCategories.initiate(null));
+    store.dispatch(categoryApi.endpoints.getAllCategories.initiate());
 
     await waitFor(() => {
       const status =
