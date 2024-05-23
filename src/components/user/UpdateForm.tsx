@@ -1,20 +1,24 @@
+import React, { ChangeEvent, useState, useEffect } from "react";
 import { useForm, Controller, SubmitHandler } from "react-hook-form";
 import { FloatingLabel } from "flowbite-react";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 
+import { storage } from "../../firebase";
+import { ref, uploadBytesResumable, getDownloadURL } from "firebase/storage";
 import { UserUpdateDto } from "../../misc/userTypes";
 import { useUpdateUserMutation } from "../../redux/slices/authApi";
-import { useEffect } from "react";
 
 function UpdateForm({ userInfo }: { userInfo: UserUpdateDto }) {
+  const [avatarUrl, setAvatarUrl] = useState(userInfo.avatar || "");
+  const [tempImg, setTempImg] = useState(userInfo.avatar || "");
+
   const [
     updateUserProfileTrigger,
     {
       isSuccess: updateIsSuccess,
       isLoading: updateLoading,
       error: updateError,
-      reset: updateReset,
     },
   ] = useUpdateUserMutation();
 
@@ -24,16 +28,29 @@ function UpdateForm({ userInfo }: { userInfo: UserUpdateDto }) {
     reset,
     formState: { errors },
   } = useForm<UserUpdateDto>({
-    defaultValues: userInfo,
+    defaultValues: { ...userInfo, avatar: "" }, // Make sure avatar is part of the default values
   });
 
-  const onSubmit: SubmitHandler<UserUpdateDto> = (data) => {
-    updateUserProfileTrigger(data);
+  const uploadImageCallBack = async (file: File): Promise<string> => {
+    const postImgRef = ref(storage, `users/${file.name}`);
+    const snapshot = await uploadBytesResumable(postImgRef, file);
+    return await getDownloadURL(snapshot.ref);
+  };
+
+  const uploadAvatar = async (event: ChangeEvent<HTMLInputElement>) => {
+    const file = event.target.files?.[0];
+    if (!file) return;
+    setTempImg(URL.createObjectURL(file));
+    const imgUrl = await uploadImageCallBack(file);
+    setAvatarUrl(imgUrl);
+  };
+
+  const onSubmit: SubmitHandler<UserUpdateDto> = async (data) => {
+    await updateUserProfileTrigger({ ...data, avatar: avatarUrl });
   };
 
   const handleReset = () => {
     reset();
-    updateReset();
   };
 
   const successNotify = () => toast.success("Update successful");
@@ -83,13 +100,9 @@ function UpdateForm({ userInfo }: { userInfo: UserUpdateDto }) {
             control={control}
             rules={{
               required: "First name is required",
-              maxLength: {
-                value: 20,
-                message: "First name should not be more than 20 characters",
-              },
-              minLength: {
-                value: 2,
-                message: "First name should not be less than 2 characters",
+              pattern: {
+                value: /^[a-zA-Z]{2,20}$/,
+                message: "First name should be 2-20 alphabetic characters",
               },
             }}
             render={({ field }) => (
@@ -109,13 +122,9 @@ function UpdateForm({ userInfo }: { userInfo: UserUpdateDto }) {
             control={control}
             rules={{
               required: "Last name is required",
-              maxLength: {
-                value: 20,
-                message: "Last name should not be more than 20 characters",
-              },
-              minLength: {
-                value: 3,
-                message: "Last name should not be less than 3 characters",
+              pattern: {
+                value: /^[a-zA-Z]{2,20}$/,
+                message: "Last name should be 2-20 alphabetic characters",
               },
             }}
             render={({ field }) => (
@@ -132,7 +141,30 @@ function UpdateForm({ userInfo }: { userInfo: UserUpdateDto }) {
           />
         </div>
 
-        <div className="flex flex-col md:flex-row justify-center gap-8">
+        <div className="form-row flex items-center gap-4">
+          <label htmlFor="avatar" className="hidden">
+            Upload Avatar
+          </label>
+          <div className="relative">
+            <input
+              type="file"
+              id="avatar"
+              accept="image/*"
+              onChange={uploadAvatar}
+              className="absolute inset-0 opacity-0 w-full h-full cursor-pointer"
+            />
+            <button
+              type="button"
+              className="btn-secondary"
+              onClick={() => document.getElementById('avatar')?.click()}
+            >
+              Upload avatar from local
+            </button>
+          </div>
+          {tempImg && <img src={tempImg} alt="Avatar Preview" className="mt-4 h-20 w-20 object-cover rounded-full" />}
+        </div>
+
+        <div className="flex flex-col md:flex-row justify-center gap-8 mt-4">
           <button
             type="submit"
             aria-label="Confirm"

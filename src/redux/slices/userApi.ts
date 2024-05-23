@@ -35,7 +35,7 @@ const UserApi = apiQueries.injectEndpoints({
 
     getUserById: builder.query<UserReadDto, string>({
       query: (id) => `/users/${id}`,
-      providesTags: (result, error, arg) => [{ type: "User", id: arg }],
+      providesTags: ["User"],
     }),
 
     createUser: builder.mutation<UserReadDto, UserCreateDto>({
@@ -53,7 +53,7 @@ const UserApi = apiQueries.injectEndpoints({
         method: "PUT",
         body: updateData,
       }),
-      invalidatesTags: (result, error, arg) => [{ type: "User", id: arg.id }],
+      invalidatesTags:["User"],
     }),
 
     deleteUser: builder.mutation<void, string>({

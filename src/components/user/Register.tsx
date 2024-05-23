@@ -108,13 +108,9 @@ function Register({
             control={control}
             rules={{
               required: "First name is required",
-              maxLength: {
-                value: 20,
-                message: "First name should not be more than 20 characters",
-              },
-              minLength: {
-                value: 2,
-                message: "First name should not be less than 2 characters",
+              pattern: {
+                value: /^[a-zA-Z]{2,20}$/,
+                message: "First name should be 2-20 alphabetic characters",
               },
             }}
             render={({ field }) => (
@@ -134,13 +130,9 @@ function Register({
             control={control}
             rules={{
               required: "Last name is required",
-              maxLength: {
-                value: 20,
-                message: "Last name should not be more than 20 characters",
-              },
-              minLength: {
-                value: 3,
-                message: "Last name should not be less than 3 characters",
+              pattern: {
+                value: /^[a-zA-Z]{2,20}$/,
+                message: "Last name should be 2-20 alphabetic characters",
               },
             }}
             render={({ field }) => (
