@@ -1,4 +1,16 @@
-# Frontend project - Marmot Shop
+# Marmot Shop
+
+![TypeScript](https://img.shields.io/badge/TypeScript-v.4-green)
+![React](https://img.shields.io/badge/React-v.18-blue)
+![React Dom](https://img.shields.io/badge/ReactDom-v.18.2.0-lightblue)
+![React Hook Form](https://img.shields.io/badge/ReactHookForm-v.7.50.1-gray)
+![Redux toolkit](https://img.shields.io/badge/Redux-v.1.9-brown)
+![Firebase](https://img.shields.io/badge/Firebase-v.10.12.1-red)
+![TailwindCSS](https://img.shields.io/badge/TailwindCSS-v.3.4.1-hotpink)
+![Flowbite](https://img.shields.io/badge/Flowbite-v.2.3.0-darkblue)
+![Flowbite React](https://img.shields.io/badge/FlowbiteReact-v.0.7.2-darkcyan)
+
+## Project description
 This is a frontend demo website for e-commerce. It has a minimalist modern design, follwing modern websites's standard. Visit the live demo [here](https://marmotshop.yuankedev.fun).
 
 ## Introduction
