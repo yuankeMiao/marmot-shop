@@ -1,4 +1,4 @@
-# Marmot Shop
+# Marmot Shop - Ecommerce Fullstack Project / Frontend part
 
 ![TypeScript](https://img.shields.io/badge/TypeScript-v.4-green)
 ![React](https://img.shields.io/badge/React-v.18-blue)
