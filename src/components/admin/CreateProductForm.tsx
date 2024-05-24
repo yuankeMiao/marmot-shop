@@ -1,4 +1,4 @@
-import { useEffect } from "react";
+import React, { useEffect, useState, ChangeEvent } from "react";
 import { useForm, Controller, SubmitHandler, useFieldArray } from "react-hook-form";
 import { FloatingLabel, Select, Textarea } from "flowbite-react";
 import { ToastContainer, toast } from "react-toastify";
@@ -8,11 +8,15 @@ import { useCreateNewProductMutation } from "../../redux/slices/apiQuery";
 import { ProductCreateDto } from "../../misc/productTypes";
 import { useGetAllCategoriesQuery } from "../../redux/slices/categoryApi";
 import { CategoryReadDto } from "../../misc/categoryTypes";
+import { storage } from "../../firebase";
+import { ref, uploadBytesResumable, getDownloadURL } from "firebase/storage";
 
 function CreateProductForm({ setInfoFormModalOpen }: {
   setInfoFormModalOpen: React.Dispatch<React.SetStateAction<boolean>>;
 }) {
   const { data: categories } = useGetAllCategoriesQuery();
+  const [thumbnailUrl, setThumbnailUrl] = useState<string>("");
+  const [tempImg, setTempImg] = useState<string[]>([]);
 
   const emptyFormValues: ProductCreateDto = {
     title: "",
@@ -26,7 +30,7 @@ function CreateProductForm({ setInfoFormModalOpen }: {
     images: [],
   };
 
-  const initialFormValues = emptyFormValues as ProductCreateDto;
+  const initialFormValues = emptyFormValues;
 
   const [
     createNewProductTrigger,
@@ -43,17 +47,48 @@ function CreateProductForm({ setInfoFormModalOpen }: {
     handleSubmit,
     formState: { errors },
     reset,
+    setValue,
   } = useForm<ProductCreateDto>({
     defaultValues: initialFormValues,
   });
 
-  const { fields, append, remove } = useFieldArray({
+  const { fields, append, remove, update } = useFieldArray({
     name: "images",
     control,
   });
 
+  const uploadImageCallBack = async (file: File, productId: string): Promise<string> => {
+    const postImgRef = ref(storage, `products/${productId}/${file.name}`);
+    const snapshot = await uploadBytesResumable(postImgRef, file);
+    return await getDownloadURL(snapshot.ref);
+  };
+
+  const uploadNewImage = async (event: ChangeEvent<HTMLInputElement>, index: number) => {
+    const file = event.target.files?.[0];
+    if (!file) {
+      return;
+    }
+    const newTempImg = [...tempImg];
+    newTempImg[index] = URL.createObjectURL(file);
+    setTempImg(newTempImg);
+
+    const imgUrl = await uploadImageCallBack(file, "newProductId");
+    update(index, { url: imgUrl });
+  };
+
+  const uploadThumbnail = async (event: ChangeEvent<HTMLInputElement>) => {
+    const file = event.target.files?.[0];
+    if (!file) {
+      return;
+    }
+    setThumbnailUrl(URL.createObjectURL(file));
+    const imgUrl = await uploadImageCallBack(file, "newProductId");
+    setThumbnailUrl(imgUrl);
+    setValue("thumbnail", imgUrl);
+  };
+
   const onSubmit: SubmitHandler<ProductCreateDto> = async (data) => {
-    const submitData = data;
+    const submitData = { ...data, thumbnail: thumbnailUrl };
     console.log(submitData);
     await createNewProductTrigger(submitData);
   };
@@ -61,6 +96,7 @@ function CreateProductForm({ setInfoFormModalOpen }: {
   const handleResetForm = () => {
     reset(initialFormValues);
     createNewProductReset();
+    setTempImg([]);
   };
 
   const createNotify = () => toast.success("Successfully created product!");
@@ -267,40 +303,32 @@ function CreateProductForm({ setInfoFormModalOpen }: {
             )}
           />
         </div>
-        <div className="form-row">
-          <Controller
-            name="thumbnail"
-            control={control}
-            rules={{
-              required: "Thumbnail is required",
-              pattern: {
-                value: /\.(gif|jpe?g|tiff|png|webp|bmp)$/i,
-                message: "Invalid image url",
-              },
-            }}
-            render={({ field }) => (
-              <FloatingLabel
-                variant="outlined"
-                label="Thumbnail URL*"
-                type="text"
-                color={errors.thumbnail && "error"}
-                helperText={errors.thumbnail && errors.thumbnail.message}
-                className="dark:bg-gray-700"
-                {...field}
-              />
-            )}
-          />
+        <div className="form-row flex items-center gap-4">
+          <label htmlFor="thumbnail" className="hidden">
+            Upload Thumbnail
+          </label>
+          <div className="relative">
+            <input
+              type="file"
+              id="thumbnail"
+              accept="image/*"
+              onChange={uploadThumbnail}
+              className="absolute inset-0 opacity-0 w-full h-full cursor-pointer"
+            />
+            <button
+              type="button"
+              className="btn-secondary"
+              onClick={() => document.getElementById('thumbnail')?.click()}
+            >
+              Upload Thumbnail
+            </button>
+          </div>
+          {thumbnailUrl && <img src={thumbnailUrl} alt="Thumbnail Preview" className="mt-4 h-20 w-20 object-cover rounded-full" />}
         </div>
         {fields.map((field, index) => (
-          <div key={field.id} className="form-row">
+          <div key={field.id} className="form-row flex items-center gap-4">
             <Controller
               control={control}
-              rules={{
-                pattern: {
-                  value: /\.(gif|jpe?g|tiff|png|webp|bmp)$/i,
-                  message: "Invalid image url",
-                },
-              }}
               name={`images.${index}.url`}
               defaultValue={field.url}
               render={({ field }) => (
@@ -315,6 +343,26 @@ function CreateProductForm({ setInfoFormModalOpen }: {
                 />
               )}
             />
+            <label htmlFor={`image-${index}`} className="hidden">
+              Upload Image
+            </label>
+            <div className="relative">
+              <input
+                type="file"
+                id={`image-${index}`}
+                accept="image/*"
+                onChange={(e) => uploadNewImage(e, index)}
+                className="absolute inset-0 opacity-0 w-full h-full cursor-pointer"
+              />
+              <button
+                type="button"
+                className="btn-secondary"
+                onClick={() => document.getElementById(`image-${index}`)?.click()}
+              >
+                Upload Image
+              </button>
+            </div>
+            {tempImg[index] && <img src={tempImg[index]} alt={`Preview ${index + 1}`} className="mt-4 h-20 w-20 object-cover rounded-full" />}
             <button
               type="button"
               onClick={() => remove(index)}

@@ -31,7 +31,8 @@ function Login({
   });
 
   const [loginTrigger, { error: loginError }] = useLoginMutation();
-  const [getProfileTrigger, { error: getProfileError }] = useLazyGetProfileQuery();
+  const [getProfileTrigger, { error: getProfileError }] =
+    useLazyGetProfileQuery();
 
   const { setOpenLoginModal } = useLoginContext();
 
@@ -46,11 +47,11 @@ function Login({
       const loginResult = await loginTrigger(data).unwrap();
       window.localStorage.setItem("accessToken", loginResult.accessToken);
       window.localStorage.setItem("refreshToken", loginResult.refreshToken);
-      const profileResult = await getProfileTrigger().unwrap();
-      if (profileResult) {
-        setOpenLoginModal(false);
-        window.location.reload();
-      }
+      await getProfileTrigger()
+        .unwrap()
+        .then((result) => {
+          window.location.reload();
+        });
     } catch (err: any) {
       setError("password", {
         type: "manual",

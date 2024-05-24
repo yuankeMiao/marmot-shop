@@ -61,7 +61,7 @@ const UserApi = apiQueries.injectEndpoints({
         url: `/users/${id}`,
         method: "DELETE",
       }),
-      invalidatesTags: (result, error, id) => [{ type: "User", id }],
+      invalidatesTags: ["User"],
     }),
 
     getUserProfile: builder.query<UserReadDto, void>({

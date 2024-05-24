@@ -20,9 +20,7 @@ root.render(
     <Provider store={store}>
       <ThemeProvider>
         <LoginProvider>
-        <GoogleOAuthProvider clientId={clientId}>
           <App />
-        </GoogleOAuthProvider>
         </LoginProvider>
       </ThemeProvider>
     </Provider>

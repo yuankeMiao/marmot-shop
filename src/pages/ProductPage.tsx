@@ -175,7 +175,7 @@ const ProductPage = () => {
             <h3 className="text-2xl font-semibold py-8">Reviews</h3>
             <div className="flex justify-end mb-4">
               <select
-                className="p-2 border rounded"
+                className="p-2 my-2 text-sm rounded-lg border border-gray-300 dark:bg-gray-700"
                 value={sortOrder}
                 onChange={handleSortChange}
               >

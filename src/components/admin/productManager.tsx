@@ -1,4 +1,5 @@
-import { useState, useEffect, useCallback, useMemo } from "react";
+import React, { useState, useEffect, useCallback, useMemo } from "react";
+import { Link } from "react-router-dom";
 import { TextInput, Table, Modal, Pagination } from "flowbite-react";
 
 import {
@@ -87,7 +88,7 @@ function ProductManager() {
 
   return (
     <div className="p-8 flex flex-col gap-8">
-      <button className="btn-primary max-w-min" onClick={() => handleAdd()}>
+      <button className="btn-primary max-w-min" onClick={handleAdd}>
         Add New Product
       </button>
 
@@ -162,18 +163,10 @@ function ProductManager() {
                 <span className="sr-only">Thumbnail</span>
               </Table.HeadCell>
               <Table.HeadCell>Product name</Table.HeadCell>
-              <Table.HeadCell className="hidden lg:table-cell">
-                Category
-              </Table.HeadCell>
-              <Table.HeadCell className="hidden lg:table-cell">
-                Brand
-              </Table.HeadCell>
-              <Table.HeadCell className="hidden md:table-cell">
-                Price
-              </Table.HeadCell>
-              <Table.HeadCell className="hidden md:table-cell">
-                Discount
-              </Table.HeadCell>
+              <Table.HeadCell className="hidden lg:table-cell">Category</Table.HeadCell>
+              <Table.HeadCell className="hidden lg:table-cell">Brand</Table.HeadCell>
+              <Table.HeadCell className="hidden md:table-cell">Price</Table.HeadCell>
+              <Table.HeadCell className="hidden md:table-cell">Discount</Table.HeadCell>
               <Table.HeadCell>Stock</Table.HeadCell>
               <Table.HeadCell>
                 <span className="sr-only">Edit</span>
@@ -192,27 +185,27 @@ function ProductManager() {
                       className="min-w-[3rem] w-12 min-h-[3rem] h-12 object-cover rounded-md"
                     />
                   </Table.Cell>
-                  <Table.Cell>{product.title}</Table.Cell>
+                  <Table.Cell>
+                    <Link to={`/product/${product.id}`}>
+                      {product.title}
+                    </Link>
+                  </Table.Cell>
                   <Table.Cell className="hidden lg:table-cell">
                     {
-                      categories?.filter((c) => c.id === product.categoryId)[0]
-                        .name
+                      categories?.find((c) => c.id === product.categoryId)?.name
                     }
                   </Table.Cell>
-                  <Table.Cell className="hidden lg:table-cell">
-                    {product.brand}
-                  </Table.Cell>
-                  <Table.Cell className="hidden md:table-cell">
-                    {product.price} €
-                  </Table.Cell>
-                  <Table.Cell className="hidden md:table-cell">
-                    - {product.discountPercentage} %
-                  </Table.Cell>
+                  <Table.Cell className="hidden lg:table-cell">{product.brand}</Table.Cell>
+                  <Table.Cell className="hidden md:table-cell">{product.price} €</Table.Cell>
+                  <Table.Cell className="hidden md:table-cell">- {product.discountPercentage} %</Table.Cell>
                   <Table.Cell>{product.stock}</Table.Cell>
                   <Table.Cell>
                     <button
                       className="text-blue-600 font-semibold underline"
-                      onClick={() => handleEdit(product)}
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        handleEdit(product);
+                      }}
                     >
                       Edit
                     </button>
@@ -255,15 +248,10 @@ function ProductManager() {
           setSelectedProduct(null);
         }}
       >
-        <Modal.Header>
-          {selectedProduct ? "Edit Product" : "Add New Product"}
-        </Modal.Header>
+        <Modal.Header>{selectedProduct ? "Edit Product" : "Add New Product"}</Modal.Header>
         <Modal.Body>
           {selectedProduct ? (
-            <UpdateProductForm
-              initialValue={selectedProduct}
-              setInfoFormModalOpen={setInfoFormModalOpen}
-            />
+            <UpdateProductForm initialValue={selectedProduct} setInfoFormModalOpen={setInfoFormModalOpen} />
           ) : (
             <CreateProductForm setInfoFormModalOpen={setInfoFormModalOpen} />
           )}

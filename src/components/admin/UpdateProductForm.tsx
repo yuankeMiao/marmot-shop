@@ -1,16 +1,13 @@
-import { useEffect } from "react";
-import {
-  useForm,
-  Controller,
-  SubmitHandler,
-  useFieldArray,
-} from "react-hook-form";
+import React, { useEffect, useState, ChangeEvent } from "react";
+import { useForm, Controller, SubmitHandler, useFieldArray } from "react-hook-form";
 import { FloatingLabel, Select, Textarea } from "flowbite-react";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { useUpdateProductMutation } from "../../redux/slices/apiQuery";
 import { ProductReadDto, ProductUpdateDto } from "../../misc/productTypes";
 import { useGetAllCategoriesQuery } from "../../redux/slices/categoryApi";
+import { storage } from "../../firebase";
+import { ref, uploadBytesResumable, getDownloadURL } from "firebase/storage";
 
 type FormValuesType = ProductUpdateDto;
 
@@ -22,6 +19,9 @@ function UpdateProductForm({
   setInfoFormModalOpen: React.Dispatch<React.SetStateAction<boolean>>;
 }) {
   const { data: categories } = useGetAllCategoriesQuery();
+  const [thumbnailUrl, setThumbnailUrl] = useState<string>(initialValue.thumbnail);
+  const [tempImg, setTempImg] = useState<string[]>(initialValue.images.map(image => image.url));
+
   const initialFormValues: ProductUpdateDto = {
     title: initialValue.title,
     description: initialValue.description,
@@ -47,27 +47,56 @@ function UpdateProductForm({
     control,
     handleSubmit,
     formState: { errors },
+    setValue,
   } = useForm<FormValuesType>({
     defaultValues: initialFormValues,
   });
 
-  const { fields, append, remove } = useFieldArray({
+  const { fields, append, remove, update } = useFieldArray({
     name: "images",
     control,
   });
 
+  const uploadImageCallBack = async (file: File, productId: string): Promise<string> => {
+    const postImgRef = ref(storage, `products/${productId}/${file.name}`);
+    const snapshot = await uploadBytesResumable(postImgRef, file);
+    return await getDownloadURL(snapshot.ref);
+  };
+
+  const uploadNewImage = async (event: ChangeEvent<HTMLInputElement>, index: number) => {
+    const file = event.target.files?.[0];
+    if (!file) {
+      return;
+    }
+    const newTempImg = [...tempImg];
+    newTempImg[index] = URL.createObjectURL(file);
+    setTempImg(newTempImg);
+
+    const imgUrl = await uploadImageCallBack(file, initialValue.id);
+    update(index, { url: imgUrl });
+  };
+
+  const uploadThumbnail = async (event: ChangeEvent<HTMLInputElement>) => {
+    const file = event.target.files?.[0];
+    if (!file) {
+      return;
+    }
+    setThumbnailUrl(URL.createObjectURL(file));
+    const imgUrl = await uploadImageCallBack(file, initialValue.id);
+    setThumbnailUrl(imgUrl);
+    setValue("thumbnail", imgUrl);
+  };
+
   const onSubmit: SubmitHandler<FormValuesType> = async (data) => {
-    const submitData = { ...data };
-    // console.log("Submitting data:", submitData);
+    const submitData = { ...data, thumbnail: thumbnailUrl };
     await updateProductTrigger({
       id: initialValue.id,
       updateData: submitData,
-    })
+    });
   };
 
   const updateNotify = () => toast.success("Successfully updated product!");
-  const errorNotify = () =>
-    toast.error("Something went wrong, please try again");
+  const errorNotify = () => toast.error("Something went wrong, please try again");
 
   useEffect(() => {
     if (updateProductSuccess) {
@@ -267,25 +296,30 @@ function UpdateProductForm({
             )}
           />
         </div>
-        <div className="form-row">
-          <Controller
-            name="thumbnail"
-            control={control}
-            render={({ field }) => (
-              <FloatingLabel
-                variant="outlined"
-                label="Thumbnail URL*"
-                type="text"
-                color={errors.thumbnail && "error"}
-                helperText={errors.thumbnail && errors.thumbnail.message}
-                className="dark:bg-gray-700"
-                {...field}
-              />
-            )}
-          />
+        <div className="form-row flex items-center gap-4">
+          <label htmlFor="thumbnail" className="hidden">
+            Upload Thumbnail
+          </label>
+          <div className="relative">
+            <input
+              type="file"
+              id="thumbnail"
+              accept="image/*"
+              onChange={uploadThumbnail}
+              className="absolute inset-0 opacity-0 w-full h-full cursor-pointer"
+            />
+            <button
+              type="button"
+              className="btn-secondary"
+              onClick={() => document.getElementById('thumbnail')?.click()}
+            >
+              Upload Thumbnail
+            </button>
+          </div>
+          {thumbnailUrl && <img src={thumbnailUrl} alt="Thumbnail Preview" className="mt-4 h-20 w-20 object-cover rounded-full" />}
         </div>
         {fields.map((field, index) => (
-          <div key={field.id} className="form-row">
+          <div key={field.id} className="form-row flex items-center gap-4">
             <Controller
               control={control}
               name={`images.${index}.url`}
@@ -302,6 +336,26 @@ function UpdateProductForm({
                 />
               )}
             />
+            <label htmlFor={`image-${index}`} className="hidden">
+              Upload Image
+            </label>
+            <div className="relative">
+              <input
+                type="file"
+                id={`image-${index}`}
+                accept="image/*"
+                onChange={(e) => uploadNewImage(e, index)}
+                className="absolute inset-0 opacity-0 w-full h-full cursor-pointer"
+              />
+              <button
+                type="button"
+                className="btn-secondary"
+                onClick={() => document.getElementById(`image-${index}`)?.click()}
+              >
+                Upload Image
+              </button>
+            </div>
+            {tempImg[index] && <img src={tempImg[index]} alt={`Preview ${index + 1}`} className="mt-4 h-20 w-20 object-cover rounded-full" />}
             <button
               type="button"
               onClick={() => remove(index)}
