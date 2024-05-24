@@ -20,7 +20,7 @@ const buildQueryParams = (options: UserQueryOptionType) => {
   if (offset) params.append("offset", offset.toString());
   if (sortBy) params.append("sortBy", sortBy);
   if (sortOrder) params.append("sortOrder", sortOrder);
-  if (role) params.append("role", role);
+  if (role) params.append("searchRole", role);
   if (searchName) params.append("searchName", searchName);
 
   return params.toString();

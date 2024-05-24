@@ -35,7 +35,12 @@ function UserManager() {
   });
   const [users, setUsers] = useState<UserReadDto[]>([]);
 
-  const { data: usersQueryResult, error, isLoading, isFetching } = useGetAllUsersQuery(filter);
+  const {
+    data: usersQueryResult,
+    error,
+    isLoading,
+    isFetching,
+  } = useGetAllUsersQuery(filter);
 
   useEffect(() => {
     if (usersQueryResult) {
@@ -48,7 +53,10 @@ function UserManager() {
     setCurrentPage(1);
   }, [filter]);
 
-  const totalPages = useMemo(() => Math.ceil(totalItems / itemsPerPage), [totalItems]);
+  const totalPages = useMemo(
+    () => Math.ceil(totalItems / itemsPerPage),
+    [totalItems]
+  );
 
   const handleEdit = useCallback((user: UserReadDto) => {
     setSelectedUser(user);
@@ -144,11 +152,12 @@ function UserManager() {
         <>
           <Table>
             <Table.Head>
-              <Table.HeadCell>Name</Table.HeadCell>
+              <Table.HeadCell className="hidden lg:table-cell">Avatar</Table.HeadCell>
+              <Table.HeadCell className="hidden lg:table-cell">Name</Table.HeadCell>
               <Table.HeadCell>Email</Table.HeadCell>
-              <Table.HeadCell>Role</Table.HeadCell>
-              <Table.HeadCell>Created Date</Table.HeadCell>
-              <Table.HeadCell>Updated Date</Table.HeadCell>
+              <Table.HeadCell className="hidden lg:table-cell">Role</Table.HeadCell>
+              <Table.HeadCell className="hidden lg:table-cell">Created Date</Table.HeadCell>
+              <Table.HeadCell className="hidden lg:table-cell">Updated Date</Table.HeadCell>
               <Table.HeadCell>
                 <span className="sr-only">Edit</span>
               </Table.HeadCell>
@@ -178,11 +187,12 @@ function UserManager() {
           )}
           <Table hoverable>
             <Table.Head>
-              <Table.HeadCell>Name</Table.HeadCell>
+              <Table.HeadCell className="hidden lg:table-cell">Avatar</Table.HeadCell>
+              <Table.HeadCell className="hidden lg:table-cell">Name</Table.HeadCell>
               <Table.HeadCell>Email</Table.HeadCell>
-              <Table.HeadCell>Role</Table.HeadCell>
-              <Table.HeadCell>Created Date</Table.HeadCell>
-              <Table.HeadCell>Updated Date</Table.HeadCell>
+              <Table.HeadCell className="hidden lg:table-cell">Role</Table.HeadCell>
+              <Table.HeadCell  className="hidden lg:table-cell">Created Date</Table.HeadCell>
+              <Table.HeadCell  className="hidden lg:table-cell">Updated Date</Table.HeadCell>
               <Table.HeadCell>
                 <span className="sr-only">Edit</span>
               </Table.HeadCell>
@@ -193,11 +203,22 @@ function UserManager() {
             <Table.Body className="divide-y">
               {users?.map((user) => (
                 <Table.Row key={user.id}>
-                  <Table.Cell>{`${user.firstname} ${user.lastname}`}</Table.Cell>
+                  <Table.Cell className="hidden lg:table-cell">
+                    <img
+                      src={user.avatar} 
+                      alt="Avatar"
+                      className="h-10 w-10 rounded-full object-cover"
+                    />
+                  </Table.Cell>
+                  <Table.Cell className="hidden lg:table-cell">{`${user.firstname} ${user.lastname}`}</Table.Cell>
                   <Table.Cell>{user.email}</Table.Cell>
-                  <Table.Cell>{user.role}</Table.Cell>
-                  <Table.Cell>{new Date(user.createdDate).toLocaleDateString()}</Table.Cell>
-                  <Table.Cell>{new Date(user.updatedDate).toLocaleDateString()}</Table.Cell>
+                  <Table.Cell className="hidden lg:table-cell">{user.role}</Table.Cell>
+                  <Table.Cell  className="hidden lg:table-cell">
+                    {new Date(user.createdDate).toLocaleDateString()}
+                  </Table.Cell>
+                  <Table.Cell  className="hidden lg:table-cell">
+                    {new Date(user.updatedDate).toLocaleDateString()}
+                  </Table.Cell>
                   <Table.Cell>
                     <button
                       className="text-blue-600 font-semibold underline"

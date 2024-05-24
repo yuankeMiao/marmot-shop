@@ -154,8 +154,11 @@ function Register({
             name="email"
             control={control}
             rules={{
-              required: "E-mail is required",
-              pattern: /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,4}$/i,
+              required: "Email is required",
+              pattern: {
+                value: /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,4}$/i,
+                message: "Invalid email address",
+              },
             }}
             render={({ field }) => (
               <FloatingLabel
@@ -184,6 +187,10 @@ function Register({
               minLength: {
                 value: 6,
                 message: "Password should not be less than 6 characters",
+              },
+              pattern: {
+                value: /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d).{6,20}$/,
+                message: "Password must contain at least one uppercase letter, one lowercase letter, and one number",
               },
             }}
             render={({ field }) => (

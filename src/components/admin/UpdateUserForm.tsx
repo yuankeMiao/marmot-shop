@@ -45,11 +45,10 @@ function UpdateUserForm({
 
   const onSubmit: SubmitHandler<FormValuesType> = async (data) => {
     const submitData = { ...data };
+    // console.log("Submitting data:", submitData);
     await updateUserTrigger({
       id: initialValue.id,
       updateData: submitData,
-    }).then((result) => {
-      setInfoFormModalOpen(false);
     });
   };
 
@@ -61,7 +60,7 @@ function UpdateUserForm({
       updateNotify();
       setInfoFormModalOpen(false);
     }
-  }, [updateUserSuccess]);
+  }, [setInfoFormModalOpen, updateUserSuccess]);
 
   useEffect(() => {
     if (updateUserError) {
@@ -103,16 +102,12 @@ function UpdateUserForm({
             name="lastname"
             control={control}
             rules={{
-              required: "Last name is required",
-              maxLength: {
-                value: 20,
-                message: "Last name should not be more than 20 characters",
-              },
-              minLength: {
-                value: 3,
-                message: "Last name should not be less than 3 characters",
-              },
-            }}
+                required: "Last name is required",
+                pattern: {
+                  value: /^[a-zA-Z]{2,20}$/,
+                  message: "Last name should be 2-20 alphabetic characters",
+                },
+              }}
             render={({ field }) => (
               <FloatingLabel
                 variant="outlined"

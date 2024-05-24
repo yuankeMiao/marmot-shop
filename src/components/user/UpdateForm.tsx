@@ -28,7 +28,7 @@ function UpdateForm({ userInfo }: { userInfo: UserUpdateDto }) {
     reset,
     formState: { errors },
   } = useForm<UserUpdateDto>({
-    defaultValues: { ...userInfo, avatar: "" }, // Make sure avatar is part of the default values
+    defaultValues: { ...userInfo, avatar: "" }, 
   });
 
   const uploadImageCallBack = async (file: File): Promise<string> => {
@@ -77,8 +77,11 @@ function UpdateForm({ userInfo }: { userInfo: UserUpdateDto }) {
             name="email"
             control={control}
             rules={{
-              required: "E-mail is required",
-              pattern: /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,4}$/i,
+              required: "Email is required",
+              pattern: {
+                value: /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,4}$/i,
+                message: "Invalid email address",
+              },
             }}
             render={({ field }) => (
               <FloatingLabel

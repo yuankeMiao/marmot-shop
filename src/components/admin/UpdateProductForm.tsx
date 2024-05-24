@@ -58,13 +58,11 @@ function UpdateProductForm({
 
   const onSubmit: SubmitHandler<FormValuesType> = async (data) => {
     const submitData = { ...data };
-    console.log("Submitting data:", submitData);
+    // console.log("Submitting data:", submitData);
     await updateProductTrigger({
       id: initialValue.id,
       updateData: submitData,
-    }).then((result) => {
-      setInfoFormModalOpen(false);
-    });
+    })
   };
 
   const updateNotify = () => toast.success("Successfully updated product!");
@@ -76,7 +74,7 @@ function UpdateProductForm({
       updateNotify();
       setInfoFormModalOpen(false);
     }
-  }, [updateProductSuccess]);
+  }, [setInfoFormModalOpen, updateProductSuccess]);
 
   useEffect(() => {
     if (updateProductError) {

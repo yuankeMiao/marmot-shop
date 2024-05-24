@@ -16,7 +16,7 @@ function CreateUserForm({
     firstname: "",
     lastname: "",
     email: "",
-    avatar: "",
+    avatar: undefined,
     password: "",
     role: "Customer", // Default role
   };
@@ -43,8 +43,9 @@ function CreateUserForm({
   });
 
   const onSubmit: SubmitHandler<UserCreateDto> = async (data) => {
-    const submitData = data;
-    await createUserTrigger(submitData);
+    const submitData = { ...data };
+    console.log(submitData)
+    await createUserTrigger(submitData)
   };
 
   const handleResetForm = () => {
@@ -53,7 +54,7 @@ function CreateUserForm({
   };
 
   const createNotify = () => toast.success("Successfully created user!");
-  const errorNotify = () => toast.error("Something went wrong, please try again");
+  const errorNotify = (msg: string) => toast.error(msg);
 
   useEffect(() => {
     if (createUserSuccess) {
@@ -62,9 +63,12 @@ function CreateUserForm({
   }, [createUserSuccess]);
 
   useEffect(() => {
-    if (createUserError) {
-      errorNotify();
-    }
+    console.log(createUserError)
+    // if (createUserError) {
+    //   let msg;
+    //   if('data' in createUserError) msg = createUserError.data;
+    //   errorNotify(msg);
+    // }
   }, [createUserError]);
 
   return (
@@ -76,13 +80,9 @@ function CreateUserForm({
             control={control}
             rules={{
               required: "First name is required",
-              maxLength: {
-                value: 20,
-                message: "First name should not be more than 20 characters",
-              },
-              minLength: {
-                value: 2,
-                message: "First name should not be less than 2 characters",
+              pattern: {
+                value: /^[a-zA-Z]{2,20}$/,
+                message: "First name should be 2-20 alphabetic characters",
               },
             }}
             render={({ field }) => (
@@ -102,13 +102,9 @@ function CreateUserForm({
             control={control}
             rules={{
               required: "Last name is required",
-              maxLength: {
-                value: 20,
-                message: "Last name should not be more than 20 characters",
-              },
-              minLength: {
-                value: 3,
-                message: "Last name should not be less than 3 characters",
+              pattern: {
+                value: /^[a-zA-Z]{2,20}$/,
+                message: "Last name should be 2-20 alphabetic characters",
               },
             }}
             render={({ field }) => (
@@ -154,16 +150,24 @@ function CreateUserForm({
             control={control}
             rules={{
               required: "Password is required",
+              maxLength: {
+                value: 20,
+                message: "Password should not be more than 20 characters",
+              },
               minLength: {
                 value: 6,
                 message: "Password should not be less than 6 characters",
+              },
+              pattern: {
+                value: /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d).{6,20}$/,
+                message: "Password must contain at least one uppercase letter, one lowercase letter, and one number",
               },
             }}
             render={({ field }) => (
               <FloatingLabel
                 variant="outlined"
                 label="Password*"
-                type="password"
+                type="text"
                 color={errors.password && "error"}
                 helperText={errors.password && errors.password.message}
                 className="dark:bg-gray-700"
