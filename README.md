@@ -11,7 +11,7 @@
 ![Flowbite React](https://img.shields.io/badge/FlowbiteReact-v.0.7.2-darkcyan)
 
 ## Project description
-This is a frontend demo website for e-commerce. It has a minimalist modern design, follwing modern websites's standard. Visit the live demo [here](https://marmotshop.yuankedev.fun).
+This is a frontend demo website for e-commerce. It is part of a fullstack project, the [public backend repository](https://github.com/yuankeMiao/Marmotshop-backend) is a separate one. It has a minimalist modern design, follwing modern websites's standard. Visit the live demo [here](https://marmotshop.yuankedev.fun).
 
 ## Introduction
 The Marmot Shop is built using: 
