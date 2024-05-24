@@ -126,10 +126,16 @@ const ProductPage = () => {
 
             <div className="*:mb-4">
               <Rating>
-                {renderStars(product.rating)}
-                <p className="ml-2 text-sm font-bold text-gray-900 dark:text-white">
-                  {product.rating.toFixed(1)}
-                </p>
+                {product.rating !== undefined && product.rating !== null ? (
+                  <>
+                    {renderStars(product.rating)}
+                    <p className="ml-2 text-sm font-bold text-gray-900 dark:text-white">
+                      {product.rating.toFixed(1)}
+                    </p>
+                  </>
+                ) : (
+                  <p className="text-sm text-gray-900 dark:text-gray-200">No rating data</p>
+                )}
               </Rating>
               <h2 className="text-2xl font-semibold h-28">{product.title}</h2>
               <div>
@@ -153,7 +159,7 @@ const ProductPage = () => {
                   )}
                 </p>
 
-                <p className="my-2 text-green-600 font-medium">Avaliable Now</p>
+                <p className="my-2 text-green-600 font-medium">Available Now</p>
               </div>
 
               <AmountControl
@@ -191,10 +197,7 @@ const ProductPage = () => {
                   <p>No reviews found.</p>
                 ) : (
                   reviews.map((review, index) => (
-                    <ReviewCard
-                      key={review.id}
-                      review={review}
-                    />
+                    <ReviewCard key={review.id} review={review} />
                   ))
                 )}
                 {totalPages > 1 && (

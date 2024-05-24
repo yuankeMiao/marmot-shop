@@ -1,9 +1,10 @@
 import { Link, useNavigate } from "react-router-dom";
-import { Button, Modal, Table } from "flowbite-react";
+import { Modal, Table } from "flowbite-react";
 
-import { useAppDispatch, useAppSelector } from "../appHooks/reduxHooks";
 import UpdateForm from "../components/user/UpdateForm";
 import AddressCard from "../components/user/AddressCard";
+import CreateAddressForm from "../components/address/CreateAddressForm";
+import UpdateAddressForm from "../components/address/UpdateAddressForm";
 
 import { useLogoutMutation } from "../redux/slices/authApi";
 import useGetCurrentUser from "../appHooks/useGetCurrentUser";
@@ -11,6 +12,7 @@ import MyOrders from "../components/user/MyOrders";
 import AnimeLoader from "../components/skeleton/AnimeLoader";
 import { useGetAddressBookByUserIdQuery } from "../redux/slices/userApi";
 import { useState } from "react";
+import { AddressReadDto } from "../misc/userTypes";
 
 function ProfilePage() {
   const navigate = useNavigate();
@@ -25,6 +27,8 @@ function ProfilePage() {
   } = useGetAddressBookByUserIdQuery();
 
   const [showAddModal, setShowAddModal] = useState(false);
+  const [showEditModal, setShowEditModal] = useState(false);
+  const [selectedAddress, setSelectedAddress] = useState<AddressReadDto | null>(null);
 
   if (userIsLoading) return <AnimeLoader message="User is loading ..." />;
 
@@ -32,7 +36,7 @@ function ProfilePage() {
     return (
       <div className="py-20">
         <p className="text-center text-xl dark:text-gray-100">
-          Please log in to chcek your profile!
+          Please log in to check your profile!
         </p>
       </div>
     );
@@ -40,6 +44,11 @@ function ProfilePage() {
   const handleLogout = () => {
     navigate("/");
     logoutTrigger(null);
+  };
+
+  const handleEditAddress = (address: AddressReadDto) => {
+    setSelectedAddress(address);
+    setShowEditModal(true);
   };
 
   return (
@@ -96,10 +105,12 @@ function ProfilePage() {
           )}
           <div className="flex flex-wrap gap-4">
             {addressBook?.map((address) => (
-              <AddressCard key={address.id} address={address} />
+              <div key={address.id} className="relative">
+                <AddressCard address={address} />
+              </div>
             ))}
             <div
-              className="p-6 bg-white dark:bg-gray-800 rounded-lg shadow-md w-full sm:w-1/2 lg:w-1/3 xl:w-1/4 flex items-center justify-center cursor-pointer"
+              className="p-6 bg-white dark:bg-gray-800 rounded-lg shadow-md w-full sm:w-1/2 lg:w-1/3 flex items-center justify-center cursor-pointer"
               onClick={() => setShowAddModal(true)}
             >
               <span className="text-7xl text-gray-500 dark:text-gray-400">
@@ -119,7 +130,14 @@ function ProfilePage() {
       <Modal show={showAddModal} onClose={() => setShowAddModal(false)} dismissible>
         <Modal.Header>Add New Address</Modal.Header>
         <Modal.Body>
-          <p className="dark:text-gray-200">Placeholder for add address form.</p>
+          <CreateAddressForm setShowAddModal={setShowAddModal} />
+        </Modal.Body>
+      </Modal>
+
+      <Modal show={showEditModal} onClose={() => setShowEditModal(false)} dismissible>
+        <Modal.Header>Edit Address</Modal.Header>
+        <Modal.Body>
+          {selectedAddress && <UpdateAddressForm address={selectedAddress} setShowEditModal={setShowEditModal} />}
         </Modal.Body>
       </Modal>
     </div>
